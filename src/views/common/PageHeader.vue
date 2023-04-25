@@ -4,16 +4,16 @@
     <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none">
       <svg class="bi pe-none me-2" width="30" height="30"><use xlink:href="#bootstrap"></use></svg>
       <span class="fs-5 fw-semibold">
-        <img src="@/assets/images/Sefix.png" style="width: 100%;">
+        <img src="@/assets/images/Sefix.png" class="logo-image">
       </span>
     </a>
     <ul class="list-unstyled ps-0">
       <li class="border-top my-3"></li>
       <li class="mb-1">
-        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="true">
+        <button class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse" data-bs-target="#home-collapse" aria-expanded="false">
           관리자메뉴
         </button>
-        <div class="collapse show" id="home-collapse">
+        <div class="collapse" id="home-collapse">
           <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
             <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 관리</a></li>
             <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 관리</a></li>
@@ -95,13 +95,13 @@
   </div>
 </template>
 
-<script>
-export default {
-};
-
-</script>
 
 <style scoped>
+.logo-image {
+  display: block;
+  margin-left: -10px;
+  width: 100%;
+}
 .border-top{
   background-color: rgb(126, 127, 131);
   border: solid 3px rgba(42, 28, 172, 0.15);
@@ -127,4 +127,14 @@ div {
         --bs-btn-active-bg: #5a23c8;
         --bs-btn-active-border-color: #5a23c8;
       }
+
+
 </style>
+
+
+<script>
+export default {
+};
+
+</script>
+
