@@ -1,7 +1,7 @@
-// const routes = [
-//   {
+const leekangjs = [
+  {
     
-//   },
-// ]
+  },
+]
 
-// export default leekangRoutes
+export default leekangjs

@@ -3,7 +3,7 @@ import SalaryManagement from '@/views/accounting/SalaryManagement.vue';
 import RevenueRetrieve from '@/views/accounting/RevenueRetrieve.vue';
 import SlipStatement from '@/views/accounting/SlipStatement.vue';
 
-const youngkwangRoutes = [
+const youngkwangjs = [
   {
     path: '/accounting/salary',
     name: 'SalaryrRetrieve',
@@ -26,4 +26,4 @@ const youngkwangRoutes = [
   },
 ];
 
-export default youngkwangRoutes;
+export default youngkwangjs;

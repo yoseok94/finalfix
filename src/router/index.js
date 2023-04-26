@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import youngkwangRoutes from './youngkwang.js';
-import yoseokRoutes from './yoseok.js';
-import leekangRoutes from './leekang.js';
-import junhyeokRoutes from './junhyeok.js'
-import junheeRoutes from './junhee.js'
+import youngkwangjs from './youngkwang.js';
+import yoseokjs from './yoseok.js';
+import leekangjs from './leekang.js';
+import junhyeokjs from './junhyeok.js'
+import junheejs from './junhee.js'
 import DashBoard from '@/views/common/DashBoard.vue';
 import LoginPage from '@/views/common/LoginPage.vue';
 
@@ -20,8 +20,8 @@ const baseRoutes = [
   },
 ];
 
-const routes = [...baseRoutes, ...youngkwangRoutes, ...yoseokRoutes, ...leekangRoutes
-              , ...junhyeokRoutes, ...junheeRoutes];
+const routes = [...baseRoutes, ...youngkwangjs, ...yoseokjs, ...leekangjs
+              , ...junhyeokjs, ...junheejs];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),

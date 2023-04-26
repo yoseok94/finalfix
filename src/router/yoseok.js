@@ -1,8 +1,8 @@
 
-// const routes = [
-//   {
+const yoseokjs = [
+  {
     
-//   },
-// ]
+  },
+]
 
-// export default yoseokRoutes
+export default yoseokjs
