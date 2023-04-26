@@ -1,6 +1,7 @@
     <!-- PageHeader.vue -->
     <template>
-    <div class="flex-shrink-0 p-3" style="width: 200px; height: 800px; auto;">
+      <div class="sidebar-container">
+    <div class="flex-shrink-0 p-3" style="width: 200px; auto;">
         <a href="/" class="d-flex align-items-center pb-3 mb-3 link-body-emphasis text-decoration-none">
           <svg class="bi pe-none me-2" width="30" height="30"><use xlink:href="#bootstrap"></use></svg>
           <span class="fs-5 fw-semibold">
@@ -92,10 +93,10 @@
             <transition name="accordion">
             <div class="collapse" ref="accordion6" id="accounting-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</router-link></li>
-                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 관리</router-link></li>
-                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출 조회</router-link></li>
-                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회계 전표 조회</router-link></li>
+                <li><router-link to="/accounting/salary" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</router-link></li>
+                <li><router-link to="/accounting/management" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 관리</router-link></li>
+                <li><router-link to="/accounting/revenue" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출 조회</router-link></li>
+                <li><router-link to="/accounting/statement" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회계 전표 조회</router-link></li>
 
               </ul>
             </div>
@@ -105,6 +106,7 @@
           <router-link to="/login"  class="btn btn-outline-light me-2" style="background-color:blueviolet">Login</router-link>
         </ul>
       </div>
+    </div>
     </template>
 
 
@@ -114,15 +116,23 @@
       margin-left: -10px;
       width: 100%;
     }
+    .sidebar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
     .border-top{
       background-color: rgb(126, 127, 131);
       border: solid 3px rgba(42, 28, 172, 0.15);
     }
     .flex-shrink-0{
       background-color: rgba(22, 25, 207, 0.1);
-            border: solid rgba(0, 0, 0, 0.15);
-            border-width: 1px 0;
-            box-shadow: inset 0 .5em 1.5em rgba(13, 13, 14, 0.1), inset 0 .125em .5em rgba(18, 18, 19, 0.15);
+  border: solid rgba(0, 0, 0, 0.15);
+  border-width: 1px 0;
+  box-shadow: inset 0 .5em 1.5em rgba(13, 13, 14, 0.1), inset 0 .125em .5em rgba(18, 18, 19, 0.15);
+  width: 200px;
+  height: 100%;
+  overflow: auto;
     }
     div {
             --bd-violet-bg: #712cf9;

@@ -2,16 +2,13 @@
   <div class="main-container">
     <div class="sidebar">
       <PageHeader/>
-
     </div>
     <div class="router-view">
       <router-view/>
     </div>
-
   </div>
   <PageFooter/>
 </template>
-
 
 <script>
 import PageHeader from '@/views/common/PageHeader.vue'
@@ -27,21 +24,29 @@ export default {
 </script>
 <style>
 .main-container {
-  display: flex;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  grid-template-columns: auto 1fr;
+  height: 100vh;
 
 }
 
 .sidebar {
+  grid-row: 1 / -1;
+  width: 200px;
   display: flex;
   flex-direction: column;
-  width: 200px;
+  justify-content: space-between;
 }
 
 .router-view {
-  flex-grow: 1;
+  grid-row: 1;
+  grid-column: 2;
   padding: 1rem;
-
 }
 
-
+PageFooter {
+  grid-row: 2;
+  grid-column: 2;
+}
 </style>

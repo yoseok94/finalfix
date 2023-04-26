@@ -1,15 +1,29 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import SalaryrRetrieve from '@/views/accounting/SalaryrRetrieve.vue';
+import SalaryManagement from '@/views/accounting/SalaryManagement.vue';
+import RevenueRetrieve from '@/views/accounting/RevenueRetrieve.vue';
+import SlipStatement from '@/views/accounting/SlipStatement.vue';
 
-
-const routes = [
+const youngkwangRoutes = [
   {
-    
+    path: '/accounting/salary',
+    name: 'SalaryrRetrieve',
+    component: SalaryrRetrieve,
   },
-]
+  {
+    path: '/accounting/management',
+    name: 'SalaryManagement',
+    component: SalaryManagement,
+  },
+  {
+    path: '/accounting/revenue',
+    name: 'RevenueRetrieve',
+    component: RevenueRetrieve,
+  },
+  {
+    path: '/accounting/statement',
+    name: 'SlipStatement',
+    component: SlipStatement,
+  },
+];
 
-const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
-  routes
-})
-
-export default router
+export default youngkwangRoutes;

@@ -2,20 +2,14 @@
   <div class="dashboard">
     <div class="dashboard-row">
       <div class="dashboard-column">
-<<<<<<< HEAD
          공지사항
         </div>
-=======
-        공지사항
-      </div>
->>>>>>> master
       <div class="dashboard-column">
         이벤트페이지
       </div>
     </div>
     <div class="dashboard-row">
       <div class="dashboard-column">
-<<<<<<< HEAD
         영업계획표(켈린더)
       </div>
       <div class="dashboard-column">
@@ -28,21 +22,9 @@
  <script>
  
  </script>
-=======
-        영업 계획표(켈린더)
-      </div>
-      <div class="dashboard-column">
-        매출 그래프(월별, 일별)
-      </div>
-    </div>
-  </div>
-</template>
->>>>>>> master
 
-<script>
-</script>
+ <style>
 
-<style>
 .dashboard {
   display: flex;
   flex-direction: column;
@@ -65,4 +47,5 @@
   border: 3px dashed red;
   overflow: auto;
 }
+
 </style>
