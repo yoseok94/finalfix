@@ -16,8 +16,8 @@
             <transition name="accordion">
             <div class="collapse" ref="accordion1" id="admin-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 관리</a></li>
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 관리</a></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 관리</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 관리</router-link></li>
               </ul>
             </div>
           </transition>
@@ -30,8 +30,8 @@
             <transition name="accordion">
             <div class="collapse" ref="accordion2" id="notice-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항</a></li>
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">이벤트</a></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">이벤트</router-link></li>
               </ul>
             </div>
           </transition>
@@ -44,9 +44,9 @@
             <transition name="accordion">
             <div class="collapse" ref="accordion3" id="management-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 이동</a></li>
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 조회</a></li>
-                <li><a href="#" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 신청</a></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 이동</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 조회</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 신청</router-link></li>
               </ul>
             </div>
           </transition>
@@ -59,10 +59,10 @@
             <transition name="accordion">
             <div class="collapse" ref="accordion4" id="hr-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">근태 신청</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">근태 관리</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">근태 현황 조회</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">신규 사원 등록</a></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 신청</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 관리</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 현황 조회</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">신규 사원 등록</router-link></li>
               </ul>
             </div>
           </transition>
@@ -75,12 +75,11 @@
             <transition name="accordion">
             <div class="collapse" ref="accordion5" id="sales-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">영업계획</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">거래처 관리</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">거래 명세서 처리</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">수주 작성 및 조회</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">영업 지출 결의서</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">작성 및 조회</a></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">영업계획</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">거래 명세서 처리</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">수주 작성 및 조회</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">영업 지출 결의서</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">작성 및 조회</router-link></li>
               </ul>
             </div>
           </transition>
@@ -93,16 +92,17 @@
             <transition name="accordion">
             <div class="collapse" ref="accordion6" id="accounting-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">급여 조회</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">급여 관리</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">매출 조회</a></li>
-                <li><a href="#" class="link-dark d-inline-flex text-decoration-none rounded">회계 전표 조회</a></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 관리</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출 조회</router-link></li>
+                <li><router-link to="/" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회계 전표 조회</router-link></li>
+
               </ul>
             </div>
           </transition>
           </li>
           <li class="border-top my-3"></li>
-          <button type="button" class="btn btn-outline-light me-2" style="background-color:blueviolet">Login</button>
+          <router-link to="/login"  class="btn btn-outline-light me-2" style="background-color:blueviolet">Login</router-link>
         </ul>
       </div>
     </template>
