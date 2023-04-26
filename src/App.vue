@@ -1,17 +1,18 @@
 <template>
+  <div class="main-container">
+    <div class="sidebar">
+      <PageHeader/>
 
-    <div class="row">
-      <div class="col-auto">
-        <PageHeader/> <!-- header component -->
-      </div>
-  
-        <router-view/> <!-- refers to the area where the page movement will be displayed -->
-  
     </div>
-  
-    <PageFooter/> <!-- Footer component -->
+    <div class="router-view">
+      <router-view/>
+    </div>
 
+  </div>
+  <PageFooter/>
 </template>
+
+
 <script>
 import PageHeader from '@/views/common/PageHeader.vue'
 import PageFooter from '@/views/common/PageFooter.vue'
@@ -25,5 +26,22 @@ export default {
 }
 </script>
 <style>
+.main-container {
+  display: flex;
+
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 200px;
+}
+
+.router-view {
+  flex-grow: 1;
+  padding: 1rem;
+
+}
+
 
 </style>

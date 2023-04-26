@@ -28,6 +28,7 @@
 .dashboard {
     display: flex;
     flex-direction: row;
+
 }
 .dashboard-row {
   display: flex;
@@ -36,7 +37,10 @@
   align-content: center;
   align-items: center;
   justify-content: center;
-}
 
+}
+.dashboard-column {
+  border: 3px dashed red;
+}
 
 </style>
