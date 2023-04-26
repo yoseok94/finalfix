@@ -93,10 +93,10 @@
             <transition name="accordion">
             <div class="collapse" ref="accordion6" id="accounting-collapse">
               <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><router-link to="/accounting/salary" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</router-link></li>
+                <li><router-link to="/accounting/salaryretrieve" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</router-link></li>
                 <li><router-link to="/accounting/management" class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 관리</router-link></li>
-                <li><router-link to="/accounting/revenue" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출 조회</router-link></li>
-                <li><router-link to="/accounting/statement" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회계 전표 조회</router-link></li>
+                <li><router-link to="/accounting/revenueretrieve" class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출 조회</router-link></li>
+                <li><router-link to="/accounting/slipretrieve" class="link-body-emphasis d-inline-flex text-decoration-none rounded">회계 전표 조회</router-link></li>
 
               </ul>
             </div>

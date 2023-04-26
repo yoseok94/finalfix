@@ -1,5 +1,5 @@
 <template>
-        <span>SalaryrRetrieve</span>
+        <span>SlipStatement.vue</span>
 
 </template>
     
