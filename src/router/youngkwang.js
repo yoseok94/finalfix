@@ -1,11 +1,14 @@
-// 급여 조회
+// 급여 조회 - v
 import SalaryrRetrieve from '@/views/accounting/SalaryrRetrieve.vue';
+// 급여명세서 작성하기
+import PayStub from '@/views/accounting/PayStub.vue';
 // 급여명세서 작성하기
 import PayStubWrite from '@/views/accounting/PayStubWrite.vue';
 // 급여명세서 보내기
 import PayStubSend from '@/views/accounting/PayStubSend.vue';
-// 급여 관리
-import SalaryManagement from '@/views/accounting/SalaryManagement.vue';
+// 급여 관리 - v
+import SalaryManagement1 from '@/views/accounting/SalaryManagement1.vue';
+import SalaryManagement2 from '@/views/accounting/SalaryManagement2.vue';
   // 수당 리스트 
 import WageList from '@/views/accounting/WageList.vue';
   // 공제 리스트 
@@ -27,6 +30,11 @@ const youngkwangjs = [
     component: SalaryrRetrieve,
   },
   {
+    path: '/accounting/stub',
+    name: 'PayStub',
+    component: PayStub,
+  },
+  {
     path: '/accounting/stubwrite',
     name: 'PayStubWrite',
     component: PayStubWrite,
@@ -37,9 +45,14 @@ const youngkwangjs = [
     component: PayStubSend,
   },
   {
-    path: '/accounting/management',
-    name: 'SalaryManagement',
-    component: SalaryManagement,
+    path: '/accounting/management1',
+    name: 'SalaryManagement1',
+    component: SalaryManagement1,
+  },
+  {
+    path: '/accounting/management2',
+    name: 'SalaryManagement2',
+    component: SalaryManagement2,
   },
   {
     path: '/accounting/wageList',

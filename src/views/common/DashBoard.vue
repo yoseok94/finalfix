@@ -51,7 +51,7 @@ export default {
         width: 'auto',
       },
       title: {
-      text: '2023년 월 매출 그래프 (100만원 단위)',
+      text: '2023년 월 매출 그래프',
       align: 'center',
       offsetY: 10,
         style: {
@@ -122,9 +122,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 50%;
+  width: 100%;
   height: 100%;
-  border: 3px dashed red;
   overflow: hidden;
 }
 
