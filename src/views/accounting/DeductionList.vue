@@ -1,11 +1,9 @@
 <template>
-<div>안녕하세요</div>
+    <span>SlipStatement.vue</span>
+
 </template>
 
 <script>
-
 </script>
-
 <style scoped>
-
 </style>
