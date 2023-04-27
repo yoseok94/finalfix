@@ -5,12 +5,12 @@
          공지사항
         </div>
       <div class="dashboard-column">
-        이벤트페이지
+        영업계획표(켈린더)
       </div>
     </div>
     <div class="dashboard-row">
       <div class="dashboard-column">
-        영업계획표(켈린더)
+       이벤트페이지
       </div>
       <div class="dashboard-column">
         <div>
