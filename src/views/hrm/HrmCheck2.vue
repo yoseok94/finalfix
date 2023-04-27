@@ -1,61 +1,131 @@
 <template>
-<div class="maindiv">
-<div class="hrmcheck-mainbox">
-  <div class="hrmlist">
+<div class="hrmlist">
+    <div>
     <h2 align="center">근태 현황 조회</h2>
       <div class="table-responsive">
         <div class="seldiv"> 기간 선택 : 
         <input type="date" name="searchdate">
-        <button @click="fnexceldown()">Excel</button>
+        &nbsp; 부서 선택 : 
+        <select name="search_key" >
+              <option value="deptname">A파트부서</option>
+            </select>
         <button @click="fnhrmsearch()">조회</button>
       </div>
       <hr class="my-4">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
+              <th scope="col">ID</th>
+              <th scope="col">Name</th>
               <th scope="col">근무일자</th>
               <th scope="col">출근시간</th>
               <th scope="col">퇴근시간</th>
               <th scope="col">구분</th>
+              <th scope="col">사유</th>
             </tr>
           </thead>
           <tbody>
             <tr>
+              <td>s01</td>
+              <td>김이름</td>
               <td>23.01.01</td>
               <td>AM 08:26</td>
               <td>PM 06:30</td>
               <td>정상</td>
+              <td> </td>
             </tr>
-          </tbody> 
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+            <tr>
+              <td>s01</td>
+              <td>김이름</td>
+              <td>23.01.01</td>
+              <td>AM 08:26</td>
+              <td>PM 06:30</td>
+              <td>정상</td>
+              <td> </td>
+            </tr>
+          </tbody>
         </table>
-    </div>
-  </div>
-  <div>
-  <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
-    <div class="col-auto d-none d-lg-block">
-          <img class="bd-placeholder-img" width="200" height="250" src="@/assets/images/noneprofile.jpg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+        <div class="btndiv">
+            <button @click="fnexceldown()">Excel</button>
         </div>
-        <div class="col p-4 d-flex flex-column position-static">
-          <strong class="d-inline-block mb-2 text-success"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">My Profile</font></font></strong>
-          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ID : s01</font></font></h4><br>
-          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Name : 김이름</font></font></h4><br>
-          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">담당부서 : A파트부서</font></font></h4><br>
-        </div>
-      </div>
-  <div>
-    <div id="chart">
-      <apexchart type="pie" width="380" :options="chartOptions" :series="series"></apexchart>
     </div>
-  </div>
-  </div>
   </div>
 </div>
 </template>
 
   <script>
-  import { ref } from 'vue';
-  import VueApexCharts from 'vue3-apexcharts';
-  
   export default {
     methods:{
       fnexceldown(){
@@ -65,54 +135,19 @@
 
       },
     },
-    components: {
-      apexchart: VueApexCharts,
-    },
-    setup() {
-      const series = ref([70, 20, 10]);
-  
-      const chartOptions = ref({
-        chart: {
-          width: 380,
-          type: 'pie',
-        },
-        labels: ['정상출근', '연차사용', '지각/조퇴'],
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200,
-              },
-              legend: {
-                position: 'bottom',
-              },
-            },
-          },
-        ],
-      });
-  
-      return {
-        series,
-        chartOptions,
-      };
-    },
-  };
-  </script>
+}
+</script>
   
 <style scoped>
+.btndiv{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: right;
+    margin-right: 30px;
+}
 .seldiv{
   margin-top: 15px;
   margin-left: 30px;
-}
-.maindiv{
-    display: flex;
-  flex-direction: column;
-  height: calc(100vh - 60px);
-  overflow: auto;
-}
-.hrmcheck-mainbox {
- display: flex;
 }
 
 #chart {
@@ -121,8 +156,10 @@
   margin: 35px auto;
 }
   .hrmlist{
-  margin: 0 auto;
-  width: 50%!important;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: auto;
 }
 .head-btn{
   text-align: right;

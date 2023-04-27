@@ -1,11 +1,14 @@
 <template>
+<div class="maindiv">
+<div>
 <div class="inoutform">
   <h2 align="center">근태 등록</h2>
-  <div class="head-btn">
+  <div class="table-responsive">
+    <div class="head-btn">
     <button @click="fnincheck()">출근</button>
     <button @click="fnoutcheck()">퇴근</button>
   </div>
-  <div class="table-responsive">
+  <hr class="my-4">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
@@ -64,12 +67,14 @@
             <hr class="mb-4">
             </div>
             <div class="mb-3">
-            <label for="hrmetc">기타 사유 : </label><br><textarea style="width:500px; height:300px;"></textarea>
+            <label for="hrmetc">기타 사유 : </label><br><textarea style="width:500px; height:auto;"></textarea>
             &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
             <button @onclick="fnhrmsub()">등록</button>
             </div>
           </span>
         </div>
+</div>
+</div>
 </template>
 
 <script>
@@ -77,6 +82,12 @@ export default {}
 </script>
 
 <style scoped>
+.maindiv{
+    display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: auto;
+}
 .col-md-8{
   border: #87888a80 1px solid;
   border-radius: 20px;
@@ -86,6 +97,8 @@ export default {}
 }
 .head-btn{
   text-align: right;
+  margin-top: 15px;
+  margin-right: 30px;
 }
 .table-responsive{
     border: #87888a80 1px solid;

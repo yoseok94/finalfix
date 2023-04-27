@@ -1,5 +1,6 @@
 <template>
 <div class="hrmlist">
+  <div>
     <h2 align="center">근태 신청자 리스트</h2>
     <div class="table-responsive">
         <table class="table table-striped table-sm">
@@ -127,6 +128,7 @@
         </table>
     </div>
 </div>
+</div>
 </template>
 
 <script>
@@ -135,6 +137,10 @@ export default {}
 
 <style scoped>
 .hrmlist{
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: auto;
   margin: 0 auto;
 }
 .table-responsive{

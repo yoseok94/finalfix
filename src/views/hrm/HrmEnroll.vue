@@ -1,5 +1,6 @@
 <!-- PageAbout.vue -->
 <template>
+<div class="maindiv">
     <div class="col-md-7 col-lg-8">
         <h2 align="center">신규사원등록</h2>
         <form class="needs-validation" novalidate="">
@@ -14,8 +15,10 @@
                         &nbsp; Profile image &nbsp;</span>
                 </div>
             </div>
+            &nbsp;&nbsp;
             <img id="showprofile" :src="previewImage"
             style="height: 90px; width: 110px; border-radius: 25px; border: 2px solid #D1D1D1;" alt="profile"/>
+            &nbsp;
             <div class="col-sm-7">
                 <div class="input-group has-validation">
                     <input type="file" class="form-control" id="hrmimage" v-onchange="fnchangeImg(this)">
@@ -137,7 +140,7 @@
                 <input type="radio" id="userlev"> 사원
               </div>
             </div>
-          </div>
+          
           <br>
           
           
@@ -146,8 +149,10 @@
             <button class="btn btn-primary1" type="button" v-on:click="fnmemberin">등록</button>
           </div>
           <hr class="my-4">
+          </div>
         </form>
       </div>
+</div>
 </template>
   
 
@@ -185,6 +190,12 @@ export default {
 </script>
 
 <style>
+.maindiv{
+    display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: auto;
+}
 .col-md-7{
     margin: 0 auto;
 }

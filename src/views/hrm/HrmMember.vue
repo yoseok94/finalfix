@@ -1,10 +1,15 @@
 <template>
 <div class="hrmlist">
+  <div>
     <h2 align="center">사원정보 리스트</h2>
-    <div class="head-btn">
-    <button @click="fnincheck()">사원등록</button>
-  </div>
     <div class="table-responsive">
+      <div>
+      <div class="head-btn">
+      <button @click="fnexceldown()">Excel</button>
+      <button @click="fnincheck()">사원등록</button>
+      </div>
+      </div>
+      <hr class="my-4">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
@@ -127,7 +132,7 @@
               </td>
             </tr>
           </tbody>
-          <div>
+          <div class="searchdiv">
             <select name="search_key" >
               <option value="ID">ID</option>
               <option value="Name">Name</option>
@@ -137,6 +142,7 @@
           </div> 
         </table>
     </div>
+</div>
 </div>
 </template>
 
@@ -152,17 +158,30 @@ export default {
       this.$router.push({
         path: './hrmup'
       })
-    }
+    },
+    fnexceldown(){
+
+      },
   }
 }
 </script>
 
 <style scoped>
 .hrmlist{
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 60px);
+  overflow: auto;
   margin: 0 auto;
 }
 .head-btn{
-  text-align: right;
+  text-align:right;
+  margin-top: 15px;
+  margin-right: 30px;
+}
+.searchdiv{
+  margin-top: 15px;
+  margin-left: 30px;
 }
 .table-responsive{
     border: #87888a80 1px solid;

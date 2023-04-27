@@ -4,6 +4,7 @@ import HrmOrder from "@/views/hrm/HrmOrder.vue"
 import HrmMember from "@/views/hrm/HrmMember.vue"
 import HrmEnroll from "@/views/hrm/HrmEnroll.vue"
 import HrmUpdate from "@/views/hrm/HrmUpdate.vue"
+import HrmCheck2 from "@/views/hrm/HrmCheck2.vue"
 
 
 const yoseokjs = [
@@ -11,6 +12,11 @@ const yoseokjs = [
     path: "/hrm/hrmcheck",
     name: "HrmCheck",
     component: HrmCheck
+  },
+  {
+    path: "/hrm/hrmcheck2",
+    name: "HrmCheck2",
+    component: HrmCheck2
   },
   {
     path: "/hrm/hrmlist",
