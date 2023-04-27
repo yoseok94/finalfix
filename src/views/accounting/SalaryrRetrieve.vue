@@ -1,4 +1,6 @@
 <template>
+  <h1 style="text-align: center;">급여 조회 페이지</h1>
+  
     <div>
       <!-- 검색 바 구역 -->
       <div class="search_container">

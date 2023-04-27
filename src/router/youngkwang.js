@@ -1,6 +1,6 @@
 // 급여 조회 - v
 import SalaryrRetrieve from '@/views/accounting/SalaryrRetrieve.vue';
-// 급여명세서 작성하기
+// 급여명세서 조회하기
 import PayStub from '@/views/accounting/PayStub.vue';
 // 급여명세서 작성하기
 import PayStubWrite from '@/views/accounting/PayStubWrite.vue';

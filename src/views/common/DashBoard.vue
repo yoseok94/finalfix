@@ -39,7 +39,7 @@ export default {
   setup() {
     const series = ref([
       {
-        name: '단위 - 100만원',
+        name: '단위 100만원 ',
         data: [20, 40, 100, 50, 220, 100, 175, 223, 115, 272, 5, 42 ],
       },
     ]);

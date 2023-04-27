@@ -1,12 +1,8 @@
 <template>
+   <h1 style="text-align: center;">급여 관리 페이지</h1>
     <div>
         <div class="salary_menu-bar">
-            <div class="salary_menu-bar-tab">
-                <!-- 하위메누 구분 텝 -->
-                <router-link to="/accounting/management1"><input type="button" value="급여조회"></router-link>
-                <router-link to="/accounting/management2"><input type="button" value="급여관리"></router-link>
-            </div>
-              <!-- 검색 바 구역 -->
+
             <div class="salary_menu-bar-search">
                 <input class="search_container-bar" type="text" placeholder="Search" v-model="searchTerm" size="50"/>
                 <button class="search_container-btn" @click="search">검색</button>
@@ -30,7 +26,7 @@
       <tbody>
         <tr v-for="salaryItem in displayedItems" :key="salaryItem.employeeID">
           <td><input type="checkbox" /></td>
-          <td>{{ salaryItem.employeeCode }}</td>
+          <td><router-link to="/accounting/management2">{{ salaryItem.employeeCode }}</router-link></td>
           <td>{{ salaryItem.employeeName }}</td>
           <td>{{ salaryItem.deptName }}</td>
           <td>{{ salaryItem.hireDate }}</td>
@@ -126,7 +122,7 @@
 
   .salary_menu-bar {
     display: flex;
-    justify-content:space-between;
+    justify-content:flex-end;
     margin-bottom: 1rem;
     margin-top: 5px;
   }
