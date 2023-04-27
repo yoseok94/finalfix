@@ -1,8 +1,11 @@
 <template>
-<span>RevenueRetrieve</span>
-           </template>
-               
-           <script>
-           </script>
-           <style scoped>
-           </style>
+<div>안녕하세요</div>
+</template>
+
+<script>
+
+</script>
+
+<style scoped>
+
+</style>

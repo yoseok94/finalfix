@@ -79,6 +79,7 @@
     //   };
     // },
     data() {
+      // 임의의 데이터 값 넣어주기 ! 추후 백엔드 연결 후 수정해줘야함.
       return {
         searchTerm: "",
         currentPage: 1,
