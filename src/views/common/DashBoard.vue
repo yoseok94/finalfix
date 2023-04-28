@@ -27,6 +27,8 @@
       </div>
     </div>
     <div class="dashboard-row">
+      <div class="dashboard-column">
+
   <div class="dashboard-column">     
     <table class="w3-table-all">
       <thead>
@@ -56,6 +58,7 @@
           </div>
         </div>
     </div>
+  </div>
   </div>
 </template>
  <script>

@@ -1,6 +1,7 @@
 <template>
+  <br>
    <h1 style="text-align: center;">급여 관리 페이지</h1>
-    <div>
+   <br>
         <div class="salary_menu-bar">
 
             <div class="salary_menu-bar-search">
@@ -15,12 +16,12 @@
       <thead>
         <tr>
           <th></th>
-          <th style="text-align: center;">사원코드</th>
-          <th style="text-align: center;">사원명</th>
-          <th style="text-align: center;">부서명</th>
-          <th style="text-align: center;">입사일자</th>
-          <th style="text-align: center;">지급급액</th>
-          <th style="text-align: center;">급여이체현황</th>
+          <th>사원코드</th>
+          <th>사원명</th>
+          <th>부서명</th>
+          <th>입사일자</th>
+          <th>지급급액</th>
+          <th>급여이체현황</th>
         </tr>
       </thead>
       <tbody>
@@ -43,7 +44,7 @@
       </div>
   
       <!-- 페이지네이션 구역 -->
-      <div class="pagination">
+      <!-- <div class="pagination">
         <button @click="previousPage"></button>
         <button
           v-for="page in totalPages"
@@ -54,7 +55,15 @@
         </button>
         <button @click="nextPage">></button>
       </div>
-    </div>
+    </div> -->
+    <div class="pagination">
+  <a href="#" class="page active">1</a>
+  <a href="#" class="page">2</a>
+  <a href="#" class="page">3</a>
+  <a href="#" class="page">4</a>
+  <a href="#" class="page">5</a>
+  <a href="#" class="page">></a>
+</div>
   </template>
   
   <script>
@@ -167,4 +176,24 @@
     margin: 0 0.5rem;
   }
 
+  .page {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+  .page.active,
+.page:hover {
+  background-color: #0077cc;
+  color: #fff;
+}
+th  {
+  padding: 0.5rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}
 </style>

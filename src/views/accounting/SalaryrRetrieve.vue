@@ -1,7 +1,7 @@
 <template>
+  <br>
   <h1 style="text-align: center;">급여 조회 페이지</h1>
-  
-    <div>
+  <br>
       <!-- 검색 바 구역 -->
       <div class="search_container">
         <input class="search_container-bar" type="text" placeholder="Search" v-model="searchTerm" size="50"/>
@@ -56,7 +56,7 @@
       </div>
   
       <!-- 페이지네이션 구역 -->
-      <div class="pagination">
+      <!-- <div class="pagination">
         <button @click="previousPage"></button>
         <button
           v-for="page in totalPages"
@@ -66,8 +66,16 @@
           {{ page }}
         </button>
         <button @click="nextPage">></button>
-      </div>
-    </div>
+      </div> -->
+      <div class="pagination">
+  <a href="#" class="page active">1</a>
+  <a href="#" class="page">2</a>
+  <a href="#" class="page">3</a>
+  <a href="#" class="page">4</a>
+  <a href="#" class="page">5</a>
+  <a href="#" class="page">></a>
+</div>
+
   </template>
   
   <script>
@@ -185,4 +193,20 @@
   .pagination button {
     margin: 0 0.5rem;
   }
+
+  .page {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+  .page.active,
+.page:hover {
+  background-color: #0077cc;
+  color: #fff;
+}
 </style>

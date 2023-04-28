@@ -20,7 +20,7 @@ import SlipStatementRetrieve from '@/views/accounting/SlipStatementRetrieve.vue'
 // 회계전표 작성
 import SlipStatementWrite from '@/views/accounting/SlipStatementWrite.vue';
 // 거래처 등록
-import AddCustomer from '@/views/accounting/AddCustomer.vue';
+import SearchCustomer from '@/views/accounting/SearchCustomer.vue';
 
 
 const youngkwangjs = [
@@ -81,9 +81,9 @@ const youngkwangjs = [
   },
   {
   
-    path: '/accounting/addcustomer',
-    name: 'AddCustomer',
-    component: AddCustomer,
+    path: '/accounting/searchcustomer',
+    name: 'SearchCustomer',
+    component: SearchCustomer,
   }
   //
 ];
