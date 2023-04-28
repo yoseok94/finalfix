@@ -28,13 +28,13 @@
        </tr>
      </thead>
      <tbody>
-          <tr v-for="paymentItem in displayedItems" :key="paymentItem.itemCode">
-               <td><input class="table-input" type="text" v-model="paymentItem.itemCode" /></td>
-               <td><input class="table-input" type="text" v-model="paymentItem.itemName" /></td>
-               <td><input class="table-input" type="text" v-model="paymentItem.displayOrder" /></td>
-               <td><input class="table-input" type="text" v-model="paymentItem.paymentType" /></td>
-               <td><input class="table-input" type="text" v-model="paymentItem.calculation" /></td>
-               <td><input class="table-input" type="text" v-model="paymentItem.calculationMethod" /></td>
+          <tr v-for="allowanceItem in displayedItems" :key="allowanceItem.itemCode">
+               <td><input class="table-input" type="text" v-model="allowanceItem.itemCode" /></td>
+               <td><input class="table-input" type="text" v-model="allowanceItem.itemName" /></td>
+               <td><input class="table-input" type="text" v-model="allowanceItem.displayOrder" /></td>
+               <td><input class="table-input" type="text" v-model="allowanceItem.paymentType" /></td>
+               <td><input class="table-input" type="text" v-model="allowanceItem.calculation" /></td>
+               <td><input class="table-input" type="text" v-model="allowanceItem.calculationMethod" /></td>
    </tr>
  </tbody>
    </table>
