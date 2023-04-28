@@ -1,4 +1,5 @@
 <template>
+<div class="maindiv">
 <main class="form-signin w-100 m-auto">
     <img class="mb-4" src="@/assets/images/Sefix.png" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please Sign In</h1>
@@ -17,6 +18,7 @@
     <p class="mt-5 mb-3 text-muted">© 2022–2023</p>
     </div>
 </main>
+</div>
 </template>
 
 <script>
@@ -34,7 +36,9 @@ export default {
 </script>
 
 <style scoped>
-
+.maindiv{
+  overflow: auto;
+}
 .form-floating{
   width: 300px;
   margin: 0 auto;
