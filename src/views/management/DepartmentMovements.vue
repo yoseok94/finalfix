@@ -197,13 +197,10 @@
 
 <style scoped>
 .main {
-    float: center;
-    justify-content: center;
-    align-items:center;
-    min-height: 100vh;
-    font-size: 20px;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    overflow: auto;
 }
 .top {
     display: table;

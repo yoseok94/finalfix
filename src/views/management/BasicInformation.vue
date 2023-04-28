@@ -1,50 +1,32 @@
 <template>
     <div class="main">
-        <table class="tableline">
-            <thead class="theadline">
-                <tr>
-                    <th>ID</th>
-                    <th>성명</th>
-                    <th>연락처</th>
-                    <th>주소</th>
-                    <th>E-mail</th>
-                    <th>출생년도</th>
-                    <th>입사일자</th>
-                    <th>부서발령일자</th>
-                    <th>현부서</th>
-                    <th>직급</th>
-                    <th>기타</th>
-                    <div class="image"><img src="" alt="Image"></div><hr>
-                </tr>
-            </thead>
-            <tbody class="tbodyline">
-                <tr>
-                    <td>s01</td>
-                    <td>김신촌</td>
-                    <td>010-1111-2222</td>
-                    <td>서울 마포구 백범로 8</td>
-                    <td>user01@ict.com</td>
-                    <td>1985.09.04</td>
-                    <td>2004.06.04</td>
-                    <td>2014.07.09</td>
-                    <td>부서1</td>
-                    <td>사원</td>
-                    <td>2022년 최고의 사원</td>
-                </tr>
-            </tbody>
-        </table>
+        <div class="row g-0 border rounded overflow-hidden flex-md-row mb-4 shadow-sm h-md-250 position-relative">
+            <div class="col-auto d-none d-lg-block">
+            <img class="bd-placeholder-img" width="200" height="250" src="@/assets/images/noneprofile.jpg" role="img" preserveAspectRatio="xMidYMid slice" focusable="false">
+            </div>
+            <div class="col p-4 d-flex flex-column position-static">
+            <strong class="d-inline-block mb-2 text-success"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">My Profile</font></font></strong>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ID : s01</font></font></h4><br>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Name : 김신촌</font></font></h4><br>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">연락처 : 010-1111-2222</font></font></h4><br>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">주소 : 서울 마포구 백범로 8</font></font></h4><br>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">E-mail : user01@ict.com</font></font></h4><br>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">출생년도 : 1985.09.04</font></font></h4><br>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">입사일자 : 2004.06.04</font></font></h4><br>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">현부서 : 2004.06.04</font></font></h4><br>
+            <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">직급 : 사원</font></font></h4><br>
+
+            </div>
+        </div>
     </div>
 </template>
 
 <style scoped>
 .main {
-    float: center;
-    justify-content: center;
-    align-items:center;
-    min-height: 100vh;
-    font-size: 20px;
-    margin: 0;
-    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 60px);
+    overflow: auto;
 }
 
 .image {
