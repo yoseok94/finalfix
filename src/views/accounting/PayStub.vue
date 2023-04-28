@@ -1,4 +1,7 @@
 <template>
+     <br>
+     <h1 style="text-align: center;">급여 명세서</h1>
+     <br>
     <table>
         <tr>
             <td>사원코드</td>

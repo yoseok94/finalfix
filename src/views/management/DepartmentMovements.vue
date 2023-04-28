@@ -219,12 +219,12 @@
 
 .lineup {
     position: absolute;
-  top: 0; left: 8.5%;
+  top: 0; left: 215px;
 }
 
 .search {
     position: absolute;
-  top: 0; right: 58%;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
+  top: 0; left: 680px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
 }
 
 .tableline {

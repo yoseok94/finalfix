@@ -30,39 +30,43 @@
               </div>
             </div>
         </div>
-        <div class="dashboard-row">
-            <div class="dashboard-column">
-                <table class="w3-table-all">
-                    <thead>
-                    <h2>이벤트</h2>
-                    <tr>
-                        <th>번호</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>등록일시</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(row, event_no) in elist" :key="event_no">
-                        <td>{{ row.event_no }}</td>
-                        <td>
-                            <router-link to="/event/detail">{{ row.event_title }}</router-link>
-                        </td>
-                        <td>{{ row.event_author }}</td>
-                        <td>{{ row.created_at }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="dashboard-column">
-                <div>
-                    <div id="chart">
-                        <apexchart type="bar" :options="chartOptions" :series="series"></apexchart>
-                    </div>
-                </div>
+      <div class="dashboard-column">
+        영업계획표(켈린더)
+      </div>
+    </div>
+    <div class="dashboard-row">
+      <div class="dashboard-column">
+
+  <div class="dashboard-column">     
+    <table class="w3-table-all">
+      <thead>
+        <h2>이벤트</h2>
+        <tr>
+          <th>번호</th>
+          <th>제목</th>
+          <th>작성자</th>
+          <th>등록일시</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(row, event_no) in elist" :key="event_no">          
+          <td>{{ row.event_no }}</td>
+          <td><router-link to="/event/detail">{{ row.event_title }}</router-link></td>
+          <td>{{ row.event_author }}</td>
+          <td>{{ row.created_at }}</td>
+        </tr>
+      </tbody>
+    </table>
+      </div>
+      <div class="dashboard-column">
+        <div>
+          <div id="chart">
+            <apexchart type="bar" :options="chartOptions" :series="series"></apexchart>
             </div>
         </div>
     </div>
+  </div>
+  </div>
 </template>
 <script>
 
