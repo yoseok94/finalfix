@@ -1,0 +1,69 @@
+Accounting (회계관리 DataBase)
+
+METHOD 에서 필요한거
+
+1. DeductionList - 공제리스트
+- 공제항목코드 : DEDUCTIONITEMCODE
+- 공제항목이름 : DEDUCTIONITEMNAME
+- 공제금액      : DEDUCTIONAMOUNT
+- 표시순서	 : DISPLAYORDER
+- 계산식	  : CALCULATION
+- 산출방법      : CALCULATIONMETHOD
+
+2. WageList - 수당리스트
+- 수당항목코드 : ALLOWANCEITEMCODE
+- 수당항목이름 : ALLOWANCEITEMNAME
+- 수당금액      : ALLOWANCEAMOUNT
+- 표시순서	 : DISPLAYORDER
+- 지급유형      : PAYMENTTYPE
+- 계산식	  : CALCULATION
+- 산출방법      : CALCULATIONMETHOD
+
+3. PayStube - 급여명세서
+- 사원코드      : EMPLOYEECODE
+- 사원명   	  : EMPLOYEENAME
+- 부서명         : DEPTNAME
+- 직급명         : JOBNAME
+- 입사일         : HIREDATE
+- 지급일자       : PAYMENTDATE
+- 지급총액      : TOTALAMOUNTPAID
+- 공제총액     : TOTALDEDUCTION
+- 실지급액     : ACTUALPAYMENTAMOUNT
+- 근로일수     : WORKDAYS
+- 총근로시간수 : TOTALWORKHOURS
+
+<td><input class="table-input" type="text" v-model="allowanceItem.itemCode" /></td>
+<td><input class="table-input" type="text" v-model="allowanceItem.itemName" /></td>
+<td><input class="table-input" type="text" v-model="allowanceItem.displayOrder" /></td>
+<td><input class="table-input" type="text" v-model="allowanceItem.paymentType" /></td>
+<td><input class="table-input" type="text" v-model="allowanceItem.calculation" /></td>
+<td><input class="table-input" type="text" v-model="allowanceItem.calculationMethod" /></td>
+
+4. PayStubSend.vue - 급여명세서 발송
+- 이메일발송주소 : EMPLOYEEEMAIL
+- 참조자           : 그냥 PARAM 으로 넘겨주기
+- 메일 제목        : 
+- 메일 내용        :
+- 첨부파일         : ORIGINFILENAME
+- 수신자명        : EMPLOYEENAME
+** 이메일 API 사용법 보고 수정
+
+5. PayStubWrite - 급여명세서 작성
+- 사원코드        : EMPLOYEECODE
+- 사원이름        : EMPLOYEENAME
+- 부서명           : DEPTNAME
+- 직급명           : JOBNAME
+- 입사일           : HIREDATE
+- 지급일자        : PAYMENTDATE
+- 지급총액        : TOTALAMOUNTPAID
+- 공제총액        : TOTALDEDUCTION
+- 실지급액       : ACTUALPAYMENTAMOUNT
+- 근로일수       : WORKDAYS
+- 총근로시간수 : TOTALWORKHOURS
+- 수당항목이름 : ALLOWANCEITEMNAME
+- 지급유형      : PAYMENTTYPE
+- 수당금액      : ALLOWANCEAMOUNT
+- 산출방법      : CALCULATIONMETHOD
+
+6. RevenueRetrieve - 매출조회페이지
+- 일시           : 
