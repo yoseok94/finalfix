@@ -13,7 +13,7 @@
                     <option value="manager">담당자명</option>
                 </select>
                 <input type="text" class="department-manager-input" v-model="filterValue"/>
-                <button @click="search">조회</button>
+                <button class="btn-search" @click="search">조회</button>
             </div>
             <div class="list-container">
                 <div class="plan-list">
@@ -74,17 +74,20 @@
             </div>
         </div>
         <div class="right-section">
-            <div class="filter-container"> <!-- 수정 -->
-                <label for="filter-calendar">캘린더</label>
-            </div>
             <div class="calendar-container"> <!-- 추가 -->
-                <div id="calendar"></div>
+                <BusinessPlanCalendar></BusinessPlanCalendar>
             </div>
         </div>
     </div>
 </template>
+
 <script>
+import BusinessPlanCalendar from "@/views/business/BusinessPlanCalendar.vue";
+
 export default {
+    components: {
+        BusinessPlanCalendar
+    },
     data() {
         return {
             startDate: '',
@@ -176,7 +179,7 @@ export default {
         },
         goToPlanDetail(planId) {
             // 선택한 계획의 상세 정보로 이동하는 로직
-            this.$router.push({ name: 'businessPlanDetail', params: { planId } });
+            this.$router.push({name: 'businessPlanDetail', params: {planId}});
         }
 
     },
@@ -192,11 +195,6 @@ export default {
             return plans;
         }
     },
-    mounted() {
-        // 캘린더 초기화
-        const calendarEl = document.getElementById('calendar');
-        calendarEl.innerHTML = 'Calendar';
-    }
 };
 </script>
 
@@ -325,6 +323,24 @@ export default {
 
 .plan-list tr:hover {
     background-color: #f5f5f5;
+}
+
+.selectdelete,
+.btn-add,
+.btn-edit,
+.btn-excel,
+.btn-search,
+.btn-approve,
+.btn-reject,
+.btn-send {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
 </style>
