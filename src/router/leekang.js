@@ -6,7 +6,7 @@ import BusinessDisbursement from "@/views/business/BusinessDisbursement.vue"
 import BusinessDisbursementAdd from "@/views/business/BusinessDisbursementAdd.vue"
 import BusinessDisbursementEdit from "@/views/business/BusinessDisbursementEdit.vue"
 import BusinessPerformance from "@/views/business/BusinessPerformance.vue"
-// import BusinessPlanCalendar from "@/views/business/BusinessPlanCalendar.vue"
+import BusinessDisbursementAdminSend from "@/views/business/BusinessDisbursementAdminSend.vue"
 
 import BusinessPartnerList from '@/views/business/BusinessPartnerList.vue';
 import BusinessPartnerAdd from '@/views/business/BusinessPartnerAdd.vue';
@@ -17,9 +17,6 @@ import TradingStatementEdit from '@/views/business/TradingStatementEdit.vue';
 import OrdersList from '@/views/business/OrdersList.vue';
 import OrdersAdd from '@/views/business/OrdersAdd.vue';
 import OrdersEdit from '@/views/business/OrdersEdit.vue';
-
-
-
 
 
 const leekangjs = [
@@ -49,6 +46,11 @@ const leekangjs = [
     component: BusinessDisbursement
   },
   {
+    path: '/businessDisbursementAdminSend',
+    name: 'BusinessDisbursementAdminSend',
+    component: BusinessDisbursementAdminSend
+  },
+  {
     path: '/businessDisbursementAdd',
     name: 'BusinessDisbursementAdd',
     component: BusinessDisbursementAdd
@@ -63,11 +65,6 @@ const leekangjs = [
     name: 'BusinessDisbursementEdit',
     component: BusinessDisbursementEdit
   },
-  // {
-  //   path: '/businessPlanCalendar',
-  //   name: 'BusinessPlanCalendar',
-  //   component: BusinessPlanCalendar
-  // },
 
 
   {
