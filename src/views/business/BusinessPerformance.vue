@@ -20,14 +20,13 @@
                 <input type="date" id="end-date" class="calendar" v-model="endDate"/>
                 <label for="client">거래처</label>
                 <input type="text" id="client" class="department-manager-input" v-model="client"/>
-                <label for="department">부서</label>
-                <input type="text" id="department" class="department-manager-input" v-model="department"/>
-                <label for="position">직책</label>
-                <input type="text" id="position" class="department-manager-input" v-model="position"/>
-                <label for="manager">담당자</label>
-                <input type="text" id="manager" class="department-manager-input" v-model="manager"/>
-
-                <button @click="search">조회</button>
+                <label for="department-manager">부서/담당자</label>
+                <select class="department-manager" v-model="filterType">
+                    <option value="">선택 해주세요</option>
+                    <option value="department">부서명</option>
+                    <option value="manager">담당자명</option>
+                </select>
+                <button class="btn-search" @click="search">조회</button>
             </div>
             <div class="plan-list">
                 <table>
@@ -72,6 +71,11 @@
         <a href="#" class="page">5</a>
         <a href="#" class="page">></a>
     </div>
+                <div class="common-buttons">
+                    <button class="btn-excel">엑셀</button>
+                    <button class="btn-print">인쇄</button>
+                </div>
+    
 </template>
 
 <script>
@@ -196,7 +200,7 @@ export default {
 }
 
 .left-section {
-    width: 70%;
+    width: 100%;
     margin-right: 20px;
 }
 
@@ -290,5 +294,25 @@ export default {
 .plan-list tr:hover {
     background-color: #f5f5f5;
 }
+
+.selectdelete,
+.btn-add,
+.btn-edit,
+.btn-excel,
+.btn-search,
+.btn-approve,
+.btn-reject,
+.btn-print,
+.btn-send {
+  padding: 8px 16px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-left: 8px;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
 
 </style>

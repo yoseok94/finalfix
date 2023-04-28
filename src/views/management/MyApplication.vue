@@ -15,8 +15,8 @@
                 </button>
             </form>
         </div>
-
-        <table class="tableline">
+<br>
+        <table class="w3-table-all">
             <thead class="theadline">
                 <tr>
                     <th>부서명</th>
@@ -182,7 +182,7 @@
             </tfoot> -->
         </table>
         <span class="buttonbro">
-            <button>신청하기</button>
+            <button class="w3-button w3-round w3-blue-gray">신청하기</button>
         </span>
     </div>
 </template>
@@ -191,57 +191,19 @@
 
 <style scoped>
 .main {
-    float: center;
-    justify-content: center;
-    align-items:center;
-    min-height: 100vh;
-    font-size: 20px;
-    margin: 0;
-    padding: 0;
+    overflow: auto;
 }
 .top {
-    display: table;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    vertical-align: baseline;
-    font-style: normal;
-    zoom: 1;
-    height: 46px;
-    width: 364px;
-}
-
-.lineup {
-    position: absolute;
-  top: 0; left: 620px;
-}
-
-.search {
-    position: absolute;
-  top: 0; left: 620px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-}
-
-.tableline {
-    display: table-cell;
+    display: flex;
+    justify-content: flex-end;
 }
 
 .theadline {
     background-color: rgb(203, 201, 201);
 }
 
-th {
-    border-bottom: solid black 2px;
-    padding: 0px;
-}
-
-td {
-    border-bottom: solid black 2px;
-    padding: 17px;
-}
-
 .buttonbro {
-    position: absolute;
-    left: 880px;
-    bottom: 200px;
+    display: flex;
+    justify-content: flex-end;
 }
 </style>

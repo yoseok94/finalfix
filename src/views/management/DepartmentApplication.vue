@@ -21,8 +21,8 @@
                 </button>
             </form>
         </div>
-
-        <table class="tableline">
+        <br>
+        <table class="w3-table-all">
             <thead class="theadline">
                 <tr>
                     <th>부서명</th>
@@ -190,12 +190,15 @@
             <td></td>
                 </tr> -->
             </tbody>
-            <tfoot>
-                <tr>
-                    <td>1 2 3</td>
-                </tr>
-            </tfoot>
         </table>
+        <div class="pagination">
+        <a href="#" class="page active">1</a>
+        <a href="#" class="page">2</a>
+        <a href="#" class="page">3</a>
+        <a href="#" class="page">4</a>
+        <a href="#" class="page">5</a>
+        <a href="#" class="page">></a>
+        </div>
     </div>
 </template>
 
@@ -203,51 +206,40 @@
 
 <style scoped>
 .main {
-    float: center;
-    justify-content: center;
-    align-items:center;
-    min-height: 100vh;
-    font-size: 20px;
-    margin: 0;
-    padding: 0;
+    overflow: auto;
 }
 .top {
-    display: table;
-    margin: 0;
-    padding: 0;
-    border: 0;
-    vertical-align: baseline;
-    font-style: normal;
-    zoom: 1;
-    height: 46px;
-    width: 364px;
-}
-
-.lineup {
-    position: absolute;
-  top: 0; left: 215px;
-}
-
-.search {
-    position: absolute;
-  top: 0; left: 700px;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                   
-}
-
-.tableline {
-    display: table-cell;
+    display: flex;
+    justify-content: space-between;
 }
 
 .theadline {
     background-color: rgb(203, 201, 201);
 }
+a {
+    text-decoration: none;
+  }
 
-th {
-    border-bottom: solid black 2px;
-    padding: 0px;
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-td {
-    border-bottom: solid black 2px;
-    padding: 17px;
+.page {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.page.active,
+.page:hover {
+  background-color: #0077cc;
+  color: #fff;
 }
 </style>
