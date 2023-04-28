@@ -1,17 +1,18 @@
 <template>
   <div class="dept-detail-container">
-    <div class="dept-detail">
-       
-    <div class="dept-contents">
-         <h3 style="text-align: center;">부서 등록</h3>
-         <hr>
-  <label for="dept_id">1. 부서코드</label>
-  <input type="text" v-model="dept_id" class="w3-input w3-border" id="dept_id" placeholder="부서코드 입력">
-  <br>
-  <label for="dept_name" v-if="idx === undefined">2. 부서명</label>
-  <input type="text" v-model="dept_name" class="w3-input w3-border" id="dept_name" placeholder="부서명 입력" v-if="idx === undefined">
-</div>
-
+    <div class="dept-detail">      
+      <div class="dept-contents">
+        <h3 style="text-align: center;">부서 등록</h3>
+        <hr>
+        <label for="dept_id">1. 부서코드</label>
+        <input type="text" v-model="dept_id" class="w3-input w3-border" id="dept_id" placeholder="부서코드 입력">
+        <br>
+        <label for="dept_name" v-if="idx === undefined">2. 부서명</label>
+        <input type="text" v-model="dept_name" class="w3-input w3-border" id="dept_name" placeholder="부서명 입력" v-if="idx === undefined">
+        <br>
+        <label for="dept_id">3. 상품코드</label>
+        <input type="text" v-model="product_id" class="w3-input w3-border" id="product_id" placeholder="상품코드 입력">
+      </div>
       <div class="common-buttons">
         <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">등록</button>
         <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">이전</button>
@@ -27,8 +28,9 @@ return {
 requestBody: this.$route.query,
 dept_no: this.$route.query.dept_no,
 
-  dept_id: '',
   dept_name: '',
+  dept_id: '',
+  product_id: '',
   created_at: ''
 }
 
@@ -42,8 +44,9 @@ if (this.dept_no !== undefined) {
 this.$axios.get(this.$serverUrl + '/dept/' + this.dept_no, {
 params: this.requestBody
 }).then((res) => {
-this.dept_id = res.data.dept_id
 this.dept_name = res.data.dept_name
+this.dept_id = res.data.dept_id
+this.product_id = res.data.product_id
 this.created_at = res.data.created_at
 }).catch((err) => {
 console.log(err)
