@@ -51,7 +51,8 @@ span {
 
 .buttonbro {
     position: absolute;
-    left: 31%
+    left: 780px;
+    bottom: 300px;
 }
 .textbox{
     border: 1.3px solid black;
