@@ -1,4 +1,7 @@
 <template>
+  <div class="bradcumb-title text-center">
+     <h2>부서 이동</h2>
+  </div>
     <div class="main">
         <div class="top">
             <select class="lineup">
