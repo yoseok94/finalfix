@@ -1,81 +1,74 @@
 <template>
-
   <div class="bradcumb-title text-center">
-                    <h2>부서 관리</h2>
-                </div>
-
-
-
-  <div class="dept-list">
-    <!-- 검색필드추가 -->
-<div>
-  <div class="d-inline-flex align-items-center">
-    <div class="form-group mr-2">
-      <!--카테고리-->
-      <select id="category" v-model="search_key" class="form-control">
-        <option value="">- 카테고리 -</option>
-        <option value="category">부서코드</option>
-        <option value="category">부서명</option>
-      </select>
-    </div>
-    <div class="form-group mr-2">
-      <input type="text" id="category" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="입력란">
-    </div>
-    <div class="form-group mr-1">
-    <button class="form-control" type="button"  @click="fnPage()">조회</button>
-    </div>
-    <div class="form-group mr-1">
-    <button class="form-control" type="button"  @click="fnDelete()">삭제</button>
-    </div>
-    <div class="form-group mr-1">
-    <button class="form-control" type="button"  @click="fnUpdate()">수정</button>
-    </div>
+    <h2>부서 관리</h2>
   </div>
-</div>
+  <div class="dept-list">
+  <!-- 검색필드추가 -->
+    <div>
+      <div class="d-inline-flex align-items-center">
+        <div class="form-group mr-2">
+          <!--카테고리-->
+          <select id="category" v-model="search_key" class="form-control">
+            <option value="">- 카테고리 -</option>
+            <option value="category">부서코드</option>
+            <option value="category">부서명</option>
+          </select>
+        </div>
+        <div class="form-group mr-2">
+          <input type="text" id="category" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="입력란">
+        </div>
+        <div class="form-group mr-1">
+          <button class="form-control" type="button"  @click="fnPage()">조회</button>
+        </div>
+        <div class="form-group mr-1">
+          <button class="form-control" type="button"  @click="fnDelete()">삭제</button>
+        </div>
+        <div class="form-group mr-1">
+          <button class="form-control" type="button"  @click="fnUpdate()">수정</button>
+        </div>
+      </div>
+    </div>
     <br>
     <table class="w3-table-all">
       <thead>
         <tr>
           <th></th>
           <th>번호</th>
-          <th>부서 코드</th>
           <th>부서명</th>
+          <th>부서 코드</th>
+          <th>상품코드</th>
           <th>등록일시</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(row, dept_no) in list" :key="dept_no">
           <div class="d-flex justify-content-center">
-          <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="same-address">
-            <label></label>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="same-address">
+              <label></label>
+            </div>
           </div>
-        </div>
-          <td>{{ row.dept_no }}</td>
-          <td>{{ row.dept_id }}</td>
-          <td>{{ row.dept_name }}</td>
-          <td>{{ row.created_at }}</td>
+            <td>{{ row.dept_no }}</td>
+            <td>{{ row.dept_name }}</td>
+            <td>{{ row.dept_id }}</td>
+            <td>{{ row.product_id }}</td>
+            <td>{{ row.created_at }}</td>
         </tr>
       </tbody>
     </table>
-
-
-<div class="common-buttons">
+    <div class="common-buttons">
       <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">부서등록</button>
     </div>
-
     <div class="pagination">
-  <a href="#" class="page active">1</a>
-  <a href="#" class="page">2</a>
-  <a href="#" class="page">3</a>
-  <a href="#" class="page">4</a>
-  <a href="#" class="page">5</a>
-  <a href="#" class="page">></a>
-</div>
-    
+      <a href="#" class="page active">1</a>
+      <a href="#" class="page">2</a>
+      <a href="#" class="page">3</a>
+      <a href="#" class="page">4</a>
+      <a href="#" class="page">5</a>
+      <a href="#" class="page">></a>
+    </div>  
   </div>
 </template>
-
 <script>
 export default {
   data() {
@@ -95,62 +88,72 @@ export default {
       this.list = [
         {
           dept_no: 1,
-          dept_id: 'J1',
           dept_name: '상품마켓팅',
+          dept_id: 'J1',
+          product_id: 'A1111',
           created_at: '2022-04-25',
         },
         {
           dept_no: 2,
-          dept_id: 'J2',
           dept_name: '상품홍보',
+          dept_id: 'J2',
+          product_id: 'A1111',
           created_at: '2022-04-24',
         },
         {
           dept_no: 3,
-          dept_id: 'J3',
           dept_name: '상품운영',
+          dept_id: 'J3',
+          product_id: 'A1111',
           created_at: '2022-04-23',
         },
          {
           dept_no: 4,
-          dept_id: 'J4',
           dept_name: '상품기획',
+          dept_id: 'J4',
+          product_id: 'A1111',
           created_at: '2022-04-23',
         },
            {
           dept_no: 5,
-          dept_id: 'E1',
           dept_name: '상품인사',
+          dept_id: 'E1',
+          product_id: 'A1111',
           created_at: '2022-04-23',
         },
            {
           dept_no: 6,
-          dept_id: 'E2',
           dept_name: '상품회계',
+          dept_id: 'E2',
+          product_id: 'A1111',
           created_at: '2022-04-23',
         },
            {
           dept_no: 7,
-          dept_id: 'G1',
           dept_name: '경영전략',
+          dept_id: 'G1',
+          product_id: 'A1111',
           created_at: '2022-04-23',
         },
            {
           dept_no: 8,
-          dept_id: 'G2',
           dept_name: '재무/회계',
+          dept_id: 'G2',
+          product_id: 'A1111',
           created_at: '2022-04-23',
         },
            {
           dept_no: 9,
-          dept_id: 'G3',
           dept_name: '경영지원',
+          dept_id: 'G3',
+          product_id: 'A1111',
           created_at: '2022-04-23',
         },
            {
           dept_no: 10,
-          dept_id: 'G4',
           dept_name: '품질',
+          dept_id: 'G4',
+          product_id: 'A1111',
           created_at: '2022-04-23',
         },
       ];
