@@ -1,4 +1,6 @@
 <template>
+<div class="maindiv">
+    <div>
     <div class="dashboard">
         <div class="dashboard-row">
             <div class="dashboard-column">
@@ -25,15 +27,13 @@
                 </table>
             </div>
             <div class="dashboard-column">
+            <div class="calendardiv">
               <div class="calendar-container" style="width: 500px; height: 500px;">
                 <BusinessPlanCalendar></BusinessPlanCalendar>
               </div>
             </div>
+            </div>
         </div>
-      <div class="dashboard-column">
-        영업계획표(켈린더)
-      </div>
-    </div>
     <div class="dashboard-row">
       <div class="dashboard-column">
 
@@ -67,6 +67,9 @@
     </div>
   </div>
   </div>
+  </div>
+</div>
+</div>
 </template>
 <script>
 
@@ -243,6 +246,12 @@ export default {
 </script>
 
 <style>
+.maindiv{
+    overflow: auto;
+}
+.calendardiv{
+    margin-top: 150px;
+}
 
 .dashboard {
     display: flex;
