@@ -1,42 +1,67 @@
-import DepartmentMovements from "@/views/management/DepartmentMovements";
-import DepartmentInquiry from "@/views/management/DepartmentInquiry";
-import DepartmentApplication from "@/views/management/DepartmentApplication";
-import ApplicationDetails from "@/views/management/ApplicationDetails";
-import MyApplication from "@/views/management/MyApplication";
-import BasicInformation from "@/views/management/BasicInformation";
+import DeptMove from "@/views/management/DeptMove";
+import PersonalDetails from "@/views/management/PersonalDetails";
+import AccessRestriction from "@/views/management/AccessRestriction";
+import DeptInquiry from "@/views/management/DeptInquiry";
+import DeptAppList from "@/views/management/DeptAppList";
+import MyMovingHistory from "@/views/management/MyMovingHistory";
+import AppDetailsCheck from "@/views/management/AppDetailsCheck";
+import CheckMyMoveDetails from "@/views/management/CheckMyMoveDetails";
+import WriteReasonApp from "@/views/management/WriteReasonApp";
+import WriteReasonMove from "@/views/management/WriteReasonMove";
+
 
 
 const junheejs = [
   {
     path: "/management/deptmove",
-    name: "DepartmentalMovements",
-    component: DepartmentMovements,
+    name: "DeptMove",
+    component: DeptMove,
   },
   {
-    path: "/management/deptinq",
-    name: "DepartmentInquiry",
-    component: DepartmentInquiry,
+    path: "/management/personaldetails",
+    name: "PersonalDetails",
+    component: PersonalDetails,
   },
   {
-    path: "/management/deptapp",
-    name: "DepartmentApplication",
-    component: DepartmentApplication,
+    path: "/management/accessrestriction",
+    name: "AccessRestriction",
+    component: AccessRestriction,
   },
   {
-    path: "/management/appdetail",
-    name: "ApplicationDetails",
-    component: ApplicationDetails,
+    path: "/management/deptinquiry",
+    name: "DeptInquiry",
+    component: DeptInquiry,
   },
   {
-    path: "/management/myapp",
-    name: "MyApplication",
-    component: MyApplication,
+    path: "/management/deptapplist",
+    name: "DeptAppList",
+    component: DeptAppList,
   },
   {
-    path: "/management/basicinfo",
-    name: "BasicInformation",
-    component: BasicInformation,
+    path: "/management/mymovinghistory",
+    name: "MyMovingHistory",
+    component: MyMovingHistory,
   },
+  {
+    path: "/management/appdetailscheck",
+    name: "AppDetailsCheck",
+    component: AppDetailsCheck,
+  },
+  {
+    path: "/management/checkmymovedetails",
+    name: "CheckMyMoveDetails",
+    component: CheckMyMoveDetails,
+  },
+  {
+    path: "/management/writereasonapp",
+    name: "WriteReasonApp",
+    component: WriteReasonApp,
+  },
+  {
+    path: "/management/writereasonmove",
+    name: "WriteReasonMove",
+    component: WriteReasonMove,
+  }
 ]
 
 export default junheejs
