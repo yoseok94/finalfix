@@ -16,73 +16,103 @@
     <hr>
     <table class="add-business-form">
       <tr>
+        <td>거래처 순번</td>
+        <td colspan="3"><input type="number" v-model="accountno"/></td>
+      </tr>
+      <tr>
         <td>거래처명</td>
-        <td colspan="3"><input type="text" v-model="account_name" /></td>
+        <td colspan="3"><input type="text" v-model="accountname"/></td>
       </tr>
       <tr>
         <td>대표자명</td>
-        <td colspan="3"><input type="text" v-model="representative_name" /></td>
+        <td colspan="3"><input type="text" v-model="representativename"/></td>
       </tr>
       <tr>
         <td>전화번호</td>
-        <td colspan="3"><input type="text" v-model="account_phone" /></td>
+        <td colspan="3"><input type="text" v-model="accountphone"/></td>
       </tr>
       <tr>
         <td>팩스</td>
-        <td colspan="3"><input type="text" v-model="account_fax" /></td>
+        <td colspan="3"><input type="text" v-model="accountfax"/></td>
       </tr>
       <tr>
         <td>사업장 주소</td>
-        <td colspan="3"><input type="text" v-model="account_address" /></td>
+        <td colspan="3"><input type="text" v-model="accountaddress"/></td>
       </tr>
       <tr>
         <td>담당자 명</td>
-        <td colspan="3"><input type="text" v-model="manager_name" /></td>
+        <td colspan="3"><input type="text" v-model="managername"/></td>
       </tr>
       <tr>
         <td>담당자 연락처</td>
-        <td colspan="3"><input type="text" v-model="manager_phone" /></td>
+        <td colspan="3"><input type="text" v-model="managerphone"/></td>
       </tr>
       <tr>
         <td>이메일</td>
-        <td colspan="3"><input type="text" v-model="manager_email" /></td>
+        <td colspan="3"><input type="email" v-model="manageremail"/></td>
       </tr>
     </table>
   </div>
   <hr>
   <div class="button-container">
-    <button class="btn-add">추가</button>
+    <button class="btn-add" @click="submitForm">추가</button>
     <button class="btn-cancel" @click="clearForm">취소</button>
   </div>
 </template>
    
 <script>
+import axios from 'axios';
 export default {
   // 취소 버튼 누르면 입력 값 초기화
   data() {
     return {
-      account_name: "",
-      representative_name: "",
-      account_phone: "",
-      account_fax: "",
-      account_address: "",
-      manager_name: "",
-      manager_phone: "",
-      manager_email: ""
+      accountno: "",
+      accountname: "",
+      representativename: "",
+      accountphone: "",
+      accountfax: "",
+      accountaddress: "",
+      managername: "",
+      managerphone: "",
+      manageremail: ""
     };
   },
   methods: {
     clearForm() {
-      this.account_name = "";
-      this.representative_name = "";
-      this.account_phone = "";
-      this.account_fax = "";
-      this.account_address = "";
-      this.manager_name = "";
-      this.manager_phone = "";
-      this.manager_email = "";
+      this.accountno = "";
+      this.accountname = "";
+      this.representativename = "";
+      this.accountphone = "";
+      this.accountfax = "";
+      this.accountaddress = "";
+      this.managername = "";
+      this.managerphone = "";
+      this.manageremail = "";
+    },
+    submitForm() {
+      const accountData = {
+      accountno: this.accountno,
+      accountname: this.accountname,
+      representativename: this.representativename,
+      accountphone: this.accountphone,
+      accountfax: this.accountfax,
+      accountaddress: this.accountaddress,
+      managername: this.managername,
+      managerphone: this.managerphone,
+      manageremail: this.manageremail
+    };
+    console.log('Sending the following data:', accountData);
+    
+    axios.post('/businessPartnerAdd', accountData)
+      .then(response => {
+        console.log(response);
+        this.clearForm();
+      })
+      .catch(error => {
+        console.error(error);
+      });
     }
-  }
+  },
 };
 </script>
   
@@ -156,6 +186,5 @@ export default {
 .btn-cancel:hover {
   background-color: #0056b3;
 }
-
-/* 여기에 스타일을 추가하세요 */</style>
+</style>
   
