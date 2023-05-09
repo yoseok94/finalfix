@@ -29,7 +29,7 @@ const yoseokjs = [
     component: HrmOrder
   },
   {
-    path: "/hrm/hrmember",
+    path: "/hrm/hrmmember",
     name: "HrmMember",
     component: HrmMember
   },

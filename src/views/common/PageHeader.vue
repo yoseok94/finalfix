@@ -63,7 +63,7 @@
                 <li><router-link to="/hrm/hrmorder" class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 신청</router-link></li>
                 <li><router-link to="/hrm/hrmlist" class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 관리</router-link></li>
                 <li><router-link to="/hrm/hrmcheck2" class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 현황 조회</router-link></li>
-                <li><router-link to="/hrm/hrmember" class="link-body-emphasis d-inline-flex text-decoration-none rounded">신규 사원 등록</router-link></li>
+                <li><router-link to="/hrm/hrmmember" class="link-body-emphasis d-inline-flex text-decoration-none rounded">신규 사원 등록</router-link></li>
               </ul>
             </div>
           </transition>
