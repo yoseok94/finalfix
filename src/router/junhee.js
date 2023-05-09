@@ -3,9 +3,9 @@ import PersonalDetails from "@/views/management/PersonalDetails";
 import AccessRestriction from "@/views/management/AccessRestriction";
 import DeptInquiry from "@/views/management/DeptInquiry";
 import DeptAppList from "@/views/management/DeptAppList";
-import MyMovingHistory from "@/views/management/MyMovingHistory";
+import MovingHistory from "@/views/management/MovingHistory";
 import AppDetailsCheck from "@/views/management/AppDetailsCheck";
-import CheckMyMoveDetails from "@/views/management/CheckMyMoveDetails";
+import MoveDetailsCheck from "@/views/management/MoveDetailsCheck";
 import WriteReasonApp from "@/views/management/WriteReasonApp";
 import WriteReasonMove from "@/views/management/WriteReasonMove";
 
@@ -38,9 +38,9 @@ const junheejs = [
     component: DeptAppList,
   },
   {
-    path: "/management/mymovinghistory",
-    name: "MyMovingHistory",
-    component: MyMovingHistory,
+    path: "/management/movinghistory",
+    name: "MovingHistory",
+    component: MovingHistory,
   },
   {
     path: "/management/appdetailscheck",
@@ -48,9 +48,9 @@ const junheejs = [
     component: AppDetailsCheck,
   },
   {
-    path: "/management/checkmymovedetails",
-    name: "CheckMyMoveDetails",
-    component: CheckMyMoveDetails,
+    path: "/management/movedetailscheck",
+    name: "MoveDetailsCheck",
+    component: MoveDetailsCheck,
   },
   {
     path: "/management/writereasonapp",
