@@ -81,7 +81,7 @@ import VueApexCharts from 'vue3-apexcharts';
 import BusinessPlanCalendar from "@/views/business/BusinessPlanCalendar.vue";
 
 export default {
-  
+  name: 'DashBoard',
     data() {
         return {
             nlist: [],
