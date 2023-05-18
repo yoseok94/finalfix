@@ -17,7 +17,8 @@
               <th scope="col">NAME</th>
               <th scope="col">재직여부</th>
               <th scope="col">담당부서</th>
-              <th scope="col">회원정보처리</th>
+              <th scope="col">사원정보처리</th>
+              <th scope="col">재직상태변경</th>
             </tr>
           </thead>
           <tbody>
@@ -27,9 +28,10 @@
               <td>{{ row.empstatus }}</td>
               <td>{{ row.deptname }}</td>
               <td>
-              <button @click="fnhrmup()">수정</button>
-              &nbsp;
-              <button @click="fnhrmde()">퇴직</button>
+              <button @click="fnhrmup(row.empno)">수정</button>
+              </td>
+              <td>
+              <button @click="fnhrmde(row.empno, row.empstatus)">변경</button>
               </td>
             </tr>
           </tbody>
@@ -95,7 +97,9 @@ export default {
         let endPage = this.paging.endPage;
         for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
         return pageNumber;
-      }
+      },
+      empno: '',
+      empstatus: "" 
     }
   },
   mounted() {
@@ -140,14 +144,39 @@ export default {
         path: './hrmenroll'
       })
     },
-    fnhrmup(){
+    fnhrmup(empno){
+      this.requestBody.empno = empno
       this.$router.push({
-        path: './hrmup'
+        path: './hrmup',
+        query: this.requestBody
       })
     },
     fnexceldown(){
 
-      },
+    },
+    fnhrmde(empno, empstatus){
+      if(empstatus == "N"){
+        this.form = {
+          "empno": empno,
+          "empstatus": "Y"
+        }
+      }else{
+        this.form = {
+          "empno": empno,
+          "empstatus": "N"
+        }
+      }
+
+      this.$axios.patch(this.$serverUrl + "/hrm/employeequit", this.form)
+      .then(() => {
+          alert('재직상태가 변경되었습니다.')
+          this.fnhrmlist();
+      }).catch((err) => {
+        if (err.message.indexOf('Network Error') > -1) {
+          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+        }
+      })
+    },
   }
 }
 </script>

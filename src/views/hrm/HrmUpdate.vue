@@ -17,12 +17,12 @@
                 </div>
             </div>
             &nbsp;&nbsp;
-            <img id="showprofile" :src="previewImage"
+            <img id="showprofile"
             style="height: 90px; width: 110px; border-radius: 25px; border: 2px solid #D1D1D1;" alt="profile"/>
             &nbsp;
             <div class="col-sm-7">
                 <div class="input-group has-validation">
-                    <input type="file" class="form-control" id="hrmimage" v-onchange="fnchangeImg(this)">
+                    <input type="file" class="form-control" id="hrmimage">
                 </div>
             </div>
             
@@ -36,7 +36,7 @@
             </div>
             <div class="col-sm-10">
                 <div class="input-group has-validation">
-                    <input type="text" class="form-control" id="userid">
+                    <input type="text" class="form-control" :value="empid" readonly>
                 </div>
             </div>
 
@@ -50,7 +50,7 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                    <input type="password" class="form-control" id="password">
+                    <input type="password" class="form-control" :value="emppw">
               </div>
             </div>
 
@@ -64,7 +64,7 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="text" class="form-control" id="username">
+                <input type="text" class="form-control" :value="empname">
               </div>
             </div>
 
@@ -78,7 +78,7 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="tel" class="form-control" id="userphone">
+                <input type="tel" class="form-control" :value="empphone">
               </div>
             </div>
 
@@ -93,7 +93,7 @@
             <div class="col-sm-10">
               <div class="input-group has-validation">
                 <button @onclick="fnaddress()">우편번호 검색</button> &nbsp;
-                <input type="text" class="form-control" id="address" placeholder="상세 주소 입력">
+                <input type="text" class="form-control" :value="empaddress">
               </div>
             </div>
 
@@ -107,8 +107,7 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">  
-                <span class="input-group-text"> 생년월일 </span>
-                <input type="date" class="form-control" id="birth">
+                <input type="text" class="form-control" :value="empbirth" readonly>
               </div>
             </div>
 
@@ -122,12 +121,21 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <span class="input-group-text"> 입사일 </span>
-                <input type="date" class="form-control" id="enrolldate">
+                <input type="text" class="form-control" :value="emphiredate" readonly>
               </div>
             </div>
-
             
+            <hr class="my-4">
+            <div class="col-sm-2">
+              <div class="input-group has-validation">  
+                <span class="input-group-text">&nbsp; 담당부서 &nbsp;</span>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group has-validation">
+                <input type="text" class="form-control" :value="deptname" readonly>
+              </div>
+            </div>
             
             <hr class="my-4">
             <div class="col-sm-2">
@@ -137,8 +145,7 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="radio" id="userlev"> 임원 &nbsp;
-                <input type="radio" id="userlev"> 사원
+                <input type="text" class="form-control" :value="emplevel" readonly>
               </div>
             </div>
           </div>
@@ -160,31 +167,74 @@
 <script>
 
 export default {
-    
+    //id pw name phone address birth hiredate 사원구분
     data(){
         return{
-            previewImageData: null
+          requestbody: this.$route.query,
+          empno: this.$route.query.empno,
+          empid: '',
+          emppw: '',
+          empname: '',
+          empphone: '',
+          empaddress:'',
+          empbirth:'',
+          emphiredate:'',
+          emplevel:'',
+          deptname:''
         }
         
     },
+    mounted(){
+      this.fnmember();
+    },
     methods: {
-        fnmemberup(){
-            this.$router.push({
-                path: "./hrmember",
-            })
-        },
-        fnchangeImg(input) {
-            const reader = new FileReader();
-            if (input.files && input.files[0]) {
-                reader.onload = e => {
-                    const previewImage = document.getElementById("showprofile");
-                    previewImage.src = e.target.result;
-                    console.log(previewImage.src);
-                }
-                //이미지 읽기
-                reader.readAsDataURL(input.files[0]);
+      fnmember(){
+        if (this.empno !== undefined) {
+          this.$axios.get(this.$serverUrl + "/hrm/hrmup/" + this.empno,{
+            params: this.requestBody
+          })
+          .then((res) => {
+            this.empno = res.data.empno
+            this.empid = res.data.empid
+            this.emppw = res.data.emppw
+            this.empname = res.data.empname
+            this.empphone = res.data.empphone
+            this.empaddress = res.data.empaddress
+            this.empbirth = res.data.empbirth
+            this.emphiredate = res.data.emphiredate
+            this.deptname = res.data.deptname
+            if(res.data.emplevel == 3){
+              this.emplevel = "사원"
             }
+            if(res.data.emplevel == 2){
+              this.emplevel = "임원"
+            }
+          })
+          .catch((err) => {
+            if (err.message.indexOf("Network Error") > -1) {
+              alert("네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.");
+            }
+          });
         }
+      },
+      fnmemberup(){
+        if (this.empno !== undefined) {
+
+          this.$axios.patch(this.$serverUrl + "/hrm/hrmup/" + this.empno,{
+            params: this.requestBody
+          })
+          .then(() => {
+            this.$router.push({
+               path: "./hrmmember",
+           })
+          })
+          .catch((err) => {
+            if (err.message.indexOf("Network Error") > -1) {
+              alert("네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.");
+            }
+          });
+        }
+      }
     }
 }
 
