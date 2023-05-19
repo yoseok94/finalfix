@@ -83,8 +83,7 @@ import BusinessPlanCalendar from "@/views/business/BusinessPlanCalendar.vue";
 export default {
   name: 'DashBoard',
     data() {
-        return {
-            requestBody : this.$route.query,
+        return{
             nlist: [],
             elist: [],
 
@@ -93,7 +92,7 @@ export default {
         };
     },
     mounted() {
-        console.log("localStorage: " + localStorage);
+        
         this.fnGetList();
     },
     methods: {

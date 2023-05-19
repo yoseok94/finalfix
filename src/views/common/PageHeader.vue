@@ -104,12 +104,12 @@
           </transition>
           </li>
           <li class="border-top my-3"></li>
-          <template v-if="fnloginck() === 0">
+          <div v-if="token == 0">
           <router-link to="/login"  class="btn btn-outline-light me-2" style="background-color:blueviolet">Login</router-link>
-          </template>
-          <template v-elseif="fnloginck() === 1">
-          <button @onclick="fnlogout()"  class="btn btn-outline-light me-2" style="background-color:blueviolet">Login</button>
-          </template>
+          </div>
+          <div v-else-if="token == 1">
+          <button @click="fnlogout()"  class="btn btn-outline-light me-2" style="background-color:blueviolet">Logout</button>
+          </div>
         </ul>
       </div>
     </div>
@@ -182,30 +182,33 @@
 }
 </style>
 
-  <script>
+<script>
 export default {
-  mounted:{
-    
+  data(){
+    return{
+      token: ""
+    }
+  },
+  watch: {
+    '$route'() {
+      this.fnloginck();
+    }
   },
   methods: {
     fnloginck(){
-      if(localStorage.getItem('token') !== null){
-        return 1;
+      if(sessionStorage.getItem('token') !== null){
+        this.token = 1;
       }else{
-        return 0;
+        this.token = 0;
       }
+      console.log("token: " + this.token);
     },
     fnlogout(){
-      localStorage.removeItem("token");
-      localStorage.removeItem("emplevel");
-      localStorage.removeItem("empno");
-      alert("logout 처리되었습니다.")
+      sessionStorage.clear();
+      alert("logout 처리되었습니다.");
+      this.$router.go(0);
     },
-
-    // 메뉴바 터치해서 하위 아코디언 메뉴바를 열려고 할 때, 기존에 이미 열려있던 아코디언 메뉴바가 있을 시 그 메뉴바를 닫으면서 동시에 새로운 메뉴바를 열어주는 코드.
-    // But "show" 라는 것을 remove 해주는 것이기 때문에 한 번에 확! 확! 사라지는 문제점이 있었고, 그냥 대뜸 remove 해버리는것이라서 따로 CSS 에서 Transition 을 줘도 먹통이었음.
-    // 따라서 JavaScript 내에서 Timeout 을 설정해줌
-    closeAccordion(element) {
+    closeAccordion(element){
       element.style.height = element.scrollHeight + 'px';
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
@@ -215,7 +218,7 @@ export default {
 
       setTimeout(() => {
         element.classList.remove("show");
-      }, 300); 
+      }, 300);
     },
     toggleAccordion(refName) {
       for (const key in this.$refs) {
@@ -227,5 +230,5 @@ export default {
       }
     },
   },
-};
+}
 </script>
