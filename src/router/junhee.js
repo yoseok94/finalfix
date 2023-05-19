@@ -1,7 +1,6 @@
 import DeptMove from "@/views/management/DeptMove";
 import PersonalDetails from "@/views/management/PersonalDetails";
 import AccessRestriction from "@/views/management/AccessRestriction";
-import DeptInquiry from "@/views/management/DeptInquiry";
 import DeptAppList from "@/views/management/DeptAppList";
 import MovingHistory from "@/views/management/MovingHistory";
 import AppDetailsCheck from "@/views/management/AppDetailsCheck";
@@ -26,11 +25,6 @@ const junheejs = [
     path: "/management/accessrestriction",
     name: "AccessRestriction",
     component: AccessRestriction,
-  },
-  {
-    path: "/management/deptinquiry",
-    name: "DeptInquiry",
-    component: DeptInquiry,
   },
   {
     path: "/management/deptapplist",
