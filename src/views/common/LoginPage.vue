@@ -62,6 +62,10 @@ export default {
       }
     },
     login(){
+      if(this.password == "" || this.userId == ""){
+        alert("아이디 또는 비밀번호를 모두 입력해주세요.");
+        this.$router.go(0);
+      }else{
       axios.post("/login/", {
           empId: this.userId,
           emppw: this.password,
@@ -81,6 +85,7 @@ export default {
         }).catch((err) => {
           console.log(err);
         });
+      }
     },
   },
 
