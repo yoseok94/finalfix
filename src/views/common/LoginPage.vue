@@ -47,9 +47,15 @@ export default {
       this.$axios.get(this.$serverUrl + "/hrm/employeeinfo/" + this.empId
         ).then((res) => {
           this.requestBody = res.data
-          sessionStorage.setItem('empno', this.requestBody.empno)
-          sessionStorage.setItem('emplevel', this.requestBody.emplevel)
-          this.changepage();
+          if(this.password == this.requestBody.emppw && this.userId == this.requestBody.empId){
+            sessionStorage.setItem('empno', this.requestBody.empno)
+            sessionStorage.setItem('emplevel', this.requestBody.emplevel)
+          
+            this.changepage();
+          }else if(this.password != this.requestBody.emppw || this.userId != this.requestBody.empId){
+            alert("아이디 또는 비밀번호가 다릅니다. 다시 입력해주세요.");
+            this.$router.go(0);
+          }
         }).catch((err) => {
           console.log(err)
         });
