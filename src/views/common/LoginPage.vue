@@ -30,37 +30,77 @@ export default {
   name:'LoginPage',
   data() {
     return {
+      // employee: {
+      //   empno: "",
+      //   empId: "",
+      //   empname: "",
+      //   empphone: "",
+      //   empaddress: "",
+      //   empemail: "",
+      //   empbirth: "",
+      //   emphiredate: "",
+      //   emplevel: "",
+      //   empstatus: "",
+      //   deptname: "",
+      //   empannual: "",
+      //   empprofile: "",
+      // },
+      requestBody:{},
       loginSuccess: false,
       loginError: false,
       userId: "",
       password: "",
+      empId:"",
     };
   },
   methods: {
+    changepage(){
+      this.$router.push({
+        path: './',
+      })
+    },
+    loginok(){
+      if (this.empId !== undefined) {
+      this.$axios.get(this.$serverUrl + "/hrm/employeeinfo/" + this.empId
+        ).then((res) => {
+          this.requestBody = res.data
+          localStorage.setItem('empno', this.requestBody.empno)
+          localStorage.setItem('emplevel', this.requestBody.emplevel)
+          this.changepage();
+        }).catch((err) => {
+          console.log(err)
+        });
+      }
+    },
     login() {
       console.log("this.userId " + this.userId);
       console.log("this.password " + this.password);
 
-      axios
-        .post("/login/", {
+      axios.post("/login/", {
           empId: this.userId,
           emppw: this.password,
-        })
-        .then((res) => {
-          // console.log(res)
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'token',
+          }
+        }).then((res) => {
           if (res.status == 200) {
             console.log(res)
             this.loginSuccess = true
-            this.$router.push({name: 'DashBoard'})
+            localStorage.setItem('token', res.data.token);
+            console.log(localStorage)
+            this.empId = this.userId
+            this.loginok();
           }
-        })
-
-        .catch((err) => {
+        }).catch((err) => {
           console.log(err)
           err.loginError = true;
         });
     },
   },
+
 };
 </script>
 

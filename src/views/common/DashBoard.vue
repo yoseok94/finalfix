@@ -84,6 +84,7 @@ export default {
   name: 'DashBoard',
     data() {
         return {
+            requestBody : this.$route.query,
             nlist: [],
             elist: [],
 
@@ -92,6 +93,7 @@ export default {
         };
     },
     mounted() {
+        console.log("localStorage: " + localStorage);
         this.fnGetList();
     },
     methods: {
