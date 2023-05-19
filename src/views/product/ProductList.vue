@@ -1,44 +1,11 @@
 <template>
-
-                <div class="bradcumb-title text-center">
-                    <h2>상품 관리</h2>
-                </div>
-
-
-  <div class="product-list">
-   <!-- 검색필드추가 -->
-<div>
-  <div class="d-inline-flex align-items-center">
-    <div class="form-group mr-2">
-      <!--카테고리-->
-      <select id="category" v-model="search_key" class="form-control">
-        <option value="">- 카테고리 -</option>
-        <option value="category">매장용냉장고</option>
-        <option value="category">김치냉장고</option>
-        <option value="category">양문형냉장고</option>
-        <option value="category">일반냉장고</option>
-        <option value="category">건식냉장고</option>
-        <option value="category">다목적냉동고</option>
-        <option value="category">반찬냉장고</option>
-      </select>
-    </div>
-    <div class="form-group mr-2">
-      <!--상품명-->
-      
-      <input type="text" id="product_name" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="상품명 입력">
-    </div>
-    <div class="form-group mr-1">
-    <button class="form-control" type="button"  @click="fnPage()">조회</button>
-    </div>
-    <div class="form-group mr-1">
-    <button class="form-control" type="button"  @click="fnDelete()">삭제</button>
-    </div>
-    <div class="form-group mr-1">
-    <button class="form-control" type="button"  @click="fnUpdate()">수정</button>
-    </div>
+  <div class="bradcumb-title text-center">
+      <h2>상품 관리</h2>
   </div>
-</div>
-    <br>
+  <div class="common-buttons">
+    <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">상품등록</button>
+  </div>
+  <div class="product-list">
     <table class="w3-table-all">
       <thead>
         <tr>
@@ -52,42 +19,71 @@
           <th>소비자가</th>
           <th>등록일시</th>
         </tr>
-           </thead>
+      </thead>
       <tbody>
-        <tr v-for="(row, product_no) in list" :key="product_no">
+        <tr v-for="(row, productno) in list" :key="productno">
           <div class="d-flex justify-content-center">
-        <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="same-address">
-            <label></label>
-        </div>
-        </div>
-          
-          <td>{{ row.product_no }}</td>
-          <td>{{ row.product_id }}</td>
-          <td>{{ row.product_name }}</td>
-          <td>{{ row.category }}</td>
-          <td>{{ row.cost }}</td>
-          <td>{{ row.purchase_price }}</td>
-          <td>{{ row.consumer_price }}</td>
-          <td>{{ row.created_at }}</td>
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="same-address">
+              <label></label>
+            </div>
+          </div>
+          <td>{{ row.productno }}</td>
+          <td>{{ row.productid }}</td>
+          <td><a v-on:click="fnView(`${row.productno}`)">{{row.productname}}</a></td>
+          <!-- <td>{{ row.productname }}</td> -->
+          <td>{{ row.productcategory }}</td>
+          <td>{{ row.productcost }}</td>
+          <td>{{ row.purchaseprice }}</td>
+          <td>{{ row.consumerprice }}</td>
+          <td>{{ row.productdate }}</td>
         </tr>
       </tbody>
     </table>
-
-
-<div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">상품등록</button>
+   <!-- 검색필드추가 -->
+    <div class="center">
+      <div class="d-inline-flex align-items-center">
+       <div class="form-group mr-2">
+        <!--카테고리-->
+        <select id="category" v-model="search_key" class="form-control">
+          <option value="">- 카테고리 -</option>
+          <option value="productid">상품 코드</option>
+          <option value="productname">상품명</option>
+          <option value="productcategory">분류</option>
+        </select>
+      </div>
+      <div class="form-group mr-2">      
+        <input type="text" id="productname" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="상품명 입력">
+      </div>
+      <div class="form-group mr-1">
+        <button class="form-control" type="button"  @click="fnPage()">조회</button>
+      </div>
+      <div class="form-group mr-1">
+        <button class="form-control" type="button"  @click="fnDelete()">삭제</button>
+      </div>
+      <div class="form-group mr-1">
+        <button class="form-control" type="button"  @click="fnUpdate()">수정</button>
+      </div>
     </div>
-
-    <div class="pagination">
-  <a href="#" class="page active">1</a>
-  <a href="#" class="page">2</a>
-  <a href="#" class="page">3</a>
-  <a href="#" class="page">4</a>
-  <a href="#" class="page">5</a>
-  <a href="#" class="page">></a>
-</div>
-    
+  </div>
+    <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
+          <span class="pg">
+          <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">&lt;&lt;</a>
+          <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
+            class="prev w3-button w3-border">&lt;</a>
+          <template v-for=" (n,index) in paginavigation()">
+              <template v-if="paging.page==n">
+                  <strong class="w3-button w3-border w3-green" :key="index">{{ n }}</strong>
+              </template>
+              <template v-else>
+                  <a class="w3-button w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">{{ n }}</a>
+              </template>
+          </template>
+          <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage"
+            @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">&gt;</a>
+          <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+          </span>
+    </div>
   </div>
 </template>
 
@@ -95,123 +91,78 @@
 export default {
   data() {
     return {
-      list: [],
-      search_key: '',
-      search_value: '',
-    };
+           requestBody: {}, //리스트 페이지 데이터전송
+                list: {}, //리스트 데이터
+                no: '', //게시판 숫자처리
+                paging: {
+                    block: 0,
+                    endPage: 0,
+                    nextBlock: 0,
+                    page: 0,
+                    pageSize: 0,
+                    prevBlock: 0,
+                    startIndex: 0,
+                    startPage: 0,
+                    totalBlockCnt: 0,
+                    totalListCnt: 0,
+                    totalPageCnt: 0,
+                }, //페이징 데이터
+                page: this.$route.query.page ? this.$route.query.page : 1,
+                size: this.$route.query.size ? this.$route.query.size :10,
+                //keyword: this.$route.query.keyword,
+                search_key: this.$route.query.sk ? this.$route.query.sk : '',
+                search_value: this.$route.query.sv ? this.$route.query.sv : '',
+                paginavigation: function () { //페이징 처리 for문 커스텀
+                    let pageNumber = [] //;
+                    let startPage = this.paging.startPage;
+                    let endPage = this.paging.endPage;
+                    for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+                    return pageNumber;
+                }
+                }
   },
   mounted() {
     this.fnGetList();
   },
   methods: {
     fnGetList() {
-      
+     this.requestBody = { // 데이터 전송
+                                  // keyword: this.keyword,
+                                  sk: this.search_key,
+                                  sv: this.search_value,
+                                  page: this.page,
+                                  size: this.size
+                              }
+                              this.$axios.get(this.$serverUrl + "/product/list", {
+                                  params: this.requestBody,
+                                  headers: {}
+                              }).then((res) => {        
+                                  //this.list = res.data  //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.  
+                                  if (res.data.resultCode === "OK") {
+                                    this.list = res.data.data
+                                    this.paging = res.data.pagination
+                                    this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+                                  }
 
-      this.list = [
-         {
-    product_no: 1,
-    product_id: 'A1111',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '500000',
-    purchase_price: '300000',
-    consumer_price: '800000',
-    created_at: '2022-04-25',
-  },
-  {
-    product_no: 2,
-    product_id: 'A1112',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '550000',
-    purchase_price: '350000',
-    consumer_price: '900000',
-    created_at: '2022-04-25',
-  },
-  {
-    product_no: 3,
-    product_id: 'A1113',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '600000',
-    purchase_price: '400000',
-    consumer_price: '950000',
-    created_at: '2022-04-25',
-  },
-  {
-    product_no: 4,
-    product_id: 'A1114',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '700000',
-    purchase_price: '450000',
-    consumer_price: '1100000',
-    created_at: '2022-04-25',
-  },
-  {
-    product_no: 5,
-    product_id: 'A1115',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '800000',
-    purchase_price: '500000',
-    consumer_price: '1200000',
-    created_at: '2022-04-25',
-  },
-  {
-    product_no: 6,
-    product_id: 'A1116',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '900000',
-    purchase_price: '550000',
-    consumer_price: '1300000',
-    created_at: '2022-04-25',
-  },
-  {
-    product_no: 7,
-    product_id: 'A1117',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '1000000',
-    purchase_price: '600000',
-    consumer_price: '1400000',
-    created_at: '2022-04-25',
-  },
-  {
-    product_no: 8,
-    product_id: 'A1118',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '1100000',
-    purchase_price: '650000',
-    consumer_price: '1500000',
-    created_at: '2022-04-25',
-  },
-  {
-    product_no: 9,
-    product_id: 'A1119',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '1200000',
-    purchase_price: '700000',
-    consumer_price: '1600000',
-    created_at: '2022-04-25',
-  },
-   {
-    product_no: 10,
-    product_id: 'A1120',
-    product_name: '****',
-    category: '매장용냉장고',
-    cost: '1300000',
-    purchase_price: '800000',
-    consumer_price: '1600000',
-    created_at: '2022-04-25',
-  },
-      ];
+                              }).catch((err) => {
+                                  if (err.message.indexOf('Network Error') > -1) {
+                                      alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+                                  }
+                              })
     },
-    fnPage() {
-
+      fnView(productno) { //위에 idx를 전달받음 - 한개조회이다
+                this.requestBody.productno = productno
+                this.$router.push({
+                  path: './detail',
+                  query: this.requestBody
+                })
+              },
+    fnPage(n) {
+ if (this.page !== n) {
+                  this.page = n
+                  
+                }
+                this.fnGetList()
     },
      fnWrite() {
                 this.$router.push({
@@ -227,6 +178,14 @@ export default {
 };
 </script>
 <style scoped>
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+
+}
+
 .pagination {
   display: flex;
   justify-content: center;

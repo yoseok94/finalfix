@@ -1,175 +1,170 @@
 <template>
-                <div class="bradcumb-title text-center">
-                    <h2>공지사항</h2>
-                </div>
-
-
-
+  <div class="bradcumb-title text-center">
+    <h2>공지사항</h2>
+  </div>
+  <div class="common-buttons">
+    <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">글 등록</button>
+  </div>
   <div class="notice-list">
-    <!-- 검색필드추가 -->
-<div>
+  <table class="w3-table-all">
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>등록일시</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(row, noticeno) in list" :key="noticeno">
+        <td>{{ row.noticeno }}</td>
+        <!-- <td><router-link to="/notice/detail">{{ row.noticetitle }}</router-link></td> -->
+        <td><a v-on:click="fnNoticeView(`${row.noticeno}`)" :style="{ color: row.noticetitle ? 'blue' : ''}" class="hover-effect">{{ row.noticetitle }}</a></td>
+        <td>관리자</td>
+        <td>{{ row.noticedate }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- 검색필드추가 -->
+  <div class="center">
   <div class="d-inline-flex align-items-center">
     <div class="form-group mr-2">
       <!--카테고리-->
       <select id="category" v-model="search_key" class="form-control">
         <option value="">- 선택 -</option>
-        <option value="notice_title">제목</option>
-        <option value="notice_author">작성자</option>
+        <option value="noticetitle">제목</option>
       </select>
     </div>
     <div class="form-group mr-2">
-      <input type="text" id="category" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="입력란">
+      <input type="text" id="noticetitle" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="입력란">
     </div>
     <div class="form-group mr-1">
-    <button class="form-control" type="button"  @click="fnPage()">조회</button>
+      <button class="form-control" type="button"  @click="fnPage()">조회</button>
     </div>
-
   </div>
-</div>
-    <br>
-    <table class="w3-table-all">
-      <thead>
-        <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>작성자</th>
-          <th>등록일시</th>
-        </tr>
-      </thead>
-    <tbody>
-  <tr v-for="(row, notice_no) in list" :key="notice_no">
-    <td>{{ row.notice_no }}</td>
-    <td><router-link to="/notice/detail">{{ row.notice_title }}</router-link></td>
-    <td>{{ row.notice_author }}</td>
-    <td>{{ row.created_at }}</td>
-  </tr>
-</tbody>
-    </table>
-
-
-<div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">글 등록</button>
-    </div>
-
-    <div class="pagination">
-  <a href="#" class="page active">1</a>
-  <a href="#" class="page">2</a>
-  <a href="#" class="page">3</a>
-  <a href="#" class="page">4</a>
-  <a href="#" class="page">5</a>
-  <a href="#" class="page">></a>
-</div>
-    
+  </div>
+  <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
+          <span class="pg">
+          <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">&lt;&lt;</a>
+          <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
+            class="prev w3-button w3-border">&lt;</a>
+          <template v-for=" (n,index) in paginavigation()">
+              <template v-if="paging.page==n">
+                  <strong class="w3-button w3-border w3-green" :key="index">{{ n }}</strong>
+              </template>
+              <template v-else>
+                  <a class="w3-button w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">{{ n }}</a>
+              </template>
+          </template>
+          <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage"
+            @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">&gt;</a>
+          <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+          </span>
+    </div>    
   </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {
-      list: [],
-      search_key: '',
-      search_value: '',
-    };
+    return { 
+      requestBody: {}, //리스트 페이지 데이터전송
+                list: {}, //리스트 데이터
+                no: '', //게시판 숫자처리
+                paging: {
+                    block: 0,
+                    endPage: 0,
+                    nextBlock: 0,
+                    page: 0,
+                    pageSize: 0,
+                    prevBlock: 0,
+                    startIndex: 0,
+                    startPage: 0,
+                    totalBlockCnt: 0,
+                    totalListCnt: 0,
+                    totalPageCnt: 0,
+                }, //페이징 데이터
+                page: this.$route.query.page ? this.$route.query.page : 1,
+                size: this.$route.query.size ? this.$route.query.size :8,
+                //keyword: this.$route.query.keyword,
+                search_key: this.$route.query.sk ? this.$route.query.sk : '',
+                search_value: this.$route.query.sv ? this.$route.query.sv : '',
+                paginavigation: function () { //페이징 처리 for문 커스텀
+                    let pageNumber = [] //;
+                    let startPage = this.paging.startPage;
+                    let endPage = this.paging.endPage;
+                    for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+                    return pageNumber;
+                }
+    }
   },
   mounted() {
     this.fnGetList();
   },
   methods: {
     fnGetList() {
-      
-
-
-
-      this.list = [
-        {
-  notice_no: 1,
-  notice_title: '부서 변경사항 안내(B부서)',
-  notice_author: '정준혁',
-  created_at: '2022-04-25',
-},
-{
-  notice_no: 2,
-  notice_title: '연말 인사드립니다',
-  notice_author: '정준혁',
-  created_at: '2021-12-30',
-},
-{
-  notice_no: 3,
-  notice_title: '긴급 공지',
-  notice_author: '정준혁',
-  created_at: '2022-08-10',
-},
-{
-  notice_no: 4,
-  notice_title: '회사 이전 안내',
-  notice_author: '정준혁',
-  created_at: '2023-02-14',
-},
-{
-  notice_no: 5,
-  notice_title: '업무협조 요청',
-  notice_author: '윤영광',
-  created_at: '2022-09-05',
-},
-{
-  notice_no: 6,
-  notice_title: '공휴일 근무 안내',
-  notice_author: '윤영광',
-  created_at: '2022-10-02',
-},
-{
-  notice_no: 7,
-  notice_title: '휴가 신청 안내',
-  notice_author: '이원준',
-  created_at: '2023-01-15',
-},
-{
-  notice_no: 8,
-  notice_title: '업무 시스템 점검 안내',
-  notice_author: '윤영광',
-  created_at: '2022-11-12',
-},
-{
-  notice_no: 9,
-  notice_title: '사내 경조사 소식',
-  notice_author: '이원준',
-  created_at: '2022-05-20',
-},
-{
-  notice_no: 10,
-  notice_title: '재택 근무 안내',
-  notice_author: '이원준',
-  created_at: '2023-03-05',
-}
-
-       
-      ];
+      this.requestBody = { // 데이터 전송
+                                  // keyword: this.keyword,
+                                  sk: this.search_key,
+                                  sv: this.search_value,
+                                  page: this.page,
+                                  size: this.size
+                              }
+                              this.$axios.get(this.$serverUrl + "/notice/list", {
+                                  params: this.requestBody,
+                                  headers: {}
+                              }).then((res) => {        
+                                  //this.list = res.data =  
+                                  if (res.data.resultCode === "OK") {
+                                    this.list = res.data.data
+                                    this.paging = res.data.pagination
+                                    this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+                                  }
+                              }).catch((err) => {
+                                  if (err.message.indexOf('Network Error') > -1) {
+                                      alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+                                  }
+                              })
     },
-    fnPage() {
-
+    fnNoticeView(noticeno){
+      this.requestBody.noticeno = noticeno
+      this.$router.push({
+        path: './detail',
+        query: this.requestBody
+      })
+    },
+    fnPage(n) {
+      if(this.page !== n){
+        this.page = n
+      }
+      this.fnGetList()
     },
      fnWrite() {
                 this.$router.push({
                   path: './write'
                 })
               },
-      fnUpdate(){
-          this.$router.push({
-            path: './update'
-          })
-      },
+      // fnUpdate(){
+      //     this.$router.push({
+      //       path: './update'
+      //     })
+      // },
   },
 };
 </script>
 <style scoped>
-
-
-  a {
+  .hover-effect:hover {
+    background-color: #edf6ff;
     text-decoration: none;
   }
 
+ .center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
 
+}
 
 .pagination {
   display: flex;
