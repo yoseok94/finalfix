@@ -43,14 +43,13 @@
               담당관리
             </button>
             <transition name="accordion">
-            <div class="collapse" ref="accordion3" id="management-collapse">
-              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><router-link to="/management/deptmove" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 이동</router-link></li>
-                <li><router-link to="/management/deptinquiry" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 조회</router-link></li>
-                <li><router-link to="/management/deptapplist" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 신청</router-link></li>
-              </ul>
-            </div>
-          </transition>
+              <div class="collapse" ref="accordion3" id="management-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li><router-link to="/management/deptmove" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 이동</router-link></li>
+                  <li><router-link to="/management/deptapplist" class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 신청</router-link></li>
+                </ul>
+              </div>
+            </transition>
           </li>
           <li class="border-top my-3"></li>
           <li class="mb-1">
