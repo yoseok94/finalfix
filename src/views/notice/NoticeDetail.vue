@@ -2,43 +2,47 @@
   <div class="notice-detail">
     <div class="notice-header">
     </div>
-    <div class="notice-contents">
-      <div class="notice-title">
-        <h3>부서 변경사항 안내(B부서)</h3>
-        <hr>
-<div class="notice-meta">
-  <div>
-    <label>작성자</label>
-    <span class="notice-author">정준혁</span>
-  </div>
-  <div>
-    <label>등록일자</label>
-    <span class="notice-date">2022-04-25</span>
-  </div>
-</div>
-        <hr>
-        <div class="notice-file">
+      <div class="notice-contents">
+        <div class="notice-title">
+          <!-- <h3>부서 변경사항 안내(B부서)</h3> -->
+          <!-- <td>{{ noticetitle }}</td> -->
+          <h3>{{ noticetitle }}</h3>
+          <hr>
+          <div class="notice-meta">
+          <div>
+          <label>작성자</label>
+          <span class="notice-author">관리자</span>
+          </div>
+          <div>
+          <label>등록일자</label>
+          <span class="notice-date">{{ noticedate }}</span>
+          </div>
+          </div>
+          <hr>
+          <div class="notice-file">
             <label>파일</label>
-            <span class="ntrename_file">deptInformation.excel</span>
+            <span class="notice-file">{{ noticefile }}</span>
+          </div>
+        </div>
+        <hr>
+        <div class="notice-body">
+          <div class="notice-image">
+          <!-- <img src="https://mblogthumb-phinf.pstatic.net/20110524_100/dantekim_13062392223698oz1l_JPEG/1234.jpg?type=w2" width="50%"> -->
+          <img src="" width="50%">{{ noticeimg }}
+          </div>
+          <br>
+          <p>여기는 내용이 작성되는 공간입니다. 내용입니다.<br>
+          이 부분에는 제목에 대한 내용이 작성됩니다.</p>
+          <br>
+          <span class="notice-content">{{ noticecontent }}</span>
+          {{ noticecontent }}
         </div>
       </div>
-      <hr>
-      <div class="notice-body">
-        <div class="notice-image">
-
-<img src="https://mblogthumb-phinf.pstatic.net/20110524_100/dantekim_13062392223698oz1l_JPEG/1234.jpg?type=w2" width="50%">
-
-          <!-- <img src="https://jpassets.jobplanet.co.kr/production/uploads/company_story/thumbnail/3361/w750_workshop.jpg" alt="이미지"> -->
-        </div>
-        <p>여기는 내용이 작성되는 공간입니다. 내용입니다 내용입니다.<br>
-        이 부분에는 제목에 대한 내용이 작성됩니다.</p>
+      <div class="common-buttons">
+        <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUpdate">수정</button>
+        <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnDelete">삭제</button>
+        <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnList">목록</button>
       </div>
-    </div>
-    <div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUpdate">수정</button>
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnDelete">삭제</button>
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnList">목록</button>
-    </div>
   </div>
 </template>
 
@@ -48,13 +52,15 @@ export default {
 data() { //변수생성
 return {
 requestBody: this.$route.query,
-idx: this.$route.query.idx,
-
-  notice_title: '',
-  notice_author: '',
-  notice_contents: '',
-  created_at: ''
+noticeno: this.$route.query.noticeno,
+  noticetitle: '',
+  noticecontent: '',
+  noticefile: '',
+  noticeimg: '',
+  noticedate: ''
 }
+
+
 
 },
 mounted() {
@@ -62,13 +68,14 @@ this.fnGetView()
 },
 methods: {
 fnGetView() {
-this.$axios.get(this.$serverUrl + '/notice/' + this.idx, {
+this.$axios.get(this.$serverUrl + '/notice/' + this.noticeno, {
 params: this.requestBody
 }).then((res) => {
-this.title = res.data.title
-this.author = res.data.author
-this.contents = res.data.contents
-this.created_at = res.data.created_at
+this.noticetitle = res.data.noticetitle
+this.noticecontent = res.data.noticecontent
+this.noticefile = res.data.noticefile
+this.noticeimg = res.data.noticeimg
+this.noticedate = res.data.noticedate
 }).catch((err) => {
 if (err.message.indexOf('Network Error') > -1) {
 alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
@@ -76,7 +83,7 @@ alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해�
 })
 },
 fnList() {
-delete this.requestBody.idx
+delete this.requestBody.noticeno
 this.$router.push({
 path: './list',
 query: this.requestBody
@@ -84,14 +91,14 @@ query: this.requestBody
 },
 fnUpdate() {
 this.$router.push({
-path: './update',
+path: './write',
 query: this.requestBody
 })
 },
 fnDelete() {
 if (!confirm("삭제하시겠습니까?")) return
 
-  this.$axios.delete(this.$serverUrl + '/notice/' + this.idx, {})
+  this.$axios.delete(this.$serverUrl + '/notice/' + this.noticeno, {})
       .then(() => {
         alert('삭제되었습니다.')
         this.fnList();
