@@ -4,35 +4,104 @@
     <img class="mb-4" src="@/assets/images/Sefix.png" alt="" width="72" height="57">
     <h1 class="h3 mb-3 fw-normal">Please Sign In</h1>
 
+    <form @submit.prevent="login()">
     <div class="form-floating">
-      <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
+      <input type="id" class="form-control" id="floatingInput" placeholder="Id" v-model="userId">
       <label for="floatingInput">ID 입력</label>
     </div>
     <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
+      <input type="password" class="form-control" id="floatingPassword" placeholder="Password" v-model="password">
       <label for="floatingPassword">PW 입력</label>
     </div>
 
     <div class="form-floating">
-    <button class="w-100 btn btn-lg btn-primary" type="submit" @click="fnLogin()">Sign in</button>
+    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
     <p class="mt-5 mb-3 text-muted">© 2022–2023</p>
     </div>
+    </form>
 </main>
 </div>
 </template>
 
 <script>
-export default {
-  data(){},
-  methods:{
-    fnLogin(){
-      this.$router.push({
-        path: '/'
-      })
-    }
-  }
+import axios from "axios";
 
-}
+export default {
+  name:'LoginPage',
+  data() {
+    return {
+      // employee: {
+      //   empno: "",
+      //   empId: "",
+      //   empname: "",
+      //   empphone: "",
+      //   empaddress: "",
+      //   empemail: "",
+      //   empbirth: "",
+      //   emphiredate: "",
+      //   emplevel: "",
+      //   empstatus: "",
+      //   deptname: "",
+      //   empannual: "",
+      //   empprofile: "",
+      // },
+      requestBody:{},
+      loginSuccess: false,
+      loginError: false,
+      userId: "",
+      password: "",
+      empId:"",
+    };
+  },
+  methods: {
+    changepage(){
+      this.$router.push({
+        path: './',
+      })
+    },
+    loginok(){
+      if (this.empId !== undefined) {
+      this.$axios.get(this.$serverUrl + "/hrm/employeeinfo/" + this.empId
+        ).then((res) => {
+          this.requestBody = res.data
+          localStorage.setItem('empno', this.requestBody.empno)
+          localStorage.setItem('emplevel', this.requestBody.emplevel)
+          this.changepage();
+        }).catch((err) => {
+          console.log(err)
+        });
+      }
+    },
+    login() {
+      console.log("this.userId " + this.userId);
+      console.log("this.password " + this.password);
+
+      axios.post("/login/", {
+          empId: this.userId,
+          emppw: this.password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'token',
+          }
+        }).then((res) => {
+          if (res.status == 200) {
+            console.log(res)
+            this.loginSuccess = true
+            localStorage.setItem('token', res.data.token);
+            console.log(localStorage)
+            this.empId = this.userId
+            this.loginok();
+          }
+        }).catch((err) => {
+          console.log(err)
+          err.loginError = true;
+        });
+    },
+  },
+
+};
 </script>
 
 <style scoped>
