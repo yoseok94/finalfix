@@ -28,26 +28,9 @@ import axios from "axios";
 
 export default {
   name:'LoginPage',
-  data() {
-    return {
-      // employee: {
-      //   empno: "",
-      //   empId: "",
-      //   empname: "",
-      //   empphone: "",
-      //   empaddress: "",
-      //   empemail: "",
-      //   empbirth: "",
-      //   emphiredate: "",
-      //   emplevel: "",
-      //   empstatus: "",
-      //   deptname: "",
-      //   empannual: "",
-      //   empprofile: "",
-      // },
-      requestBody:{},
-      loginSuccess: false,
-      loginError: false,
+  data(){
+    return{
+      requestBody: {},
       userId: "",
       password: "",
       empId:"",
@@ -64,18 +47,21 @@ export default {
       this.$axios.get(this.$serverUrl + "/hrm/employeeinfo/" + this.empId
         ).then((res) => {
           this.requestBody = res.data
-          localStorage.setItem('empno', this.requestBody.empno)
-          localStorage.setItem('emplevel', this.requestBody.emplevel)
-          this.changepage();
+          if(this.password == this.requestBody.emppw && this.userId == this.requestBody.empId){
+            sessionStorage.setItem('empno', this.requestBody.empno)
+            sessionStorage.setItem('emplevel', this.requestBody.emplevel)
+          
+            this.changepage();
+          }else if(this.password != this.requestBody.emppw || this.userId != this.requestBody.empId){
+            alert("아이디 또는 비밀번호가 다릅니다. 다시 입력해주세요.");
+            this.$router.go(0);
+          }
         }).catch((err) => {
           console.log(err)
         });
       }
     },
-    login() {
-      console.log("this.userId " + this.userId);
-      console.log("this.password " + this.password);
-
+    login(){
       axios.post("/login/", {
           empId: this.userId,
           emppw: this.password,
@@ -88,15 +74,12 @@ export default {
         }).then((res) => {
           if (res.status == 200) {
             console.log(res)
-            this.loginSuccess = true
-            localStorage.setItem('token', res.data.token);
-            console.log(localStorage)
+            sessionStorage.setItem('token', res.data.token);
             this.empId = this.userId
             this.loginok();
           }
         }).catch((err) => {
-          console.log(err)
-          err.loginError = true;
+          console.log(err);
         });
     },
   },
