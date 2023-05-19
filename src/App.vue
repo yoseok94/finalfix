@@ -13,9 +13,7 @@
 <script>
 import PageHeader from '@/views/common/PageHeader.vue'
 import PageFooter from '@/views/common/PageFooter.vue'
-// import { provide, onMounted } from 'vue'
-// import { useAuth } from './compositions/useAuth.js'
-// import Cookies from 'js-cookie'
+
 
 export default {
   name: 'App',
@@ -23,34 +21,12 @@ export default {
     PageHeader,
     PageFooter,
   },
-  // setup() {
-  //   const {
-  //     myinfo,
-  //     isAuthorized,
-  //     isAdmin,
-  //     isMember,
-  //     signin,
-  //     signinByToken,
-  //     signout,
-  //   } = useAuth()
+  mounted(){
 
-  //   //데이터 공유
-  //   provide("myinfo", myinfo)
-  //   provide("isAuthorized", isAuthorized)
-  //   provide("isAdmin", isAdmin)
-  //   provide("isMember", isMember)
-  //   provide("signin", signin)
-  //   provide("signout", signout)
-
-  //   onMounted (() => {
-  //     const savedToken = Cookies.get('accessToken')
-  //     if (savedToken) {
-  //       signinByToken(savedToken).then(() => {
-  //         console.log('Logined By Token')
-  //       })
-  //     }
-  //   })
-  // },
+  },
+  methods:{
+    
+  }
 }
 </script>
 <style>

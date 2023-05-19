@@ -71,6 +71,21 @@
 export default {
   data() { //변수생성
     return {
+            // employee: {
+      //   empno: "",
+      //   empId: "",
+      //   empname: "",
+      //   empphone: "",
+      //   empaddress: "",
+      //   empemail: "",
+      //   empbirth: "",
+      //   emphiredate: "",
+      //   emplevel: "",
+      //   empstatus: "",
+      //   deptname: "",
+      //   empannual: "",
+      //   empprofile: "",
+      // },
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: '', //게시판 숫자처리
