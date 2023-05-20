@@ -1,174 +1,171 @@
 <template>
-
-                <div class="bradcumb-title text-center">
-                    <h2>이벤트</h2>
-                </div>
-
-
-
-
+  <div class="bradcumb-title text-center">
+    <h2>이벤트</h2>
+  </div>
+  <div class="common-buttons">
+    <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">글 등록</button>
+  </div>
   <div class="event-list">
-    <!-- 검색필드추가 -->
-<div>
+  <table class="w3-table-all">
+    <thead>
+    <tr>
+      <th>번호</th>
+      <th>제목</th>
+      <th>작성자</th>
+      <th>등록일시</th>
+    </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(row, eventno) in list" :key="eventno">
+        <td>{{ row.eventno }}</td>
+        <!-- <td><router-link to="/event/detail">{{ row.eventtitle }}</router-link></td> -->
+        <td><a v-on:click="fnEventView(`${row.eventno}`)" :style="{ color: row.eventtitle ? 'blue' : ''}" class="hover-effect">{{ row.eventtitle }}</a></td>
+        <td>관리자</td>
+        <td>{{ row.eventdate }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <!-- 검색필드추가 -->
+  <div class="center">
   <div class="d-inline-flex align-items-center">
     <div class="form-group mr-2">
       <!--카테고리-->
       <select id="category" v-model="search_key" class="form-control">
         <option value="">- 선택 -</option>
-        <option value="event_title">제목</option>
-        <option value="event_author">작성자</option>
+        <option value="eventtitle">제목</option>
       </select>
     </div>
     <div class="form-group mr-2">
-      <input type="text" id="category" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="입력란">
+      <input type="text" id="eventtitle" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="입력란">
     </div>
     <div class="form-group mr-1">
-    <button class="form-control" type="button"  @click="fnPage()">조회</button>
+      <button class="form-control" type="button"  @click="fnPage()">조회</button>
     </div>
-
   </div>
-</div>
-    <br>
-    <table class="w3-table-all">
-      <thead>
-        <tr>
-          <th>번호</th>
-          <th>제목</th>
-          <th>작성자</th>
-          <th>등록일시</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, event_no) in list" :key="event_no">          
-          <td>{{ row.event_no }}</td>
-          <td><router-link to="/event/detail">{{ row.event_title }}</router-link></td>
-          <td>{{ row.event_author }}</td>
-          <td>{{ row.created_at }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-
-<div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">글 등록</button>
-    </div>
-
-    <div class="pagination">
-  <a href="#" class="page active">1</a>
-  <a href="#" class="page">2</a>
-  <a href="#" class="page">3</a>
-  <a href="#" class="page">4</a>
-  <a href="#" class="page">5</a>
-  <a href="#" class="page">></a>
-</div>
-    
+  </div>
+  <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
+          <span class="pg">
+          <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">&lt;&lt;</a>
+          <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
+            class="prev w3-button w3-border">&lt;</a>
+          <template v-for=" (n,index) in paginavigation()">
+              <template v-if="paging.page==n">
+                  <strong class="w3-button w3-border w3-green" :key="index">{{ n }}</strong>
+              </template>
+              <template v-else>
+                  <a class="w3-button w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">{{ n }}</a>
+              </template>
+          </template>
+          <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage"
+            @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">&gt;</a>
+          <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+          </span>
+    </div>    
   </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {
-      list: [],
-      search_key: '',
-      search_value: '',
-    };
+    return { 
+      requestBody: {}, //리스트 페이지 데이터전송
+                list: {}, //리스트 데이터
+                no: '', //게시판 숫자처리
+                paging: {
+                    block: 0,
+                    endPage: 0,
+                    nextBlock: 0,
+                    page: 0,
+                    pageSize: 0,
+                    prevBlock: 0,
+                    startIndex: 0,
+                    startPage: 0,
+                    totalBlockCnt: 0,
+                    totalListCnt: 0,
+                    totalPageCnt: 0,
+                }, //페이징 데이터
+                page: this.$route.query.page ? this.$route.query.page : 1,
+                size: this.$route.query.size ? this.$route.query.size :8,
+                //keyword: this.$route.query.keyword,
+                search_key: this.$route.query.sk ? this.$route.query.sk : '',
+                search_value: this.$route.query.sv ? this.$route.query.sv : '',
+                paginavigation: function () { //페이징 처리 for문 커스텀
+                    let pageNumber = [] //;
+                    let startPage = this.paging.startPage;
+                    let endPage = this.paging.endPage;
+                    for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+                    return pageNumber;
+                }
+    }
   },
   mounted() {
     this.fnGetList();
   },
   methods: {
     fnGetList() {
-      
-
-
-
-      this.list = [
-{
-  event_no: 1,
-  event_title: '2023년 workshop 일정 안내',
-  event_author: '정준혁',
-  created_at: '2023-12-20',
-},
-{
-  event_no: 2,
-  event_title: '2023년 체육대회 일정 안내',
-  event_author: '정준혁',
-  created_at: '2023-9-10',
-},
-{
-  event_no: 3,
-  event_title: '2023 회사 후퇴: 더 강한 팀 만들기',
-  event_author: '정준혁',
-  created_at: '2023-08-30',
-},
-{
-  event_no: 4,
-  event_title: '2022 제품 출시 행사: 최신 혁신 소개',
-  event_author: '정준혁',
-  created_at: '2023-08-13',
-},
-{
-  event_no: 5,
-  event_title: '2023년 주주총회: 회사 실적 검토',
-  event_author: '정준혁',
-  created_at: '2023-07-29',
-},
-{
-  event_no: 6,
-  event_title: '2022년 직원 시상식: 우수 직원 축하',
-  event_author: '정준혁',
-  created_at: '2023-06-22',
-},
-{
-  event_no: 7,
-  event_title: '2023년 영업 컨퍼런스: 수익의 새로운 고지 달성',
-  event_author: '정준혁',
-  created_at: '2023-04-30',
-},
-{
-  event_no: 8,
-  event_title: '2022 지역 사회 봉사 활동 프로그램: 우리 이웃에 돌려주기',
-  event_author: '정준혁',
-  created_at: '2023-4-15',
-},
-{
-  event_no: 9,
-  event_title: '2023년 기업의 사회적 책임 서밋: 긍정적인 영향 만들기',
-  event_author: '정준혁',
-  created_at: '2023-3-10',
-},
-{
-  event_no: 10,
-  event_title: '2023년 파트너 감사의 밤: 주요 협력사 인정',
-  event_author: '정준혁',
-  created_at: '2023-02-30',
-},
-
-
-       
-      ];
+      this.requestBody = { // 데이터 전송
+                                  // keyword: this.keyword,
+                                  sk: this.search_key,
+                                  sv: this.search_value,
+                                  page: this.page,
+                                  size: this.size
+                              }
+                              this.$axios.get(this.$serverUrl + "/event/list", {
+                                  params: this.requestBody,
+                                  headers: {}
+                              }).then((res) => {        
+                                  //this.list = res.data =  
+                                  if (res.data.resultCode === "OK") {
+                                    this.list = res.data.data
+                                    this.paging = res.data.pagination
+                                    this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+                                  }
+                              }).catch((err) => {
+                                  if (err.message.indexOf('Network Error') > -1) {
+                                      alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+                                  }
+                              })
     },
-    fnPage() {
-
+    fnEventView(eventno){
+      this.requestBody.eventno = eventno
+      this.$router.push({
+        path: './detail',
+        query: this.requestBody
+      })
+    },
+    fnPage(n) {
+      if(this.page !== n){
+        this.page = n
+      }
+      this.fnGetList()
     },
      fnWrite() {
                 this.$router.push({
                   path: './write'
                 })
               },
-      fnUpdate(){
-          this.$router.push({
-            path: './update'
-          })
-      },
+      // fnUpdate(){
+      //     this.$router.push({
+      //       path: './update'
+      //     })
+      // },
   },
 };
 </script>
 <style scoped>
-a {
+
+  .hover-effect:hover {
+    background-color: #edf6ff;
     text-decoration: none;
   }
+
+ .center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 10px;
+
+}
 
 .pagination {
   display: flex;
@@ -192,4 +189,5 @@ a {
   background-color: #0077cc;
   color: #fff;
 }
+
 </style>

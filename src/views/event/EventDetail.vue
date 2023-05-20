@@ -4,31 +4,37 @@
     </div>
     <div class="event-contents">
       <div class="event-title">
-        <h3>2023년 workshop 일정 안내</h3>
+        <h3>{{ eventtitle }}</h3>
         <hr>
-<div class="event-meta">
-  <div>
-    <label>작성자</label>
-    <span class="event-author">정준혁</span>
-  </div>
-  <div>
-    <label>등록일자</label>
-    <span class="event-date">2023-12-20</span>
-  </div>
-</div>
+        <div class="event-meta">
+          <div>
+            <label>작성자</label>
+            <span class="event-author">관리자</span>
+          </div>
+          <div>
+            <label>등록일자</label>
+            <span class="event-date">{{ eventdate }}</span>
+          </div>
+        </div>
         <hr>
         <div class="event-file">
-            <label>파일</label>
-            <span class="ntrename_file">workshop.excel</span>
+          <label>파일</label>
+          <span class="event-file">{{ eventfile }}</span>
         </div>
       </div>
       <hr>
       <div class="event-body">
         <div class="event-image">
-         <img src="https://jpassets.jobplanet.co.kr/production/uploads/company_story/thumbnail/3361/w750_workshop.jpg" alt="이미지">
+         <!-- <img src="https://jpassets.jobplanet.co.kr/production/uploads/company_story/thumbnail/3361/w750_workshop.jpg" alt="이미지"> -->
+         <img src="" width="50%"> {{ eventimg }}
         </div>
+        <br>
         <p>여기는 내용이 작성되는 공간입니다.<br>
         이 부분에는 제목에 대한 내용이 작성됩니다.</p>
+        <br>
+        <span class="event-content">{{ eventcontents }}</span>
+        {{ eventcontents }}
+
       </div>
     </div>
     <div class="common-buttons">
@@ -45,12 +51,12 @@ export default {
 data() { //변수생성
 return {
 requestBody: this.$route.query,
-idx: this.$route.query.idx,
-
-  event_title: '',
-  event_author: '',
-  event_contents: '',
-  created_at: ''
+eventno: this.$route.query.eventno,
+  eventtitle: '',
+  eventcontents: '',
+  eventfile: '',
+  eventimg: '',
+  eventdate: ''
 }
 
 },
@@ -59,13 +65,14 @@ this.fnGetView()
 },
 methods: {
 fnGetView() {
-this.$axios.get(this.$serverUrl + '/event/' + this.idx, {
+this.$axios.get(this.$serverUrl + '/event/' + this.eventno, {
 params: this.requestBody
 }).then((res) => {
-this.title = res.data.title
-this.author = res.data.author
-this.contents = res.data.contents
-this.created_at = res.data.created_at
+this.eventtitle = res.data.eventtitle
+this.eventcontents = res.data.eventcontents
+this.eventfile = res.data.eventfile
+this.eventimg = res.data.eventimg
+this.eventdate = res.data.eventdate
 }).catch((err) => {
 if (err.message.indexOf('Network Error') > -1) {
 alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
@@ -73,7 +80,7 @@ alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해�
 })
 },
 fnList() {
-delete this.requestBody.idx
+delete this.requestBody.eventno
 this.$router.push({
 path: './list',
 query: this.requestBody
@@ -81,14 +88,14 @@ query: this.requestBody
 },
 fnUpdate() {
 this.$router.push({
-path: './update',
+path: './write',
 query: this.requestBody
 })
 },
 fnDelete() {
 if (!confirm("삭제하시겠습니까?")) return
 
-  this.$axios.delete(this.$serverUrl + '/event/' + this.idx, {})
+  this.$axios.delete(this.$serverUrl + '/event/' + this.eventno, {})
       .then(() => {
         alert('삭제되었습니다.')
         this.fnList();

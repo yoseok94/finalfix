@@ -7,24 +7,25 @@
 <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">저장</button> &nbsp;
 <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
 </div> -->
-<div class="notice_title">
-<input type="text" v-model="notice_title" class="w3-input w3-border" placeholder="제목을 입력해주세요.">
+<div class="noticetitle">
+  <label for="noticetitle">d</label>
+<input type="text" v-model="noticetitle" class="w3-input w3-border" id="noticetitle" placeholder="제목을 입력해주세요.">
 <hr>
-<label for="notice_author">작성자</label>
-<input type="text" v-model="notice_author" class="w3-input w3-border" placeholder="작성자를 입력해주세요." v-if="idx === undefined">
-<label for="created_at">등록일</label>
-<input type="date" v-model="created_at" class="w3-input w3-border" placeholder="등록일자">
+<label>작성자</label>
+<input type="text" class="w3-input w3-border" placeholder="관리자" readonly>
+<label for="noticedate">등록일</label>
+<input type="date" v-model="noticedate" class="w3-input w3-border" placeholder="등록일자" readonly>
 <hr>
-<label for="ntorigin_file">파일</label>
-<input type="file" ref="fileInput" @change="handleFileUpload()" accept="image/*" id="ntorigin_file" class="w3-input w3-border">
+<label for="noticefile">파일</label>
+<input type="file" ref="fileInput" @change="handleFileUpload()" accept="image/*" id="noticefile" class="w3-input w3-border">
 <hr>
-<label for="ntorigin_img">이미지 파일</label>
-<input type="file" ref="fileInput" @change="handleFileUpload()" accept="image/*" id="ntorigin_img" class="w3-input w3-border">
+<label for="noticeimg">이미지 파일</label>
+<input type="file" ref="fileInput" @change="handleFileUpload()" accept="image/*" id="noticeimg" class="w3-input w3-border">
 
 
 </div>
-<label for="notice_contents">내용 &nbsp;</label>
-<div class="editor">
+<label for="noticecontent">내용 &nbsp;</label>
+<div class="ck-editor">
  <ck-editor v-model="editorContent" :editor="editor" :config="editorConfig"  />
 </div>
 
@@ -45,15 +46,15 @@ export default defineComponent({
   data() {
     return {
       requestBody: this.$route.query,
-      idx: this.$route.query.idx,
-      title: '',
-      author: '',
-      contents: '',
-      created_at: '',
+      noticeno: this.$route.query.noticeno,
+      noticetitle: '',
       editorContent: "",
+      // noticecontent: '',
+      noticefile: '',
+      noticeimg: '',
+      noticedate: '',
       editor: ClassicEditor, 
     editorConfig: {
-      
   toolbar: [
           'heading',
           '|',
@@ -97,30 +98,34 @@ export default defineComponent({
       },
     };
   },
+  mounted(){
+    this.fnGetView()
+  },
   methods: {
 fnGetView() {
-if (this.idx !== undefined) {
-this.$axios.get(this.$serverUrl + '/notice/' + this.idx, {
+if (this.noticeno !== undefined) {
+this.$axios.get(this.$serverUrl + '/notice/' + this.noticeno, {
 params: this.requestBody
 }).then((res) => {
-this.title = res.data.title
-this.author = res.data.author
-this.contents = res.data.contents
-this.created_at = res.data.created_at
+this.noticetitle = res.data.noticetitle
+this.editorContent = res.data.noticecontent
+this.noticefile = res.data.noticefile
+this.noticeimg = res.data.noticeimg
+this.noticedate = res.data.noticedate
 }).catch((err) => {
 console.log(err)
 })
 }
 },
 fnList() {
-delete this.requestBody.idx
+delete this.requestBody.noticeno
 this.$router.push({
 path: './list',
 query: this.requestBody
 })
 },
-fnView(idx) {
-this.requestBody.idx = idx
+fnView(noticeno) {
+this.requestBody.noticeno = noticeno
 this.$router.push({
 path: './detail',
 query: this.requestBody
@@ -129,18 +134,19 @@ query: this.requestBody
     fnSave() {
 let apiUrl = this.$serverUrl + '/notice'
 this.form = {
-"idx": this.idx,
-"title": this.title,
-"contents": this.contents,
-"author": this.author
+  "noticeno": this.noticeno,
+  "noticetitle": this.noticetitle,
+  "noticecontent": this.editorContent,
+  "noticefile": this.noticefile, 
+  "noticeimg": this.noticeimg, 
 }
 
-  if (this.idx === undefined) {
+  if (this.noticeno === undefined) {
     //INSERT
     this.$axios.post(apiUrl, this.form)
     .then((res) => {
       alert('글이 저장되었습니다.')
-      this.fnView(res.data.idx)
+      this.fnView(res.data.noticeno)
     }).catch((err) => {
       if (err.message.indexOf('Network Error') > -1) {
         alert('네트워크가 원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
@@ -151,7 +157,7 @@ this.form = {
     this.$axios.patch(apiUrl, this.form)
     .then((res) => {
       alert('글이 저장되었습니다.')
-      this.fnView(res.data.idx)
+      this.fnView(res.data.noticeno)
     }).catch((err) => {
       if (err.message.indexOf('Network Error') > -1) {
         alert('네트워크가 원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
@@ -160,13 +166,14 @@ this.form = {
   }
 },
     // ...기타 필요한 애플리케이션 관련 메소드 추가
-  },
-  mounted() {
-    this.fnGetView();
-  },
+  }
+  // mounted() {
+  //   this.fnGetView();
+  // },
 });
 </script>
 <style scoped>
+
 .notice-detail-container {
   display: flex;
   justify-content: center;

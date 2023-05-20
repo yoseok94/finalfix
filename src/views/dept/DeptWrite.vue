@@ -1,4 +1,5 @@
 <template>
+   <!-- <form action="/dept/${deptno}" method="post"> -->
   <div class="dept-detail-container">
     <div class="dept-detail">      
       <div class="dept-contents">
@@ -7,31 +8,34 @@
         <label for="deptid">1. 부서코드</label>
         <input type="text" v-model="deptid" class="w3-input w3-border" id="deptid" placeholder="부서코드 입력">
         <br>
-        <label for="deptname" v-if="deptno === undefined">2. 부서명</label>
+        <!-- <label for="deptname" v-if="deptno === undefined">2. 부서명</label>
         <input type="text" v-model="deptname" class="w3-input w3-border" id="dept_name" placeholder="부서명 입력" v-if="deptno === undefined">
+        <br> -->
+         <label for="deptname">2. 부서명</label>
+        <input type="text" v-model="deptname" class="w3-input w3-border" id="deptname" placeholder="부서명 입력">
         <br>
         <label for="productid">3. 상품코드</label>
         <input type="text" v-model="productid" class="w3-input w3-border" id="productid" placeholder="상품코드 입력">
       </div>
       <div class="common-buttons">
-        <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">등록</button>
+        <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave" >등록</button>
         <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">이전</button>
       </div>
     </div>
   </div>
+   <!-- </form> -->
 </template>
 
 <script>
 export default {
 data() { //변수생성
 return {
-requestBody: this.$route.query,
-deptno: this.$route.query.deptno,
-
-  deptname: '',
-  deptid: '',
-  productid: '',
-  deptdate: ''
+  requestBody: this.$route.query,
+    deptno: this.$route.query.deptno,
+    productid: '',
+    deptid: '',
+    deptname: '',
+    deptdate: ''
 }
 
 },
@@ -44,10 +48,10 @@ if (this.deptno !== undefined) {
 this.$axios.get(this.$serverUrl + '/dept/' + this.deptno, {
 params: this.requestBody
 }).then((res) => {
-this.deptname = res.data.deptname
-this.deptid = res.data.deptid
 this.productid = res.data.productid
-// this.created_at = res.data.created_at
+this.deptid = res.data.deptid
+this.deptname = res.data.deptname
+this.deptdate = res.data.deptdate
 }).catch((err) => {
 console.log(err)
 })
@@ -60,9 +64,6 @@ path: './list',
 query: this.requestBody
 })
 },
-
-
-
 fnView(deptno) {
 this.requestBody.deptno = deptno
 this.$router.push({
@@ -70,19 +71,16 @@ path: './detail',
 query: this.requestBody
 })
 },
-
-
-
-
 fnSave() {
-let apiUrl = this.$serverUrl + '/dept'
-this.form = {
-
-"deptno" : this.deptno,
-"deptname": this.deptname,
-"deptid": this.deptid,
-"productid": this.productid
-}
+  let apiUrl = this.$serverUrl + '/dept'
+// let apiUrl = this.deptno === undefined ? '/dept' : '/dept/' + this.deptno // API URL 설정 수정
+  this.form = {
+    "deptno": this.deptno,
+    "productid": this.productid,
+    "deptid": this.deptid,
+    "deptname": this.deptname,
+    // "deptdate": this.deptdate // 'deptdate' 속성 추가
+  }
 
   if (this.deptno === undefined) {
     //INSERT
@@ -92,7 +90,7 @@ this.form = {
       this.fnView(res.data.deptno)
     }).catch((err) => {
       if (err.message.indexOf('Network Error') > -1) {
-        alert('네트워크가 원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
+        alert('네트워크가 dddddd원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
       }
     })
   } else {
@@ -102,11 +100,11 @@ this.form = {
       alert('글이 저장되었습니다.')
       this.fnView(res.data.deptno)
     }).catch((err) => {
-      if (err.message.indexOf('Network Error') > -1) {
-        alert('네트워크가 원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
-      }
+       if (err.message.indexOf('Network Error') > -1) {
+        alert('존재하지 않는 상품코드입니다.')
+       }
     })
-  }
+   }
 }
 
 }
