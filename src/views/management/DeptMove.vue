@@ -1,28 +1,30 @@
 <template>
     <div class="main">
+      <!--관리자, 임원의 부서 이동관리 페이지입니다.-->
+      <h2 align="center">부서 이동</h2>
+      <a v-on:click="fnView3(`${empno}`)"><button>신청하기</button></a>
+        <!--카테고리검색-->
         <div class="top">
-            <div>
-                <div class="d-inline-flex align-items-center">
-                    <div>
-                    <!--카테고리-->
-                    <select id="category" v-model="search_key">
-                        <option value="">- 선택 -</option>
-                        <option value="departmentname">부서명</option>
-                        <option value="ID">ID</option>
-                        <option value="name">이름</option>
-                        <option value="position">직급</option>
-                    </select>
-                    </div>
-                    <div>
-                    <input type="text" id="category" v-model="search_value" @keyup.enter="fnPage()" placeholder="입력란">
-                    </div>
-                    <div>
-                    <button type="button"  @click="fnPage()">조회</button>
-                    </div>
-                </div>
+          <div class="d-inline-flex align-items-center">
+            <div class="form-group mr-2">
+              <select id="category" v-model="search_key" class="form-control">
+                <option value="">- 선택 -</option>
+                <option value="Deptname">부서명</option>
+                <option value="ID">ID</option>
+                <option value="Name">이름</option>
+                <!-- <option value="Level">직급</option> -->
+              </select>
             </div>
+            <div class="form-group mr-2">
+              <input type="text" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="입력란">
+            </div>
+            <div class="form-group mr-1">
+              <button class="form-control" type="button"  @click="fnPage()">조회</button>
+            </div>
+          </div>
         </div>
-        <br>
+
+        <!-- 내용 -->
         <table class="w3-table-all">
             <thead class="theadline">
                 <tr>
@@ -31,174 +33,42 @@
                     <th>이름</th>
                     <th>직급</th>
                     <th>세부정보보기</th>
-                    <th>부서명</th>
                     <th>=></th>
-                    <th>이동부서</th>
-                    <th>이동</th>
+                    <th>부서이동</th>
                 </tr>
             </thead>
-            <tbody class="tbodyline">
-                <tr>
-                    <td>부서1</td>
-                    <td>s01</td>
-                    <td>김신촌</td>
-                    <td>사원</td>
-                    <td><router-link to="/management/basicinfo"><button>세부정보보기</button></router-link></td>
-                    <td>부서1</td>
-                    <td>=></td>
-                    <td>
-                        <select>
-                            <option value="department1">부서1</option>
-                            <option value="department2">부서2</option>
-                            <option value="department3">부서3</option>
-                            <option value="department4">부서4</option>
-                        </select>
-                    </td>
-                    <td><button>이동</button></td>
-                </tr>
-                <!-- <tr>
-                    <td>부서1</td>
-                    <td>s01</td>
-                    <td>김신촌</td>
-                    <td>사원</td>
-                    <td><router-link to="/management/basicinfo"><button>세부정보보기</button></router-link></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> -->
-                <tr>
-                    <td>부서2</td>
-                    <td>s02</td>
-                    <td>최강대</td>
-                    <td>임원</td>
-                    <td><button>세부정보보기</button></td>
-                    <td>부서2</td>
-                    <td>=></td>
-                    <td>
-                        <select>
-                            <option value="department1">부서1</option>
-                            <option value="department2">부서2</option>
-                            <option value="department3">부서3</option>
-                            <option value="department4">부서4</option>
-                        </select>
-                    </td>
-                    <td><button>이동</button></td>
-                </tr>
-                <tr>
-                    <td>부서2</td>
-                    <td>s03</td>
-                    <td>서홍대</td>
-                    <td>사원</td>
-                    <td><button>세부정보보기</button></td>
-                    <td>부서2</td>
-                    <td>=></td>
-                    <td><select>
-                <option value="department1">부서1</option>
-                <option value="department2">부서2</option>
-                <option value="department3">부서3</option>
-                <option value="department4">부서4</option>
-            </select></td>
-                    <td><button>이동</button></td>
-                </tr>
-                <tr>
-                    <td>부서2</td>
-                    <td>s04</td>
-                    <td>박수원</td>
-                    <td>사원</td>
-                    <td><button>세부정보보기</button></td>
-                    <td>부서2</td>
-                    <td>=></td>
-                    <td><select>
-                <option value="department1">부서1</option>
-                <option value="department2">부서2</option>
-                <option value="department3">부서3</option>
-                <option value="department4">부서4</option>
-            </select></td>
-                    <td><button>이동</button></td>
-                </tr>
-                <tr>
-                    <td>부서2</td>
-                    <td>s05</td>
-                    <td>염용산</td>
-                    <td>사원</td>
-                    <td><button>세부정보보기</button></td>
-                    <td>부서2</td>
-                    <td>=></td>
-                    <td><select>
-                <option value="department1">부서1</option>
-                <option value="department2">부서2</option>
-                <option value="department3">부서3</option>
-                <option value="department4">부서4</option>
-            </select></td>
-                    <td><button>이동</button></td>
-                </tr>
-                <tr>
-                    <td>부서3</td>
-                    <td>s06</td>
-                    <td>한이대</td>
-                    <td>임원</td>
-                    <td><button>세부정보보기</button></td>
-                    <td>부서3</td>
-                    <td>=></td>
-                    <td><select>
-                <option value="department1">부서1</option>
-                <option value="department2">부서2</option>
-                <option value="department3">부서3</option>
-                <option value="department4">부서4</option>
-            </select></td>
-                    <td><button>이동</button></td>
-                </tr>
-                <!-- <tr>
-                    <td>부서3</td>
-                    <td>s06</td>
-                    <td>한이대</td>
-                    <td>임원</td>
-                    <td><button>세부정보보기</button></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> -->
-                <tr>
-                    <td>부서4</td>
-                    <td>s07</td>
-                    <td>변아현</td>
-                    <td>임원</td>
-                    <td><button>세부정보보기</button></td>
-                    <td>부서4</td>
-                    <td>=></td>
-                    <td><select>
-                <option value="department1">부서1</option>
-                <option value="department2">부서2</option>
-                <option value="department3">부서3</option>
-                <option value="department4">부서4</option>
-            </select></td>
-                    <td><button>이동</button></td>
-                </tr>
-                <!-- <tr>
-                    <td>부서4</td>
-                    <td>s07</td>
-                    <td>변아현</td>
-                    <td>임원</td>
-                    <td><button>세부정보보기</button></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr> -->
+            <tbody>
+              <tr v-for="(row, empno) in list" :key="empno">   
+                <td>{{ row.deptname }}</td>
+                <td>{{ row.empId }}</td>
+                <td>{{ row.empname }}</td>
+                <td>{{ row.emplevel }}</td>
+                <td><a v-on:click="fnView(`${row.empno}`)"><button>세부정보보기</button></a></td>
+                <td>=></td>
+                <td><a v-on:click="fnView2(`${row.empno}`)"><button>이동</button></a></td>
+              </tr>
             </tbody>
-
         </table>
-        <br>
-        <div class="pagination">
-        <a href="#" class="page active">1</a>
-        <a href="#" class="page">2</a>
-        <a href="#" class="page">3</a>
-        <a href="#" class="page">4</a>
-        <a href="#" class="page">5</a>
-        <a href="#" class="page">></a>
-        </div>
+      
+      <!-- 페이징 -->
+      <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
+        <span class="pg">
+          <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">&lt;&lt;</a>
+          <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
+            class="prev w3-button w3-border">&lt;</a>
+          <template v-for=" (n,index) in paginavigation()">
+            <template v-if="paging.page==n">
+              <strong class="w3-button w3-border w3-green" :key="index">{{ n }}</strong>
+            </template>
+            <template v-else>
+              <a class="w3-button w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">{{ n }}</a>
+            </template>
+          </template>
+          <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage"
+            @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">&gt;</a>
+          <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+        </span>
+      </div>
     </div>
 </template>
 
@@ -206,102 +76,106 @@
 export default {
   data() {
     return {
-      list: [],
-      search_key: '',
-      search_value: '',
-    };
+      requestBody: {}, //리스트 페이지 데이터전송
+      list: {}, //리스트 데이터
+      no: '', //게시판 숫자처리
+      paging: {
+        block: 0,
+        endPage: 0,
+        nextBlock: 0,
+        page: 0,
+        pageSize: 0,
+        prevBlock: 0,
+        startIndex: 0,
+        startPage: 0,
+        totalBlockCnt: 0,
+        totalListCnt: 0,
+        totalPageCnt: 0,
+      }, //페이징 데이터
+      page: this.$route.query.page ? this.$route.query.page : 1,
+      size: this.$route.query.size ? this.$route.query.size :10,
+      //keyword: this.$route.query.keyword,
+      search_key: this.$route.query.sk ? this.$route.query.sk : '',
+      search_value: this.$route.query.sv ? this.$route.query.sv : '',
+      paginavigation: function () { //페이징 처리 for문 커스텀
+        let pageNumber = [] //;
+        let startPage = this.paging.startPage;
+        let endPage = this.paging.endPage;
+        for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+        return pageNumber;
+      }
+    }
   },
   mounted() {
     this.fnGetList();
   },
   methods: {
     fnGetList() {
-      
-
-
-
-      this.list = [
-{
-  event_no: 1,
-  event_title: '2023년 workshop 일정 안내',
-  event_author: '정준혁',
-  created_at: '2023-12-20',
-},
-{
-  event_no: 2,
-  event_title: '2023년 체육대회 일정 안내',
-  event_author: '정준혁',
-  created_at: '2023-9-10',
-},
-{
-  event_no: 3,
-  event_title: '2023 회사 후퇴: 더 강한 팀 만들기',
-  event_author: '정준혁',
-  created_at: '2023-08-30',
-},
-{
-  event_no: 4,
-  event_title: '2022 제품 출시 행사: 최신 혁신 소개',
-  event_author: '정준혁',
-  created_at: '2023-08-13',
-},
-{
-  event_no: 5,
-  event_title: '2023년 주주총회: 회사 실적 검토',
-  event_author: '정준혁',
-  created_at: '2023-07-29',
-},
-{
-  event_no: 6,
-  event_title: '2022년 직원 시상식: 우수 직원 축하',
-  event_author: '정준혁',
-  created_at: '2023-06-22',
-},
-{
-  event_no: 7,
-  event_title: '2023년 영업 컨퍼런스: 수익의 새로운 고지 달성',
-  event_author: '정준혁',
-  created_at: '2023-04-30',
-},
-{
-  event_no: 8,
-  event_title: '2022 지역 사회 봉사 활동 프로그램: 우리 이웃에 돌려주기',
-  event_author: '정준혁',
-  created_at: '2023-4-15',
-},
-{
-  event_no: 9,
-  event_title: '2023년 기업의 사회적 책임 서밋: 긍정적인 영향 만들기',
-  event_author: '정준혁',
-  created_at: '2023-3-10',
-},
-{
-  event_no: 10,
-  event_title: '2023년 파트너 감사의 밤: 주요 협력사 인정',
-  event_author: '정준혁',
-  created_at: '2023-02-30',
-},
-
-
-       
-      ];
+      //스프링부트에서 전송받은 데이터 출력처리
+      this.requestBody = { // 데이터 전송
+        // keyword: this.keyword,
+        sk: this.search_key,
+        sv: this.search_value,
+        page: this.page,
+        size: this.size
+      }
+      this.$axios.get(this.$serverUrl + "/hrm/hrmmember", { //Controller의 Mapping값
+        params: this.requestBody,
+        headers: {}
+      }).then((res) => {        
+        //this.list = res.data  //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.  
+        if (res.data.resultCode === "OK") {
+          this.list = res.data.data
+          this.paging = res.data.pagination
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+        }
+      }).catch((err) => {
+        if (err.message.indexOf('Network Error') > -1) {
+          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+        }
+      })
     },
-    fnPage() {
-
+    fnView(empno) {
+      this.requestBody.empno = empno
+      this.$router.push({
+        path: '/management/personaldetails',
+        query: this.requestBody
+      })
     },
-     fnWrite() {
-                this.$router.push({
-                  path: './write'
-                })
-              },
-      fnUpdate(){
-          this.$router.push({
-            path: './update'
-          })
-      },
+    fnView2(empno) {
+      this.requestBody.empno = empno
+      this.$router.push({
+        path: '/management/writereasonmove',
+        query: this.requestBody
+      })
+    },
+    fnView3(empno) {
+      this.requestBody.empno = empno
+      this.$router.push({
+        path: '/management/writereasonapp',
+        query: this.requestBody
+      })
+    },
+    fnPage(n) {
+      if (this.page !== n) {
+        this.page = n          
+      }
+      this.fnGetList()
+    },
+    fnWrite() {
+      this.$router.push({
+        path: './write'
+      })
+    },
+    fnUpdate(){
+      this.$router.push({
+      path: './update'
+      })
+    },
   },
 };
 </script>
+
 
 <style scoped>
 .main {
@@ -311,9 +185,6 @@ export default {
     display: flex;
     justify-content: flex-end;
 }
-a {
-    text-decoration: none;
-  }
 
 .pagination {
   display: flex;

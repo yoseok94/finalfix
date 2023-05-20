@@ -1,21 +1,32 @@
 <template>
+  <!-- 이동이력 출력 -->
     <div class="main">
+      <h2 align="center">이동이력</h2>
+
+        <!--카테고리검색-->
         <div class="top">
-            <form class="search">
-                <select>
-                    <option value="all">전체</option>
-                    <option value="departmentname">부서명</option>
-                    <option value="ID">ID</option>
-                    <option value="name">이름</option>
-                    <option value="position">직급</option>
-                </select>
-                <input type="text" maxlength = 20 value="" autocomplete="off">
-                <button>
-                    <i>검색</i>
-                </button>
-            </form>
+          <div class="d-inline-flex align-items-center">
+            <div class="form-group mr-2">
+              <select id="category" v-model="search_key" class="form-control">
+                <option value="">- 선택 -</option>
+                <option value="Deptname">부서명</option>
+                <option value="ID">ID</option>
+                <option value="Name">이름</option>
+                <!-- <option value="Level">직급</option>
+                <option value="Hiredate">작성일자</option>
+                <option value="Accept">현황</option> -->
+              </select>
+            </div>
+            <div class="form-group mr-2">
+              <input type="text" v-model="search_value" class="form-control" @keyup.enter="fnPage()" placeholder="입력란">
+            </div>
+            <div class="form-group mr-1">
+              <button class="form-control" type="button"  @click="fnPage()">조회</button>
+            </div>
+          </div>
         </div>
-<br>
+
+        <!-- 내용 -->
         <table class="w3-table-all">
             <thead class="theadline">
                 <tr>
@@ -26,167 +37,139 @@
                     <th>작성일자</th>
                     <th>=></th>
                     <th>희망부서</th>
-                    <th></th>
+                    <th>세부내역조회</th>
                     <th>현황</th>
                 </tr>
             </thead>
-            <tbody class="tbodyline">
-                <tr>
-                    <td>부서1</td>
-                    <td>s01</td>
-                    <td>김신촌</td>
-                    <td>사원</td>
-                    <td></td>
+            <tbody>
+                 <tr v-for="(row, appno) in list" :key="appno">   
+                    <td>{{ row.appdeptname }}</td>
+                    <td>{{ row.appid }}</td>
+                    <td>{{ row.appname }}</td>
+                    <td>{{ row.applevel }}</td>
+                    <td>{{ row.appdate }}</td>
+                    <!-- 클릭시 해당 인원의 세부정보가 나와야함 -->
                     <td>=></td>
-                    <td>부서2</td>
-                    <td><button>내역조회</button></td>
-                    <td><button>거부</button></td>
-                </tr>
-                <tr>
-                    <td>부서1</td>
-                    <td>s01</td>
-                    <td>김신촌</td>
-                    <td>사원</td>
-                    <td></td>
-                    <td>=></td>
-                    <td>부서3</td>
-                    <td><button>내역조회</button></td>
-                    <td><button>검토중</button></td>
-                </tr>
-                <!-- <tr>
-                    <td>부서2</td>
-                    <td>s02</td>
-                    <td>최강대</td>
-                    <td>임원</td>
-                    <td><button>신청내역조회</button></td>
-                    <td>소속부서</td>
-                    <td>=></td>
-                    <td>부서3</td>
-                    <td><button>승인</button>&nbsp;<button>가결</button></td>
-                </tr>
-                <tr>
-                    <td>부서2</td>
-                    <td>s03</td>
-                    <td>서홍대</td>
-                    <td>사원</td>
-                    <td><button>신청내역조회</button></td>
-                    <td>소속부서</td>
-                    <td>=></td>
-                    <td>부서3</td>
-            <td><button>승인</button>&nbsp;<button>가결</button></td>
-                </tr>
-                <tr>
-                    <td>부서2</td>
-                    <td>s04</td>
-                    <td>박수원</td>
-                    <td>사원</td>
-                    <td><button>신청내역조회</button></td>
-                    <td>소속부서</td>
-                    <td>=></td>
-                    <td>부서4</td>
-            <td><button>승인</button>&nbsp;<button>가결</button></td>
-                </tr>
-                <tr>
-                    <td>부서2</td>
-                    <td>s05</td>
-                    <td>염용산</td>
-                    <td>사원</td>
-                    <td><button>신청내역조회</button></td>
-                    <td>소속부서</td>
-                    <td>=></td>
-                    <td>부서3</td>
-            <td><button>승인</button>&nbsp;<button>가결</button></td>
-                </tr>
-                <tr>
-                    <td>부서3</td>
-                    <td>s06</td>
-                    <td>한이대</td>
-                    <td>임원</td>
-                    <td><button>신청내역조회</button></td>
-                    <td>소속부서</td>
-                    <td>=></td>
-                    <td>부서1</td>
-            <td><button>승인</button>&nbsp;<button>가결</button></td>
-                </tr>
-                <tr>
-                    <td>부서4</td>
-                    <td>s07</td>
-                    <td>변아현</td>
-                    <td>임원</td>
-                    <td><button>신청내역조회</button></td>
-                    <td>소속부서</td>
-                    <td>=></td>
-                    <td>부서4</td>
-            <td><button>승인</button>&nbsp;<button>가결</button></td>
-                </tr> -->
-                <tr>
-                    <td><br></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-            <td></td>
-                </tr>
-                <tr>
-                    <td><br></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-            <td></td>
-                </tr>
-                <tr>
-                    <td><br></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-            <td></td>
-                </tr>
-                <tr>
-                    <td><br></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-            <td></td>
-                </tr>
-                <tr>
-                    <td><br></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-            <td></td>
+                    <!-- 모든 부서가 나와야 하며 선택한 부서값 전달 -->
+                    <td>{{ row.appchange }}</td>
+                    <td><a v-on:click="fnView(`${row.appno}`)"><button>세부내역조회</button></a></td>
+                    <!-- <td><router-link to="/management/movedetailscheck"><button>세부내역조회</button></router-link></td> -->
+                    <td>{{ row.appaccept }}</td>
                 </tr>
             </tbody>
-            <!-- <tfoot>
-                <tr>
-                    <td>1 2 3</td>
-                </tr>
-            </tfoot> -->
         </table>
-        <span class="buttonbro">
-            <button class="w3-button w3-round w3-blue-gray">신청하기</button>
+        <!-- <router-link to="/management/writereasonapp"><button class="form-control">신청하기</button></router-link> -->
+      <!-- 페이징 -->
+      <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
+        <span class="pg">
+          <a href="javascript:;" @click="fnPage(1)" class="first w3-button w3-border">&lt;&lt;</a>
+          <a href="javascript:;" v-if="paging.startPage > 10" @click="fnPage(`${paging.startPage-1}`)"
+            class="prev w3-button w3-border">&lt;</a>
+          <template v-for=" (n,index) in paginavigation()">
+            <template v-if="paging.page==n">
+              <strong class="w3-button w3-border w3-green" :key="index">{{ n }}</strong>
+            </template>
+            <template v-else>
+              <a class="w3-button w3-border" href="javascript:;" @click="fnPage(`${n}`)" :key="index">{{ n }}</a>
+            </template>
+          </template>
+          <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage"
+            @click="fnPage(`${paging.endPage+1}`)" class="next w3-button w3-border">&gt;</a>
+          <a href="javascript:;" @click="fnPage(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
         </span>
+      </div>
     </div>
 </template>
 
+<script>
+export default {
+  data() {
+    return {
+      requestBody: {}, //리스트 페이지 데이터전송
+      list: {}, //리스트 데이터
+      no: '', //게시판 숫자처리
+      paging: {
+        block: 0,
+        endPage: 0,
+        nextBlock: 0,
+        page: 0,
+        pageSize: 0,
+        prevBlock: 0,
+        startIndex: 0,
+        startPage: 0,
+        totalBlockCnt: 0,
+        totalListCnt: 0,
+        totalPageCnt: 0,
+      }, //페이징 데이터
+      page: this.$route.query.page ? this.$route.query.page : 1,
+      size: this.$route.query.size ? this.$route.query.size :10,
+      //keyword: this.$route.query.keyword,
+      search_key: this.$route.query.sk ? this.$route.query.sk : '',
+      search_value: this.$route.query.sv ? this.$route.query.sv : '',
+      paginavigation: function () { //페이징 처리 for문 커스텀
+        let pageNumber = [] //;
+        let startPage = this.paging.startPage;
+        let endPage = this.paging.endPage;
+        for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+        return pageNumber;
+      }
+    }
+  },
+  mounted() {
+    this.fnGetList();
+  },
+  methods: {
+    fnGetList() {
+      //스프링부트에서 전송받은 데이터 출력처리
+      this.requestBody = { // 데이터 전송
+        // keyword: this.keyword,
+        sk: this.search_key,
+        sv: this.search_value,
+        page: this.page,
+        size: this.size
+      }
+      this.$axios.get(this.$serverUrl + "/management/deptapplist", {
+        params: this.requestBody,
+        headers: {}
+      }).then((res) => {        
+        //this.list = res.data  //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.  
+        if (res.data.resultCode === "OK") {
+          this.list = res.data.data
+          this.paging = res.data.pagination
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+        }
+      }).catch((err) => {
+        if (err.message.indexOf('Network Error') > -1) {
+          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+        }
+      })
+    },
+    fnView(appno) {
+      this.requestBody.appno = appno
+      this.$router.push({
+        path: '/management/movedetailscheck',
+        query: this.requestBody
+      })
+    },
+    fnPage(n) {
+      if (this.page !== n) {
+        this.page = n          
+      }
+      this.fnGetList()
+    },
+    fnWrite() {
+      this.$router.push({
+        path: './write'
+      })
+    },
+    fnUpdate(){
+      this.$router.push({
+      path: './update'
+      })
+    },
+  },
+};
+</script>
 
 
 <style scoped>
@@ -198,12 +181,26 @@
     justify-content: flex-end;
 }
 
-.theadline {
-    background-color: rgb(203, 201, 201);
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.buttonbro {
-    display: flex;
-    justify-content: flex-end;
+.page {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.page.active,
+.page:hover {
+  background-color: #0077cc;
+  color: #fff;
 }
 </style>

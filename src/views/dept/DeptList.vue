@@ -10,7 +10,6 @@
       <thead>
         <tr>
           <th></th>
-          <th>번호</th>
           <th>부서명</th>
           <th>부서 코드</th>
           <th>상품코드</th>
@@ -20,11 +19,9 @@
       <tbody>
         <tr v-for="(row, deptno) in list" :key="deptno">
           <div class="form-check">
-            <input type="checkbox" class="form-check-input" id="same-address">
-            <label></label>
+            <input type="checkbox" :value="row.deptno" v-model="deptnock" id="deptno">          
           </div>    
-          <td>{{ row.deptno }}</td>
-          <td>{{ row.deptname }}</td>
+          <td><a v-on:click="fnView(`${row.deptno}`)">{{ row.deptname }}</a></td>
           <td>{{ row.deptid }}</td>
           <td>{{ row.productid }}</td>
           <td>{{ row.deptdate }}</td>
@@ -47,12 +44,6 @@
         </div>
         <div class="form-group mr-1">
           <button class="form-control" type="button"  @click="fnPage()">조회</button>
-        </div>
-        <div class="form-group mr-1">
-          <button class="form-control" type="button"  @click="fnDelete()">삭제</button>
-        </div>
-        <div class="form-group mr-1">
-          <button class="form-control" type="button"  @click="fnUpdate()">수정</button>
         </div>
       </div>
     </div>
@@ -80,6 +71,7 @@
 export default {
   data() {
     return {
+            deptnock: [],
            requestBody: {}, //리스트 페이지 데이터전송
                 list: {}, //리스트 데이터
                 no: '', //게시판 숫자처리
@@ -97,7 +89,7 @@ export default {
                     totalPageCnt: 0,
                 }, //페이징 데이터
                 page: this.$route.query.page ? this.$route.query.page : 1,
-                size: this.$route.query.size ? this.$route.query.size :8,
+                size: this.$route.query.size ? this.$route.query.size :10,
                 //keyword: this.$route.query.keyword,
                 search_key: this.$route.query.sk ? this.$route.query.sk : '',
                 search_value: this.$route.query.sv ? this.$route.query.sv : '',
@@ -117,7 +109,6 @@ export default {
               fnGetList() {
                 //스프링부트에서 전송받은 데이터 출력처리
                                   this.requestBody = { // 데이터 전송
-                                  // keyword: this.keyword,
                                   sk: this.search_key,
                                   sv: this.search_value,
                                   page: this.page,
@@ -140,10 +131,17 @@ export default {
                                   }
                               })
     },
+    fnView(deptno) {
+      this.requestBody.deptno = deptno
+      this.$router.push({
+        path: './detail',
+        query: this.requestBody
+      })
+    },
     fnPage(n) {
       if (this.page !== n) {
                   this.page = n
-                  
+
                 }
                 this.fnGetList()
       },
@@ -152,11 +150,21 @@ export default {
                   path: './write'
                 })
               },
-      fnUpdate(){
-          this.$router.push({
-            path: './update'
-          })
-      },
+    // fnDelete(deptnock) {
+    //   this.deptnock = deptnock
+    //   this.$axios.delete(this.$serverUrl + '/dept/deldept', JSON.stringify({list: deptnock})) //수정(js)
+    //       .then(() => {
+    //         alert('삭제되었습니다.')
+    //         this.fnGetList();
+    //       }).catch((err) => {
+    //     console.log(err);
+    //   })
+    // },
+      // fnUpdate(){
+      //     this.$router.push({
+      //       path: './update'
+      //     })
+      // },
   },
 };
 </script>
