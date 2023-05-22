@@ -84,6 +84,8 @@ export default {
           }
         }).catch((err) => {
           console.log(err);
+          alert("회원정보가 없습니다. 다시 입력해주세요.");
+        this.$router.go(0);
         });
       }
     },

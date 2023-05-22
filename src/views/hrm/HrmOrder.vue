@@ -18,20 +18,18 @@
               <th scope="col">퇴근시간</th>
               <th scope="col">출근IP</th>
               <th scope="col">퇴근IP</th>
-              <th scope="col">휴무여부</th>
-              <th scope="col">연차</th>
+              <th scope="col">근태구분</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>AM 08:21</td>
-              <td>PM 08:23</td>
-              <td>199.999.9.9</td>
-              <td>199.999.9.9</td>
-              <td>N</td>
-              <td>12개</td>
+              <td>{{this.empId}}</td>
+              <td>{{this.empname}}</td>
+              <td>{{this.intime}}</td>
+              <td>{{this.outtime}}</td>
+              <td>{{this.inip}}</td>
+              <td>{{this.outip}}</td>
+              <td>{{this.divide}}</td>
             </tr>
           </tbody>
         </table>
@@ -40,45 +38,238 @@
 <div class="col-md-8 order-md-1">
   <br>
           <h2 class="mb-3" align="center">근태 신청서</h2>
+          <hr class="my-4">
+            <div class="col-sm-2">
+              <div class="input-group has-validation">  
+                <span class="input-group-text">&nbsp; Name &nbsp;</span>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group has-validation">
+                <input type="text" class="form-control" v-model="empname" readonly>
+              </div>
+            </div>
+          <hr class="my-4">
+            <div class="col-sm-2">
+              <div class="input-group has-validation">  
+                <span class="input-group-text">&nbsp; 담당부서 &nbsp;</span>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group has-validation">
+                <input type="text" class="form-control" v-model="deptname" readonly>
+              </div>
+            </div>
           <hr class="mb-4">
-          <span class="needs-validation" novalidate="">
-            <div class="mb-3">
-              <label for="Name">Name : </label>
-              김이름 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              <label for="Dept">담당부서 : </label>
-              A파트 부서
+            <div class="col-sm-2">
+              <div class="input-group has-validation">  
+                <span class="input-group-text">&nbsp; 기 간 &nbsp;</span>
+              </div>
             </div>
+            <div class="col-sm-10">
+              <div class="input-group has-validation">
+                <input type="date" class="form-control" v-model="requestdate">
+              </div>
+            </div>
+          <hr class="mb-4">
+            <div class="col-sm-2">
+              <div class="input-group has-validation">  
+                <span class="input-group-text">&nbsp; 사 유 &nbsp;</span>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group has-validation">
+                <input type="radio" v-model="reason" value="조퇴">
+                <label for="조퇴">조퇴</label>
+                <input type="radio" v-model="reason" value="연차">
+                <label for="연차">연차</label>
+                <input type="radio" v-model="reason" value="기타">
+                <label for="기타">기타</label>
+              </div>
+            </div>
+          <hr class="mb-4">
+          <div v-if="reason == '기타'">
+            <div class="col-sm-2">
+              <div class="input-group has-validation">  
+                <span class="input-group-text">&nbsp; 기타사유 &nbsp;</span>
+              </div>
+            </div>
+            <div class="col-sm-10">
+              <div class="input-group has-validation">
+                <input type="text" class="form-control" v-model="reasonpr">
+              </div>
+            </div>
+          </div>
             <hr class="mb-4">
-            <div class="mb-3">
-              <label for="hrmdate">기간 : </label>
-              <input type="date" class="form-control" id="hrmdate">
-            </div>
-            <hr class="mb-4">
-            <div class="mb-3">
-            <div class="custom-control custom-checkbox">
-              사유 : 
-              <input type="radio" class="custom-control-input" id="save-info">
-              <label class="custom-control-label" for="save-info">조퇴</label>
-              <input type="radio" class="custom-control-input" id="save-info">
-              <label class="custom-control-label" for="save-info">연차</label>
-              <input type="radio" class="custom-control-input" id="save-info">
-              <label class="custom-control-label" for="save-info">기타</label>
-            </div>
-            <hr class="mb-4">
-            </div>
-            <div class="mb-3">
-            <label for="hrmetc">기타 사유 : </label><br><textarea style="width:500px; height:auto;"></textarea>
-            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-            <button @onclick="fnhrmsub()">등록</button>
-            </div>
-          </span>
-        </div>
+            <div class="col-sm-2">
+              <div class="input-group has-validation">  
+                <button @click="fnorder()">등록</button>
+              </div>
+            </div>          
+      </div>
 </div>
 </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data(){
+    return{
+      empno: sessionStorage.getItem("empno"),
+      requestBody: {},
+      attendenceno: "",
+      empId: "",
+      empname: "",
+      deptname: "",
+      intime: "",
+      outtime: "",
+      inip: "",
+      outip: "",
+      divide: "",
+      reason: "",
+      reasonpr: "",
+      requestdate: "",
+      checkdate: "",
+      requestresult: "N",
+      checkresult: "",
+    };
+  },
+  mounted(){
+    this.setNowTimes();
+  },
+  methods: {
+    setNowTimes(){        
+      let myDate = new Date()
+      let yy = String(myDate.getFullYear())
+      let mm = String(myDate.getMonth() + 1 < 10 ? '0' + (myDate.getMonth() + 1) : (myDate.getMonth() + 1))
+      let dd = String(myDate.getDate() < 10 ? '0' + myDate.getDate() : myDate.getDate())
+      this.requestdate = yy + '-' + mm + '-' + dd
+      this.checkdate = yy + '-' + mm + '-' + dd
+      this.fngetemp();
+    },
+    fnorder(){
+      if(this.reason != "기타"){
+        this.reasonpr = "기타사유x"
+      }
+      if(this.checkdate < this.requestdate){
+        if(this.checkresult == null){
+        let apiUrl = this.$serverUrl + '/hrm/orderin'
+          this.form = {
+            "empId": this.empId,
+            "empname": this.empname,
+            "deptname": this.deptname,
+            "reason": this.reason,
+            "reasonpr": this.reasonpr,
+            "requestdate": this.requestdate,
+            "requestresult": this.requestresult,
+          },
+          this.$axios.post(apiUrl, this.form)
+          .then(() => {
+            alert("근태 신청 처리 되었습니다.");
+            this.fngetemp();
+          }).catch((err) => {
+            console.log(err)
+          });
+        }
+        else{
+          let apiUrl = this.$serverUrl + '/hrm/orderup'
+          this.form = {
+            "attendenceno": this.attendenceno,
+            "reason": this.reason,
+            "reasonpr": this.reasonpr,
+            "requestdate": this.requestdate,
+            "requestresult": this.requestresult,
+          },
+          this.$axios.patch(apiUrl, this.form)
+          .then(() => {
+            alert("근태 신청 처리 되었습니다.");
+            this.fngetemp();
+          }).catch((err) => {
+            console.log(err)
+          });
+        }
+      }else{
+        alert("해당 날짜로 신청 불가능합니다.");
+        this.$router.go(0);
+      }
+    },
+    fngetemp(){
+      this.$axios.get(this.$serverUrl + "/hrm/hrmup/" + this.empno
+        ).then((res) => {
+          this.requestBody = res.data
+          this.empId = this.requestBody.empId
+          this.empname = this.requestBody.empname
+          this.deptname = this.requestBody.deptname
+          this.fngetattendence();
+        }).catch((err) => {
+          console.log(err)
+        });
+    },
+    fngetattendence(){
+      this.$axios.get(this.$serverUrl + "/hrm/adinfo/" + this.empId
+        ).then((res) => {
+          this.requestBody = res.data
+          this.attendenceno = this.requestBody.attendenceno
+          this.intime = this.requestBody.intime
+          this.outtime = this.requestBody.outtime
+          this.inip = this.requestBody.inip
+          this.outip = this.requestBody.outip
+          this.divide = this.requestBody.divide
+          this.reason = "기타"
+          this.reasonpr = this.requestBody.reasonpr
+          this.requestdate = this.requestBody.requestdate
+          this.checkresult = this.requestBody.requestresult
+          
+        }).catch((err) => {
+          console.log(err)
+        });
+    },
+    fnincheck(){
+      if(this.intime == null){
+        if(this.reason == null && this.checkresult == "N" || this.checkresult == null){
+          let apiUrl = this.$serverUrl + '/hrm/adin'
+          this.form = {
+            "empId": this.empId,
+            "empname": this.empname,
+            "deptname": this.deptname,
+            "requestresult": this.requestresult,
+          },
+          this.$axios.post(apiUrl, this.form)
+          .then(() => {
+            alert("출근 처리 되었습니다.");
+            this.fngetemp();
+          }).catch((err) => {
+            console.log(err)
+          });
+        }else{
+          alert("근태 신청한 일자는 출근처리 불가합니다.");
+          this.$router.go(0);
+        }
+      }else{
+        alert("이미 처리되었습니다.");
+        this.$router.go(0);
+      }
+    },
+    fnoutcheck(){
+      if(this.outtime == null){
+        let apiUrl = this.$serverUrl + '/hrm/adout'
+        this.form = {
+          "attendenceno": this.attendenceno,
+        },
+        this.$axios.patch(apiUrl, this.form)
+        .then(() => {
+          alert("퇴근 처리 되었습니다.");
+          this.fngetemp();
+        }).catch((err) => {
+          console.log(err)
+        });
+      }else{
+        alert("이미 처리되었습니다.");
+        this.$router.go(0);
+      }
+    },
+  }
+}
 </script>
 
 <style scoped>

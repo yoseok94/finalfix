@@ -3,15 +3,14 @@
     <div class="dept-detail">      
       <div class="dept-contents">
         <h3 style="text-align: center;">부서 수정</h3>
-        <hr>
-        <label for="dept_id">1. 부서코드</label>
-        <input type="text" v-model="dept_id" class="w3-input w3-border" id="dept_id" placeholder="부서코드 입력">
+        <label for="deptid">1. 부서코드</label>
+        <input type="text" v-model="deptid" class="w3-input w3-border" id="deptid" placeholder="부서코드 입력">
         <br>
-        <label for="dept_name" v-if="idx === undefined">2. 부서명</label>
-        <input type="text" v-model="dept_name" class="w3-input w3-border" id="dept_name" placeholder="부서명 입력" v-if="idx === undefined">
+        <label for="deptname" v-if="deptno === undefined">2. 부서명</label>
+        <input type="text" v-model="deptname" class="w3-input w3-border" id="deptname" placeholder="부서명 입력" v-if="deptno === undefined">
         <br>
-        <label for="dept_id">3. 상품코드</label>
-        <input type="text" v-model="product_id" class="w3-input w3-border" id="product_id" placeholder="상품코드 입력">
+        <label for="deptid">3. 상품코드</label>
+        <input type="text" v-model="productid" class="w3-input w3-border" id="productid" placeholder="상품코드 입력">
       </div>
       <div class="common-buttons">
         <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">수정</button>
@@ -26,12 +25,11 @@ export default {
 data() { //변수생성
 return {
 requestBody: this.$route.query,
-dept_no: this.$route.query.dept_no,
-
-  dept_name: '',
-  dept_id: '',
-  product_id: '',
-  created_at: ''
+deptno: this.$route.query.deptno,
+  deptname: '',
+  deptid: '',
+  productid: '',
+  deptdate: ''
 }
 
 },
@@ -40,55 +38,35 @@ this.fnGetView()
 },
 methods: {
 fnGetView() {
-if (this.dept_no !== undefined) {
-this.$axios.get(this.$serverUrl + '/dept/' + this.dept_no, {
+if (this.deptno !== undefined) {
+this.$axios.get(this.$serverUrl + '/dept/' + this.deptno, {
 params: this.requestBody
 }).then((res) => {
-this.dept_name = res.data.dept_name
-this.dept_id = res.data.dept_id
-this.product_id = res.data.product_id
-this.created_at = res.data.created_at
+this.deptname = res.data.deptname
+this.deptid = res.data.deptid
+this.productid = res.data.productid
+this.deptdate = res.data.deptdate
 }).catch((err) => {
 console.log(err)
 })
 }
 },
-fnList() {
-delete this.requestBody.dept_no
-this.$router.push({
-path: './list',
-query: this.requestBody
-})
-},
-
-
-
-fnView(dept_no) {
-this.requestBody.dept_no = dept_no
-this.$router.push({
-path: './detail',
-query: this.requestBody
-})
-},
-
-
-
-
 fnSave() {
 let apiUrl = this.$serverUrl + '/board'
 this.form = {
-"idx": this.idx,
-"title": this.title,
-"contents": this.contents,
-"author": this.author
+"deptno": this.deptno,
+"deptid": this.dept_id,
+"product_id": this.product_id,
+"deptname": this.deptname,
+"deptdate": this.deptdate
 }
 
-  if (this.idx === undefined) {
+  if (this.deptno === undefined) {
     //INSERT
     this.$axios.post(apiUrl, this.form)
     .then((res) => {
       alert('글이 저장되었습니다.')
-      this.fnView(res.data.idx)
+      this.fnView(res.data.deptno)
     }).catch((err) => {
       if (err.message.indexOf('Network Error') > -1) {
         alert('네트워크가 원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
@@ -99,7 +77,7 @@ this.form = {
     this.$axios.patch(apiUrl, this.form)
     .then((res) => {
       alert('글이 저장되었습니다.')
-      this.fnView(res.data.idx)
+      this.fnView(res.data.deptno)
     }).catch((err) => {
       if (err.message.indexOf('Network Error') > -1) {
         alert('네트워크가 원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
