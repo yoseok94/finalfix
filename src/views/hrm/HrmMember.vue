@@ -1,5 +1,5 @@
 <template>
-<div class="hrmlist">
+<div class="hrmmember">
   <div>
     <h2 align="center">사원정보 리스트</h2>
     <div class="table-responsive">
@@ -23,7 +23,7 @@
           </thead>
           <tbody>
             <tr v-for="(row, empno) in list" :key="empno">
-              <td>{{ row.empid }}</td>
+              <td>{{ row.empId }}</td>
               <td>{{ row.empname }}</td>
               <td>{{ row.empstatus }}</td>
               <td>{{ row.deptname }}</td>
@@ -202,7 +202,7 @@ export default {
   align-items: center;
   justify-content: center;
 }
-.hrmlist{
+.hrmmember{
   display: flex;
   flex-direction: column;
   height: calc(100vh - 60px);
