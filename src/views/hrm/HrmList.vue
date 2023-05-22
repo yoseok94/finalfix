@@ -1,7 +1,7 @@
 <template>
 <div class="hrmlist">
   <div>
-    <h2 align="center">사원정보 리스트</h2>
+    <h2 align="center">근태 신청자 리스트</h2>
     <div class="table-responsive">
       <hr class="my-4">
         <table class="table table-striped table-sm">
@@ -9,23 +9,33 @@
             <tr>
               <th scope="col">ID</th>
               <th scope="col">NAME</th>
+              <th scope="col">직급</th>
               <th scope="col">사유</th>
+              <th scope="col">추가내용</th>
               <th scope="col">담당부서</th>
+              <th scope="col">처리상태</th>
               <th scope="col">근태처리</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(row, attendenceno) in list" :key="attendenceno">
-              <td>{{ row.empid }}</td>
-              <td>{{ row.empname }}</td>
-              <td>{{ row.empstatus }}</td>
-              <td>{{ row.deptname }}</td>
-              <td>
-              <button @click="fnhrmup(row.empno)">승인</button>
-              </td>
-              <td>
-              <button @click="fnhrmde(row.empno, row.empstatus)">반려</button>
-              </td>
+                <td v-if="row.reason != null">{{ row.empId }}</td>
+                <td v-if="row.reason != null">{{ row.empname }}</td>
+                <td v-if="row.reason != null">{{ row.emplevel }}</td>
+                <td v-if="row.reason != null">{{ row.reason }}</td>
+                <td v-if="row.reason != null">{{ row.reasonpr }}</td>
+                <td v-if="row.reason != null">{{ row.deptname }}</td>
+                <td v-if="row.reason != null">{{ row.requestresult }}</td>
+                <div v-if="row.requestresult == 'N' && row.empId != empId && row.emplevel != emplevel && row.reason != null">
+                <td>
+                <button @click="fnchangeresult(row.attendenceno, row.requestresult)">승인</button>
+                </td>
+                </div>
+                <div v-if="row.requestresult == 'Y' && row.empId != empId && row.emplevel != emplevel && row.reason != null">
+                <td>
+                <button @click="fnchangeresult(row.attendenceno, row.requestresult)">반려</button>
+                </td>
+                </div>
             </tr>
           </tbody>
         </table>
@@ -34,25 +44,25 @@
               <option value="ID">ID</option>
               <option value="Name">Name</option>
             </select>
-            <input type="text" v-model="search_value" @keyup.enter="fnhrmsearch()">
-            <button @click="fnhrmsearch()">검색</button>
+            <input type="text" v-model="search_value" @keyup.enter="fnattendencesearch()">
+            <button @click="fnattendencesearch()">검색</button>
         </div> 
         <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
             <span>
-              <a href="javascript:;" @click="fnhrmsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
-              <a href="javascript:;" v-if="paging.startPage > 10" @click="fnhrmsearch(`${paging.startPage - 1}`)" class="prev w3-button w3-border">
+              <a href="javascript:;" @click="fnattendencesearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
+              <a href="javascript:;" v-if="paging.startPage > 10" @click="fnattendencesearch(`${paging.startPage - 1}`)" class="prev w3-button w3-border">
               &lt;</a>
               <template v-for="(n, index) in paginavigation()">
               <template v-if="paging.page == n">
               <strong class="w3-button w3-border w3-green" :key="index">{{n}}</strong>
               </template>
               <template v-else>
-              <a class="w3-button w3-border" href="javascript:;" @click="fnhrmsearch(`${n}`)" :key="index">{{ n }}</a>
+              <a class="w3-button w3-border" href="javascript:;" @click="fnattendencesearch(`${n}`)" :key="index">{{ n }}</a>
               </template>
               </template>
-              <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnhrmsearch(`${paging.endPage + 1}`)" class="next w3-button w3-border">
+              <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnattendencesearch(`${paging.endPage + 1}`)" class="next w3-button w3-border">
               &gt;</a>
-              <a href="javascript:;" @click="fnhrmsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+              <a href="javascript:;" @click="fnattendencesearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
             </span>
         </div>
     </div>
@@ -64,9 +74,11 @@
 export default {
   data() { //변수생성
     return {
-      empno: sessionStorage.getItem("empno"),
+      empId: sessionStorage.getItem("empId"),
+      emplevel: sessionStorage.getItem("emplevel"),
+
       requestBody: {},
-      attendenceno: "",
+
       list: {},
       no: '',
       paging: {
@@ -93,21 +105,21 @@ export default {
         for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
         return pageNumber;
       },
-      empstatus: "" 
+
     }
   },
   mounted() {
-    this.fnhrmlist()
+    this.fnattendencelist()
   },
   methods: {
-    fnhrmsearch(n) {
+    fnattendencesearch(n) {
       if (this.page !== n) {
         this.page = n       
       }
 
-      this.fnhrmlist()      
+      this.fnattendencelist()      
     },
-    fnhrmlist(){
+    fnattendencelist(){
       this.requestBody = { // 데이터 전송        
         sk: this.search_key,
         sv: this.search_value,
@@ -115,7 +127,7 @@ export default {
         size: this.size
       }
 
-      this.$axios.get(this.$serverUrl + "/hrm/hrmmember", {
+      this.$axios.get(this.$serverUrl + "/hrm/adlist", {
         
         params: this.requestBody,
         headers: {}
@@ -133,38 +145,23 @@ export default {
         }
       })
     },
-    fnincheck(){
-      this.$router.push({
-        path: './hrmenroll'
-      })
-    },
-    fnhrmup(empno){
-      this.requestBody.empno = empno
-      this.$router.push({
-        path: './hrmup',
-        query: this.requestBody
-      })
-    },
-    fnexceldown(){
-
-    },
-    fnhrmde(empno, empstatus){
-      if(empstatus == "N"){
+    fnchangeresult(attendenceno, requestresult){
+      if(requestresult == 'Y'){
         this.form = {
-          "empno": empno,
-          "empstatus": "Y"
+          "attendenceno": attendenceno,
+          "requestresult": "N"
         }
       }else{
         this.form = {
-          "empno": empno,
-          "empstatus": "N"
+          "attendenceno": attendenceno,
+          "requestresult": "Y"
         }
       }
-
-      this.$axios.patch(this.$serverUrl + "/hrm/employeequit", this.form)
+      
+      this.$axios.patch(this.$serverUrl + "/hrm/changeresult", this.form)
       .then(() => {
-          alert('재직상태가 변경되었습니다.')
-          this.fnhrmlist();
+          alert('근태신청 처리 결과가 반영되었습니다.')
+          this.fnattendencelist();
       }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
           alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')

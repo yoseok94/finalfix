@@ -49,6 +49,7 @@ export default {
           this.requestBody = res.data
           if(this.password == this.requestBody.emppw && this.userId == this.requestBody.empId){
             sessionStorage.setItem('empno', this.requestBody.empno)
+            sessionStorage.setItem('empId', this.requestBody.empId)
             sessionStorage.setItem('emplevel', this.requestBody.emplevel)
           
             this.changepage();

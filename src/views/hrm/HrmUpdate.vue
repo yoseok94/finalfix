@@ -1,34 +1,10 @@
 <!-- PageAbout.vue -->
 <template>
 <div class="maindiv">
-<div>
+  <div>
     <div class="col-md-7 col-lg-8">
-        <h2 align="center">사원정보수정</h2>
-        <form class="needs-validation" novalidate="">
-          <div class="row g-3">
-
-            
-            
-            <hr class="my-4">
-            <div class="col-sm-2">
-                <div class="input-group has-validation">
-                    <span align="center" style="margin: 0; padding: 0; display: flex;" class="input-group-text">
-                        &nbsp; Profile image &nbsp;</span>
-                </div>
-            </div>
-            &nbsp;&nbsp;
-            <img id="showprofile"
-            style="height: 90px; width: 110px; border-radius: 25px; border: 2px solid #D1D1D1;" alt="profile"/>
-            &nbsp;
-            <div class="col-sm-7">
-                <div class="input-group has-validation">
-                    <input type="file" class="form-control" id="hrmimage">
-                </div>
-            </div>
-            
-
-
-            <hr class="my-4">
+          <h2 align="center">사원정보수정</h2>
+          <hr class="my-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; I &nbsp; &nbsp; D &nbsp;</span>
@@ -36,13 +12,13 @@
             </div>
             <div class="col-sm-10">
                 <div class="input-group has-validation">
-                    <input type="text" class="form-control" :value="empid" readonly>
+                    <input type="text" class="form-control" v-model="empId" readonly>
                 </div>
             </div>
 
             
             
-            <hr class="my-4">
+          <hr class="my-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; P &nbsp; &nbsp; W &nbsp;</span>
@@ -50,13 +26,13 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                    <input type="password" class="form-control" :value="emppw">
+                    <input type="password" class="form-control" v-model="emppw">
               </div>
             </div>
 
             
             
-            <hr class="my-4">
+          <hr class="my-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; N a m e &nbsp;</span>
@@ -64,13 +40,13 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="text" class="form-control" :value="empname">
+                <input type="text" class="form-control" v-model="empname">
               </div>
             </div>
 
             
             
-            <hr class="my-4">
+          <hr class="my-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; P h o n e &nbsp;</span>
@@ -78,13 +54,13 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="tel" class="form-control" :value="empphone">
+                <input type="tel" class="form-control" v-model="empphone">
               </div>
             </div>
 
             
             
-            <hr class="my-4">
+          <hr class="my-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; Address &nbsp;</span>
@@ -92,14 +68,20 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <button @onclick="fnaddress()">우편번호 검색</button> &nbsp;
-                <input type="text" class="form-control" :value="empaddress">
+                <input type="text" placeholder="우편번호" v-model="zonecode" readonly>
+                <button id="postcode" @click="fnaddress()">검색</button><br>
+              </div>
+              <div class="input-group has-validation">
+                <input type="text" v-model="roadAddress" placeholder="주소" readonly><br>
+              </div>
+              <div class="input-group has-validation">
+                <input type="text" v-model="detailAddress" placeholder="상세주소">
               </div>
             </div>
 
             
             
-            <hr class="my-4">
+          <hr class="my-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; 생년월일 &nbsp;</span>
@@ -107,13 +89,13 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">  
-                <input type="text" class="form-control" :value="empbirth" readonly>
+                <input type="text" class="form-control" v-model="empbirth" readonly>
               </div>
             </div>
 
            
            
-           <hr class="my-4">
+          <hr class="my-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; 입사일 &nbsp;</span>
@@ -121,11 +103,11 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="text" class="form-control" :value="emphiredate" readonly>
+                <input type="text" class="form-control" v-model="emphiredate" readonly>
               </div>
             </div>
             
-            <hr class="my-4">
+          <hr class="my-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; 담당부서 &nbsp;</span>
@@ -133,11 +115,11 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="text" class="form-control" :value="deptname" readonly>
+                <input type="text" class="form-control" v-model="deptname" readonly>
               </div>
             </div>
             
-            <hr class="my-4">
+          <hr class="mb-4">
             <div class="col-sm-2">
               <div class="input-group has-validation">  
                 <span class="input-group-text">&nbsp; 사원구분 &nbsp;</span>
@@ -145,21 +127,19 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="text" class="form-control" :value="emplevel" readonly>
+                <input type="radio" v-model="emplevel" value="임원">
+                <label for="임원">임원</label>
+                <input type="radio" v-model="emplevel" value="사원">
+                <label for="사원">사원</label>
               </div>
+          </div> 
+          <hr class="mb-4">
+            <div>
+              <button class="btn btn-primary1" type="button" @click="fnmemberup()">수정</button>
             </div>
-          </div>
-          <br>
-          
-          
-          <hr class="my-4">
-          <div>
-            <button class="btn btn-primary1" type="button" v-on:click="fnmemberup">수정</button>
-          </div>
-          <hr class="my-4">
-        </form>
-      </div>
-</div>
+          <hr class="mb-4">
+        </div>
+  </div>
 </div>
 </template>
   
@@ -172,7 +152,7 @@ export default {
         return{
           requestbody: this.$route.query,
           empno: this.$route.query.empno,
-          empid: '',
+          empId: '',
           emppw: '',
           empname: '',
           empphone: '',
@@ -180,7 +160,12 @@ export default {
           empbirth:'',
           emphiredate:'',
           emplevel:'',
-          deptname:''
+          deptname:'',
+
+
+          zonecode: "",
+          roadAddress: "",
+          detailAddress: "",
         }
         
     },
@@ -188,6 +173,15 @@ export default {
       this.fnmember();
     },
     methods: {
+      fnaddress(){
+        new window.daum.Postcode({
+        oncomplete: (data) => {
+          // 팝업에서 검색결과 항목을 클릭했을때 실행할 코드를 작성하는 부분
+          this.zonecode = data.zonecode;
+          this.roadAddress = data.roadAddress;
+        },
+      }).open()
+      },
       fnmember(){
         if (this.empno !== undefined) {
           this.$axios.get(this.$serverUrl + "/hrm/hrmup/" + this.empno,{
@@ -195,20 +189,14 @@ export default {
           })
           .then((res) => {
             this.empno = res.data.empno
-            this.empid = res.data.empid
+            this.empId = res.data.empId
             this.emppw = res.data.emppw
             this.empname = res.data.empname
             this.empphone = res.data.empphone
-            this.empaddress = res.data.empaddress
             this.empbirth = res.data.empbirth
             this.emphiredate = res.data.emphiredate
             this.deptname = res.data.deptname
-            if(res.data.emplevel == 3){
-              this.emplevel = "사원"
-            }
-            if(res.data.emplevel == 2){
-              this.emplevel = "임원"
-            }
+            this.emplevel = res.data.emplevel
           })
           .catch((err) => {
             if (err.message.indexOf("Network Error") > -1) {
@@ -218,23 +206,33 @@ export default {
         }
       },
       fnmemberup(){
-        if (this.empno !== undefined) {
-
-          this.$axios.patch(this.$serverUrl + "/hrm/hrmup/" + this.empno,{
-            params: this.requestBody
-          })
+        let apiUrl = this.$serverUrl + '/hrm/hrmup'
+          this.form = {
+            "empno": this.empno,
+            "empId": this.empId,
+            "emppw": this.emppw,
+            "empname": this.empname,
+            "empphone": this.empphone,
+            "empaddress": this.zonecode + " " + this.roadAddress + " " + this.detailAddress,
+            "empbirth": this.empbirth,
+            "deptname": this.deptname,
+            "emplevel": this.emplevel,
+            "emphiredate": this.emphiredate,
+          },
+          this.$axios.patch(apiUrl, this.form)
           .then(() => {
-            this.$router.push({
-               path: "./hrmmember",
-           })
-          })
-          .catch((err) => {
-            if (err.message.indexOf("Network Error") > -1) {
-              alert("네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.");
-            }
+            alert("사원정보 수정 처리 되었습니다.");
+            this.changepage();
+          }).catch((err) => {
+            console.log(err)
           });
-        }
-      }
+
+       },
+       changepage(){
+        this.$router.push({
+          path: '../hrm/hrmmember',
+        })
+      },
     }
 }
 
