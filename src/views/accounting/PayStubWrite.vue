@@ -5,21 +5,21 @@
  <table>
      <tr>
          <td>사원코드</td>
-         <td><input class="table-input" type="text" v-model="employeeCode " /></td>
+         <td><input class="table-input" type="text" v-model="salaryDetails.empid" /></td>
          <td>사원명</td>
-         <td><input class="table-input" type="text" v-model="employeeName " /></td>
+         <td><input class="table-input" type="text" v-model="salaryDetails.empname" /></td>
      </tr>
      <tr>
          <td>부서</td>
-         <td><input class="table-input" type="text" v-model="deptName " /></td>
+         <td><input class="table-input" type="text" v-model="deptname " /></td>
          <td>직급</td>
-         <td><input class="table-input" type="text" v-model="jobName " /></td>
+         <td><input class="table-input" type="text" v-model="jobname " /></td>
      </tr>
      <tr>
          <td>입사일</td>
-         <td><input class="table-input" type="text" v-model="hireDate " /></td>
+         <td><input class="table-input" type="text" v-model="emphiredate " /></td>
          <td>지급일자</td>
-         <td><input class="table-input" type="text" v-model="paymentDate " /></td>
+         <td><input class="table-input" type="text" v-model="SYSDATE " /></td>
      </tr>
  </table>
 <br>
@@ -158,34 +158,61 @@
      </tbody>
  </table>
 <br>
- <div class="actions">
-     <button>저장</button>
- </div>
+    <div class="actions">
+        <router-link to="/accounting/stubwrite"><button @click="submitForm">등록</button></router-link>
+        <router-link to="/accounting/allowancesdeductions"><button>리스트작성</button></router-link>
+        <router-link to="/accounting/stubsend"><button>명세서보내기</button></router-link>
+      </div>
+
 </template>
 
 <script>
 export default {
-data() {
- return {
-   employeeCode: "EMP001",
-   employeeName: "John Doe",
-   deptName: "Sales",
-   jobName: "Manager",
-   hireDate: "2020-01-01",
-   paymentDate: "2023-04-30",
-   totalAmountPaid: "KRW 3,815,000",
-   totalDeduction: "KRW 815,000",
-   actualPaymentAmount: "KRW 3,000,000",
-   workDays: "22",
-   totalWorkHours: "176",
- };
+    data() {
+        return {
+            requestBody: this.$route.query,
+            empid : this.$route.query.empid,
+            salaryDetails: {
+                empid: this.$route.query.empid, // Add empid to the salaryDetails object
+            },
+        };
+    },
+    mounted() {
+    const empid = this.$route.query.empid;
+
+    this.$axios.get(`${this.$serverUrl}/accounting/employee/${empid}`)
+    .then((res) => {
+        this.employeeDetails = res.data; 
+    }).catch((err) => {
+        if (err.message.indexOf('Network Error') > -1) {
+            alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+        }
+    }); 
 },
-};
+    methods: {
+        formatDate(dateString) {
+        let date = new Date(dateString);
+        return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+    },
+    submitForm() {
+        this.$axios.post(`${this.$serverUrl}/accounting/salarywrite`, this.salaryDetails)
+        .then((res) => {
+            console.log(res);
+            this.$router.push('/'); 
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    },
+    }
+}
 </script>
 
 <style scoped>
 table {
- width: 100%;
+ position: relative;
+ width: 50%;
+ left: 25%;
  border-collapse: collapse;
 }
 
@@ -201,5 +228,10 @@ input.table-input {
   text-align: center;
   background-color: transparent;
   outline: none;
+}
+.actions button {
+    margin-right: 1rem;
+    position: relative;
+    left: 25%;
 }
 </style>

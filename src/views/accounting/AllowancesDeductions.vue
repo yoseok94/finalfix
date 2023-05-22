@@ -1,8 +1,11 @@
 <template>
-    <div>
-    <h1 style="text-align: center;">회계 전표 조회 페이지</h1>
+  <div>
+    <br>
+    <h1 style="text-align: center;">수당 및 공제 리스트 작성 페이지</h1>
+    <br>
+    </div>
     <div class="salary_menu-bar">
-        <div class="searchdiv">
+    <div class="searchdiv">
             <select v-model="search_key" >
               <option value="ID">ID</option>
               <option value="Name">Name</option>
@@ -10,39 +13,41 @@
             <input type="text" v-model="search_value" @keyup.enter="fnhrmsearch()">
             <button @click="fnhrmsearch()">검색</button>
         </div> 
-    </div>
-    <!-- 테이블 구역 -->
-    <table class="salary-table">
-      <thead>
-        <tr>
-          <th></th>
-          <th style="text-align: center;">전표번호</th>
-          <th style="text-align: center;">거래유형</th>
-          <th style="text-align: center;">거래금액</th>
-          <!-- <th style="text-align: center;">거래처명</th> -->
-          <th style="text-align: center;">적요</th>
-          <th style="text-align: center;">전표</th>
-          <th style="text-align: center;">결의서</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, slipstatementno) in list" :key="slipstatementno">
-          <td><input type="checkbox" /></td>
-          <td>{{ row.slipstatementdate }}</td>
-          <td>{{ row.tradetype }}</td>
-          <td>{{ row.slipstatementamount }}</td>
-          <!-- <td>{{ row.customerName }}</td> -->
-          <td>{{ row.slipstatementbrief }}</td>
-          <td style="text-align: center;">인쇄</td>
-          <td style="text-align: center;">인쇄</td>
-        </tr>
-      </tbody>
-    </table>
+      </div> 
 
-    <div class="actions">
-      <router-link to="/accounting/slipwrite"><button>등록하기</button></router-link>
-      <button>인쇄</button>
+    <!-- 테이블 구역 -->
+    <form @submit.prevent="saveData">
+      <table class="salary-table">
+        <thead>
+          <tr>
+            <th style="width: 50px;"></th>
+            <th style="width: 200px;">항목코드</th>
+            <th style="width: 400px;">항목이름</th>
+            <th>계산식</th>
+            <th>산출방법</th>
+          </tr>
+        </thead>
+        <tbody>
+         
+          <tr v-for="(row, adno) in list" :key="adno">
+            <td><input type="checkbox" style="align-items: center;"></td>
+            <td>{{ row.adcode }}</td>
+            <td>{{ row.adname }}</td>
+            <td>{{ row.adcalculation }}</td>
+            <td>{{ row.adcalculationmethod }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+    
+            <!-- 액션 버튼 (이메일 및 인쇄) 구역 -->
+            <div class="actions">
+      <button @click="sendemail()">신규등록</button>
+      <button @click="sendsms()">삭제</button>
+      <button class="movelocation" @click="updatesalary()">수정</button>
     </div>
+
+
     <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
             <span>
               <a href="javascript:;" @click="fnhrmsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
@@ -63,11 +68,8 @@
         </div>
 
 
-
-  </div>
 </template>
 
-    
 <script>
 export default {
   data() { //변수생성
@@ -120,7 +122,7 @@ export default {
         size: this.size
       }
 
-      this.$axios.get(this.$serverUrl + "/accounting/sliplist", {
+      this.$axios.get(this.$serverUrl + "/accounting/adlist", {
         
         params: this.requestBody,
         headers: {}
@@ -141,64 +143,81 @@ export default {
   }
 }
 </script>
-
+  
 <style scoped>
-    .salary_menu-bar {
-      display: flex;
-      justify-content: flex-end;
-      margin-bottom: 1rem;
-      margin-top: 5px;
-    }
-    .search_container-bar {
-      margin-right: 1rem;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+input.table-input {
+  border: none;
+}
 
-    th,
-    td {
-      padding: 0.5rem;
-      text-align: left;
-      border: 1px solid #ddd;
-    }
+.salary_menu-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+  margin-top: 5px;
+}
 
-    th {
-      background-color: #f2f2f2;
-      font-weight: bold;
-    }
+.search_container-bar {
+  margin-right: 1rem;
+}
 
-    .actions {
-      display: flex;
-      justify-content: space-between;
-      margin: 1rem 0;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-    .actions button {
-      margin-right: 1rem;
-    }
+th,
+td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
 
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin-bottom: 1rem;
-    }
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
 
-    .page {
-      display: inline-block;
-      margin: 0 5px;
-      padding: 5px 10px;
-      background-color: #f1f1f1;
-      color: #333;
-      text-decoration: none;
-      border-radius: 5px;
-      transition: background-color 0.3s ease;
-    }
-    .page.active,
-    .page:hover {
-      background-color: #0077cc;
-      color: #fff;
-    }
-  </style>
+.actions {
+  display: flex;
+  justify-content: flex-start;
+  margin: 1rem 0;
+}
+
+.actions button {
+  margin-right: 1rem;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.pagination button {
+  margin: 0 0.5rem;
+}
+
+.page {
+  display: inline-block;
+  margin: 0 5px;
+  padding: 5px 10px;
+  background-color: #f1f1f1;
+  color: #333;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.page.active,
+.page:hover {
+  background-color: #0077cc;
+  color: #fff;
+}
+
+
+th {
+  padding: 0.5rem;
+  text-align: center;
+  border: 1px solid #ddd;
+}</style>
