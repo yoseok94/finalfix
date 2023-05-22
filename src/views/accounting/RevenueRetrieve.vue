@@ -11,7 +11,6 @@
         <div style="text-align: center; font-weight: bolder;">매출 기간</div>
         <div>2023.03.21 ~ 2023.04.21</div>
        </div>
-      <input type="button" value="검색옵션"/>
    </div>
     <h3>신용카드매출</h3>
     <table class="sales-table">
