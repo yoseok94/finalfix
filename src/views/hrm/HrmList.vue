@@ -1,8 +1,9 @@
 <template>
 <div class="hrmlist">
   <div>
-    <h2 align="center">근태 신청자 리스트</h2>
+    <h2 align="center">사원정보 리스트</h2>
     <div class="table-responsive">
+      <hr class="my-4">
         <table class="table table-striped table-sm">
           <thead>
             <tr>
@@ -14,134 +15,183 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
+            <tr v-for="(row, attendenceno) in list" :key="attendenceno">
+              <td>{{ row.empid }}</td>
+              <td>{{ row.empname }}</td>
+              <td>{{ row.empstatus }}</td>
+              <td>{{ row.deptname }}</td>
               <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
+              <button @click="fnhrmup(row.empno)">승인</button>
               </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
               <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
-              </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
-              <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
-              </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
-              <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
-              </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
-              <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
-              </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
-              <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
-              </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
-              <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
-              </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
-              <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
-              </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
-              <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
-              </td>
-            </tr>
-            <tr>
-              <td>s01</td>
-              <td>김이름</td>
-              <td>연차사용</td>
-              <td>A파트부서</td>
-              <td>
-              <button @click="fnaccept()">승인</button>
-              &nbsp;
-              <button @click="fnrefuse()">반려</button>
+              <button @click="fnhrmde(row.empno, row.empstatus)">반려</button>
               </td>
             </tr>
           </tbody>
         </table>
+        <div class="searchdiv">
+            <select v-model="search_key" >
+              <option value="ID">ID</option>
+              <option value="Name">Name</option>
+            </select>
+            <input type="text" v-model="search_value" @keyup.enter="fnhrmsearch()">
+            <button @click="fnhrmsearch()">검색</button>
+        </div> 
+        <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
+            <span>
+              <a href="javascript:;" @click="fnhrmsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
+              <a href="javascript:;" v-if="paging.startPage > 10" @click="fnhrmsearch(`${paging.startPage - 1}`)" class="prev w3-button w3-border">
+              &lt;</a>
+              <template v-for="(n, index) in paginavigation()">
+              <template v-if="paging.page == n">
+              <strong class="w3-button w3-border w3-green" :key="index">{{n}}</strong>
+              </template>
+              <template v-else>
+              <a class="w3-button w3-border" href="javascript:;" @click="fnhrmsearch(`${n}`)" :key="index">{{ n }}</a>
+              </template>
+              </template>
+              <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnhrmsearch(`${paging.endPage + 1}`)" class="next w3-button w3-border">
+              &gt;</a>
+              <a href="javascript:;" @click="fnhrmsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+            </span>
+        </div>
     </div>
 </div>
 </div>
 </template>
 
 <script>
-export default {}
+export default {
+  data() { //변수생성
+    return {
+      empno: sessionStorage.getItem("empno"),
+      requestBody: {},
+      attendenceno: "",
+      list: {},
+      no: '',
+      paging: {
+        block: 0,
+        endPage: 0,
+        nextBlock: 0,
+        page: 0,
+        pageSize: 0,
+        prevBlock: 0,
+        startIndex: 0,
+        startPage: 0,
+        totalBlockCnt: 0,
+        totalListCnt: 0,
+        totalPageCnt: 0,
+      }, //페이징 데이터
+      page: this.$route.query.page ? this.$route.query.page : 1,
+      size: this.$route.query.size ? this.$route.query.size : 10,
+      search_key: this.$route.query.sk ? this.$route.query.sk : "",
+      search_value: this.$route.query.sv ? this.$route.query.sv : null,
+      paginavigation: function () { //페이징 처리 for문 커스텀
+        let pageNumber = [] //;
+        let startPage = this.paging.startPage;
+        let endPage = this.paging.endPage;
+        for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+        return pageNumber;
+      },
+      empstatus: "" 
+    }
+  },
+  mounted() {
+    this.fnhrmlist()
+  },
+  methods: {
+    fnhrmsearch(n) {
+      if (this.page !== n) {
+        this.page = n       
+      }
+
+      this.fnhrmlist()      
+    },
+    fnhrmlist(){
+      this.requestBody = { // 데이터 전송        
+        sk: this.search_key,
+        sv: this.search_value,
+        page: this.page,
+        size: this.size
+      }
+
+      this.$axios.get(this.$serverUrl + "/hrm/hrmmember", {
+        
+        params: this.requestBody,
+        headers: {}
+      }).then((res) => {      
+
+        if (res.data.resultCode === "OK") {
+          this.list = res.data.data
+          this.paging = res.data.pagination
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+        }
+        
+      }).catch((err) => {
+        if (err.message.indexOf('Network Error') > -1) {
+          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+        }
+      })
+    },
+    fnincheck(){
+      this.$router.push({
+        path: './hrmenroll'
+      })
+    },
+    fnhrmup(empno){
+      this.requestBody.empno = empno
+      this.$router.push({
+        path: './hrmup',
+        query: this.requestBody
+      })
+    },
+    fnexceldown(){
+
+    },
+    fnhrmde(empno, empstatus){
+      if(empstatus == "N"){
+        this.form = {
+          "empno": empno,
+          "empstatus": "Y"
+        }
+      }else{
+        this.form = {
+          "empno": empno,
+          "empstatus": "N"
+        }
+      }
+
+      this.$axios.patch(this.$serverUrl + "/hrm/employeequit", this.form)
+      .then(() => {
+          alert('재직상태가 변경되었습니다.')
+          this.fnhrmlist();
+      }).catch((err) => {
+        if (err.message.indexOf('Network Error') > -1) {
+          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+        }
+      })
+    },
+  }
+}
 </script>
 
 <style scoped>
+.pagination{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .hrmlist{
   display: flex;
   flex-direction: column;
   height: calc(100vh - 60px);
   overflow: auto;
   margin: 0 auto;
+}
+.searchdiv{
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .table-responsive{
     border: #87888a80 1px solid;
