@@ -5,41 +5,31 @@
  <table>
      <tr>
          <td>사원코드</td>
-         <td><input class="table-input" type="text" v-model="salaryDetails.empid" /></td>
-         <td>사원명</td>
-         <td><input class="table-input" type="text" v-model="salaryDetails.empname" /></td>
+         <td><input class="table-input" type="text" v-model="employeeDetails.empId" /></td>
+         <td>사원이름</td>
+         <td><input class="table-input" type="text" v-model="employeeDetails.empname" /></td>
      </tr>
      <tr>
-         <td>부서</td>
-         <td><input class="table-input" type="text" v-model="deptname " /></td>
-         <td>직급</td>
-         <td><input class="table-input" type="text" v-model="jobname " /></td>
+         <td>부서이름</td>
+         <td><input class="table-input" type="text" v-model="employeeDetails.deptname " /></td>
+         <td>직급이름</td>
+         <td><input class="table-input" type="text" v-model="employeeDetails.emplevel" /></td>
      </tr>
      <tr>
-         <td>입사일</td>
-         <td><input class="table-input" type="text" v-model="emphiredate " /></td>
-         <td>지급일자</td>
-         <td><input class="table-input" type="text" v-model="SYSDATE " /></td>
-     </tr>
- </table>
-<br>
- <table>
-     <tr>
-         <td>지급총액 :</td>
-         <td><input class="table-input" type="text" v-model="totalAmountPaid " /></td>
-         <td>공제총액 :</td>
-         <td><input class="table-input" type="text" v-model="totalDeduction " /></td>
-         <td>실지급액 :</td>
-         <td><input class="table-input" type="text" v-model="actualPaymentAmount " /></td>
+         <td>입사일자</td>
+         <td><input class="table-input" type="text" v-model="employeeDetails.emphiredate " /></td>
+     <td>지급일자</td>
+     <td><input class="table-input" type="text" v-model="currentDate" /></td>
      </tr>
  </table>
 <br>
  <table>
      <tr>
-         <td>근로일수 :</td>
-         <td><input class="table-input" type="text" v-model="workDays " /></td>
-         <td>총 근로시간수 :</td>
+         <td>총 근무시간 :</td>
          <td><input class="table-input" type="text" v-model="totalWorkHours " /></td>
+         <td>초과근무시간:</td>
+         <td><input class="table-input" type="text" v-model="workDays" /></td>
+         <button v-on:click="calculateSalary()">급여 계산하기</button>
      </tr>
  </table>
 <br>
@@ -47,11 +37,10 @@
      <thead>
          <tr>
              <th>수당항목명</th>
-             <th>지급유형</th>
-             <th>근무기록</th>
-             <th>수당금액</th>
-             <th>금액</th>
+             <th>계산식</th>             
              <th>산출방법</th>
+             <th>금액</th>
+             
          </tr>
      </thead>
      <tbody>
@@ -60,103 +49,33 @@
              <td><input class="table-input" type="text"></td>
         <td><input class="table-input" type="text"></td>
         <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
          </tr>
      </tbody>
      <tbody>
          <tr>
              <td>식대(고정)</td>
-             <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
+        <td><input class="table-input" type="text" readonly>200,000</td>
+        <td><input class="table-input" type="text" readonly>1인 최대 200,000원 입니다.</td>
+        <td><input class="table-input" type="text" readonly>200,000</td>
          </tr>
      </tbody>
      <tbody>
          <tr>
-             <td>야간근로수당</td>
+             <td>초과근무수당</td>
              <td><input class="table-input" type="text"></td>
         <td><input class="table-input" type="text"></td>
         <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-         </tr>
-     </tbody>
-     <tbody>
-         <tr>
-             <td>결근</td>
-             <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-         </tr>
-     </tbody>
-     <tbody>
-         <tr>
-             <td>조퇴</td>
-             <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-         </tr>
-         <tr>
-             <td>합계</td>
-             <td colspan="5"></td>
          </tr>
      </tbody>
  </table>
-<br>
+ <br>
  <table>
-     <thead>
-         <tr>
-             <td>공제항목명</td>
-             <td>금액</td>
-             <td>산출방법</td>
-         </tr>
-     </thead>
-     <tbody>
-         <tr>
-             <td>소득세</td>
-             <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-
-         </tr>
-         <tr>
-             <td>지방소득세</td>
-             <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-         </tr>
-         <tr>
-             <td>국민연금</td>
-             <td></td>
-             <td></td>
-         </tr>
-         <tr>
-             <td>건강보험</td>
-             <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-         </tr>
-         <tr>
-             <td>고용보험</td>
-
-             <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-         </tr>
-         <tr>
-             <td>장기요양보험</td>
-             <td><input class="table-input" type="text"></td>
-        <td><input class="table-input" type="text"></td>
-         </tr>
-         <tr>
-             <td>합계</td>
-             <td colspan="2"></td>
-         </tr>
-     </tbody>
+     <tr>
+         <td>지급총액 :</td>
+         <td><input class="table-input" type="text" v-model="totalAmountPaid " /></td>
+     </tr>
  </table>
+
 <br>
     <div class="actions">
         <router-link to="/accounting/stubwrite"><button @click="submitForm">등록</button></router-link>
@@ -171,23 +90,27 @@ export default {
     data() {
         return {
             requestBody: this.$route.query,
-            empid : this.$route.query.empid,
-            salaryDetails: {
-                empid: this.$route.query.empid, // Add empid to the salaryDetails object
-            },
+            empId: null,
+            employeeDetails: { },
+            salaryDetails: { empId: null },
+            currentDate: new Date().toISOString().slice(0,10),
         };
     },
-    mounted() {
-    const empid = this.$route.query.empid;
-
-    this.$axios.get(`${this.$serverUrl}/accounting/employee/${empid}`)
-    .then((res) => {
-        this.employeeDetails = res.data; 
-    }).catch((err) => {
-        if (err.message.indexOf('Network Error') > -1) {
+  created() {
+    this.$axios.get(`${this.$serverUrl}/hrm/employeeinfo/${this.empId}`)
+      .then((res) => {
+          this.employeeDetails = res.data;
+      })
+      .catch((err) => {
+          if (err.message.indexOf('Network Error') > -1) {
             alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-        }
-    }); 
+          }
+      });
+  },
+
+         
+      mounted() {
+
 },
     methods: {
         formatDate(dateString) {
@@ -195,15 +118,33 @@ export default {
         return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
     },
     submitForm() {
-        this.$axios.post(`${this.$serverUrl}/accounting/salarywrite`, this.salaryDetails)
-        .then((res) => {
-            console.log(res);
-            this.$router.push('/'); 
-        })
-        .catch((err) => {
-            console.log(err);
-        });
-    },
+    this.salaryDetails.empId = this.empId; // Associate the employee id with the salary details
+    this.$axios.post(`${this.$serverUrl}/accounting/salarywrite`, this.salaryDetails)
+    .then((res) => {
+        console.log(res);
+        this.$router.push('/');
+    })
+    .catch((err) => {
+        console.log(err);
+    });
+},
+calculateSalary() {
+    let salaryRate = 0;
+    switch(this.employeeDetails.emplevel) {
+        case 'laborer':
+            salaryRate = 60000;
+            break;
+        case 'manager':
+            salaryRate = 35000;
+            break;
+        case 'employee':
+            salaryRate = 15000;
+            break;
+    }
+    this.salaryDetails.baseSalary = this.totalWorkHours * salaryRate;
+    this.salaryDetails.overtimeSalary = this.salaryDetails.baseSalary * 1.5;
+    this.salaryDetails.empId = this.empId; // Associate the employee id with the salary details
+},
     }
 }
 </script>
@@ -211,8 +152,8 @@ export default {
 <style scoped>
 table {
  position: relative;
- width: 50%;
- left: 25%;
+ width: 65%;
+ left: 20%;
  border-collapse: collapse;
 }
 
@@ -232,6 +173,6 @@ input.table-input {
 .actions button {
     margin-right: 1rem;
     position: relative;
-    left: 25%;
+    left: 20%;
 }
 </style>

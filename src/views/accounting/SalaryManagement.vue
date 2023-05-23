@@ -6,7 +6,7 @@
      <!-- 검색 바 구역 -->
   <div class="search_container">
     <select v-model="search_key">
-      <option value="empid">사원코드</option>
+      <option value="empId">사원코드</option>
       <option value="empname">사원이름</option>
       <option value="deptname">부서이름</option>
       <option value="emphiredate">입사일자</option>
@@ -71,75 +71,76 @@
    
 <script>
 export default {
-  data() { //변수생성
+  data () {
     return {
-      requestBody: {}, //리스트 페이지 데이터전송
-      list: {}, //리스트 데이터
-      no: '', //게시판 숫자처리
+      requestBody: {},
+      list: {},
+      no: '',
       paging: {
         block: 0,
         endPage: 0,
-        nextBlock: 0,
+        nextBlock : 0,
         page: 0,
         pageSize: 0,
-        prevBlock: 0,
+        prevBlock : 0 ,
         startIndex: 0,
         startPage: 0,
-        totalBlockCnt: 0,
-        totalListCnt: 0,
-        totalPageCnt: 0,
-      }, //페이징 데이터
+        totalBlockCnt : 0,
+        totalListCnt : 0,
+        totalPageCnt: 0
+      },
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      search_key: this.$route.query.sk ? this.$route.query.sk : "",
-      search_value: this.$route.query.sv ? this.$route.query.sv : null,
-      paginavigation: function () { //페이징 처리 for문 커스텀
-        let pageNumber = [] //;
+      search_key : this.$route.query.sk ? this.$route.query.sk : "",
+      search_value : this.$route.query.sv ? this.$route.query.sv : null,
+      empId: null,
+    }
+  },
+  computed: {
+    pagenavigation: function () {
+        let pageNumber = [];
         let startPage = this.paging.startPage;
         let endPage = this.paging.endPage;
         for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
-        return pageNumber;
-      }
-    }
+        return pageNumber ;
+    } 
+  },
+  created() {
+    this.empId = this.$route.params.empId;
   },
   mounted() {
-    this.fnhrmlist()
+    this.fnhrmlist();
   },
   methods: {
     fnhrmsearch(n) {
       if (this.page !== n) {
-        this.page = n       
+        this.page = n;
+        this.fnhrmlist();
       }
-
-      this.fnhrmlist()      
     },
     fnhrmlist(){
-      this.requestBody = { // 데이터 전송        
-        sk: this.search_key,
+      this.requestBody = {
+        eg: this.search_key,
         sv: this.search_value,
         page: this.page,
         size: this.size
-      }
-
+      };
       this.$axios.get(this.$serverUrl + "/hrm/hrmmember", {
-        
         params: this.requestBody,
         headers: {}
-      }).then((res) => {      
-
+      }).then((res) => {
         if (res.data.resultCode === "OK") {
-          this.list = res.data.data
-          this.paging = res.data.pagination
-          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
-        }
-        
+          this.list = res.data.data;
+          this.paging = res.data.pagination;
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+        } 
       }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
-          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+          alert('Network error. Please contact support.');
         }
-      })
+      });
     },
-    sendemail() {
+    sendmail() {
 
     },
     sendsms() {
@@ -148,12 +149,9 @@ export default {
     print() {
 
     },
-    updatesalary(empid){
-    this.$router.push({
-        path: '/accounting/stubwrite',
-        params: { empid: empid }
-    })
-},
+    updatesalary(empId){
+      this.$router.push({ name: 'PayStubWrite', params: { empId: empId } });
+    }
   }
 }
 </script>
@@ -231,5 +229,9 @@ th  {
   padding: 0.5rem;
   text-align: center;
   border: 1px solid #ddd;
+}
+td input[type="checkbox"] {
+  display: block;
+  margin: 0 auto;
 }
 </style>
