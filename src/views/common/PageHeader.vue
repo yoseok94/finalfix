@@ -319,6 +319,11 @@ export default {
     }
   },
   methods: {
+    changepage(){
+      this.$router.replace({
+        path: "../",
+      })
+    },
     fnloginck(){
       if(sessionStorage.getItem('token') !== null){
         this.token = 1;
@@ -338,7 +343,7 @@ export default {
     fnlogout(){
       sessionStorage.clear();
       alert("logout 처리되었습니다.");
-      this.$router.go(0);
+      this.changepage();
     },
     closeAccordion(element) {
       element.style.height = element.scrollHeight + 'px';

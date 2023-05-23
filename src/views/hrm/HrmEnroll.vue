@@ -128,7 +128,11 @@
             </div>
             <div class="col-sm-10">
               <div class="input-group has-validation">
-                <input type="text" class="form-control" v-model="deptname" readonly>
+                <select v-model="deptname">
+                  <option v-for="(row, deptno) in this.list" :key="deptno" :value="row.deptname">
+                    {{row.deptname}}
+                  </option>
+                </select>
               </div>
             </div>
             
@@ -163,6 +167,7 @@ export default {
     //id pw name phone address birth hiredate 사원구분
     data(){
         return{
+          list: {},
           empId: '',
           emppw: '',
           empname: '',
@@ -170,7 +175,7 @@ export default {
           empaddress:'',
           empbirth:'',
           emphiredate:'',
-          emplevel:'',
+          emplevel:'사원',
           deptname:'',
           empemail:"",
 
@@ -185,6 +190,14 @@ export default {
       this.setNowTimes();
     },
     methods: {
+      deptoptionlist(){
+        this.$axios.get(this.$serverUrl + "/hrm/deptlist"
+        ).then((res) => {
+          this.list = res.data
+        }).catch((err) => {
+          console.log(err)
+        });
+      },
       checkPhoneNumber(empphone) {
         const regex = /^\d{3}-\d{3,4}-\d{4}$/;
         if (regex.test(empphone) === true){
@@ -207,7 +220,7 @@ export default {
         }
       },
       checkPasswd(emppw) {
-        const regex = /^[A-Za-z0-9]{6,12}$/;
+        const regex = /^[A-Za-z0-9]{5,12}$/;
         if (regex.test(emppw) === true){
           this.checkEmail(this.empemail);
         }else{
@@ -218,7 +231,7 @@ export default {
       },
       checkUserId(empId) {
         if (empId !== undefined) {
-          const reg = /^[a-zA-Z]+[a-zA-Z0-9]{6,12}$/;
+          const reg = /^[a-zA-Z]+[a-zA-Z0-9]{5,12}$/;
           if (empId.match(reg)) {
             this.checkPasswd(this.emppw);
             return true;
@@ -239,6 +252,8 @@ export default {
         let dd = String(myDate.getDate() < 10 ? '0' + myDate.getDate() : myDate.getDate())
         this.emphiredate = yy + '-' + mm + '-' + dd
         this.empbirth = yy + '-' + mm + '-' + dd
+
+        this.deptoptionlist();
       },
       fnaddress(){
         new window.daum.Postcode({
