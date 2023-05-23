@@ -35,34 +35,37 @@
 <table v-if="salaryDetails">
         <thead>
             <tr>
-                <th>수당항목명</th>
-                <th>수당금액</th>
+                <th>수당항목명</th>       
                 <th>산출방법</th>
                 <th>상세내용</th>
+                <th>수당금액</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>기본급(고정)</td>
-                <td>{{ salaryDetails.basesalary }}</td>
+               
                 <td>근무시간 * 기본급</td>
                 <td>회사 내규를 확인해주세요.</td>
+                <td>{{ salaryDetails.basesalary }}</td>
             </tr>
         </tbody>
         <tbody>
             <tr>
                 <td>초과근무수당</td>
-                <td>{{ salaryDetails.overtimesalary }}</td>
+                
                 <td>근무시간 * 기본급의 150%</td>
                 <td>회사 내규를 확인해주세요.</td>
+                <td>{{ salaryDetails.overtimesalary }}</td>
             </tr>
         </tbody>
         <tbody>
             <tr>
                 <td>식대(고정)</td>
-                <td>200,000</td>
+                
                 <td>최대 200,000 원 지원</td>
                 <td>회사 내규를 확인해주세요.</td>
+                <td>200,000</td>
             </tr>
         </tbody>
 
@@ -72,47 +75,54 @@
         <thead>
             <tr>
                 <td>공제항목명</td>
-                <td style="width: 200px;">공제금액</td>
+                
                 <td>산출방법</td>
                 <td>상세내용</td>
+                <td style="width: 200px;">공제금액</td>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>근로소득세</td>
-                <td>{{ salaryDetails.earnedincometax }}</td>
+                
                 <td>과세표준에 근로소득 세율을 곱해서 정해집니다.</td>
                 <td>구간별 차이가 있어 자세한 사항은 연도별 개정안을 확인해주세요.</td>
+                <td>{{ salaryDetails.earnedincometax }}</td>
             </tr>
             <tr>
                 <td>지방소득세</td>
-                <td>{{ salaryDetails.localincomtax }}</td>
+                
                 <td>근로소득세 * 10%</td>
                 <td>근로소득세 * 10% 입니다.</td>
+                <td>{{ salaryDetails.localincomtax }}</td>
             </tr>
             <tr>
                 <td>국민연금료</td>
-                <td>{{ salaryDetails.nationalpensionfee }}</td>
+                
                 <td>월 급여 * 4.5%</td>
                 <td>단, 월급이 5,530,000 이상일 경우 5,530,000 * 4.5%</td>
+                <td>{{ salaryDetails.nationalpensionfee }}</td>
             </tr>
             <tr>
                 <td>건강보험료</td>
-                <td>{{ salaryDetails.healthinsurancepremium }}</td>
+                
                 <td>월 급여 * 3.545%</td>
                 <td>계산 시 월 급여에서 식대는 제외합니다.</td>
+                <td>{{ salaryDetails.healthinsurancepremium }}</td>
             </tr>
             <tr>
                 <td>고용보험료</td>
-                <td>{{ salaryDetails.employmentinsurancepremium }}</td>
+                
                 <td>월 급여 * 0.9%</td>
                 <td>계산 시 월 급여에서 식대는 제외합니다.</td>
+                <td>{{ salaryDetails.employmentinsurancepremium }}</td>
             </tr>
             <tr>
                 <td>장기요양보험료</td>
-                <td>{{ salaryDetails.longtermcareinsurancepremium }}</td>
+              
                 <td>건강보험료 * 12.81%</td>
                 <td>건강보험료 * 12.81% 입니다.</td>
+                <td>{{ salaryDetails.longtermcareinsurancepremium }}</td>
             </tr>
         </tbody>
     </table>
