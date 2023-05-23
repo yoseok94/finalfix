@@ -25,16 +25,15 @@
       <strong class="w3-large">7. 상품판매가</strong>
       <td>{{ consumerprice}}</td>
       <br>
-      <strong class="w3-large">8. 상품이미지</strong>
-      <td>{{ productimg}}</td>
+      <!-- <strong class="w3-large">8. 상품이미지</strong>
+      <td>{{ productimg}}</td> -->
 			<!-- <td><div id="preview"><img src="items/display?productno=41" width="210" height="50"></div></td> -->
       <!-- <td>
         <div id="preview">
           <img :src="getProductimg(productNo)" width="210" height="50">
         </div>
       </td> -->
-      <br>
-      <strong class="w3-large">9. 상품비고</strong>
+      <strong class="w3-large">8. 상품비고</strong>
       <td>{{ productremarks}}</td>
     </div>
     <div class="common-buttons">

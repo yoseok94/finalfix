@@ -25,16 +25,12 @@
       <hr>
       <div class="event-body">
         <div class="event-image">
-         <!-- <img src="https://jpassets.jobplanet.co.kr/production/uploads/company_story/thumbnail/3361/w750_workshop.jpg" alt="이미지"> -->
          <img src="" width="50%"> {{ eventimg }}
         </div>
         <br>
-        <p>여기는 내용이 작성되는 공간입니다.<br>
-        이 부분에는 제목에 대한 내용이 작성됩니다.</p>
-        <br>
-        <span class="event-content">{{ eventcontents }}</span>
-        {{ eventcontents }}
-
+        <div class="ck-editor">
+        <ck-editor v-model="editorContent" :editor="editor" :config="editorConfig" @ready="configureEditor" disabled />
+        </div>
       </div>
     </div>
     <div class="common-buttons">
@@ -47,18 +43,34 @@
 
 
 <script>
-export default {
+import { defineComponent } from 'vue';
+import CKEditor from '@ckeditor/ckeditor5-vue';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
+export default defineComponent({
+    components: { 'ck-editor': CKEditor.component },
 data() { //변수생성
 return {
 requestBody: this.$route.query,
 eventno: this.$route.query.eventno,
   eventtitle: '',
-  eventcontents: '',
+  editorContent: '',
   eventfile: '',
   eventimg: '',
-  eventdate: ''
-}
+  eventdate: '',
+  editor: ClassicEditor, 
+    editorConfig: {     
+    toolbar: [
 
+          ],
+          table: {
+            contentToolbar: [
+
+            ],
+          },
+
+        },
+    };
 },
 mounted() {
 this.fnGetView()
@@ -69,7 +81,7 @@ this.$axios.get(this.$serverUrl + '/event/' + this.eventno, {
 params: this.requestBody
 }).then((res) => {
 this.eventtitle = res.data.eventtitle
-this.eventcontents = res.data.eventcontents
+this.editorContent = res.data.eventcontent
 this.eventfile = res.data.eventfile
 this.eventimg = res.data.eventimg
 this.eventdate = res.data.eventdate
@@ -105,7 +117,7 @@ if (!confirm("삭제하시겠습니까?")) return
 }
 
 }
-}
+});
 </script>
 <style scoped>
 .event-detail {
