@@ -4,8 +4,6 @@
     </div>
       <div class="notice-contents">
         <div class="notice-title">
-          <!-- <h3>부서 변경사항 안내(B부서)</h3> -->
-          <!-- <td>{{ noticetitle }}</td> -->
           <h3>{{ noticetitle }}</h3>
           <hr>
           <div class="notice-meta">
@@ -27,15 +25,12 @@
         <hr>
         <div class="notice-body">
           <div class="notice-image">
-          <!-- <img src="https://mblogthumb-phinf.pstatic.net/20110524_100/dantekim_13062392223698oz1l_JPEG/1234.jpg?type=w2" width="50%"> -->
-          <img src="" width="50%">{{ noticeimg }}
+            <img src="" width="50%">{{ noticeimg }}
           </div>
           <br>
-          <p>여기는 내용이 작성되는 공간입니다. 내용입니다.<br>
-          이 부분에는 제목에 대한 내용이 작성됩니다.</p>
-          <br>
-          <span class="notice-content">{{ noticecontent }}</span>
-          {{ noticecontent }}
+          <div class="ck-editor">
+            <ck-editor v-model="editorContent" :editor="editor" :config="editorConfig" @ready="configureEditor" disabled />
+          </div>
         </div>
       </div>
       <div class="common-buttons">
@@ -46,70 +41,80 @@
   </div>
 </template>
 
-
 <script>
-export default {
-data() { //변수생성
-return {
-requestBody: this.$route.query,
-noticeno: this.$route.query.noticeno,
-  noticetitle: '',
-  noticecontent: '',
-  noticefile: '',
-  noticeimg: '',
-  noticedate: ''
-}
+import { defineComponent } from 'vue';
+import CKEditor from '@ckeditor/ckeditor5-vue';
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-
-
-},
-mounted() {
-this.fnGetView()
-},
-methods: {
-fnGetView() {
-this.$axios.get(this.$serverUrl + '/notice/' + this.noticeno, {
-params: this.requestBody
-}).then((res) => {
-this.noticetitle = res.data.noticetitle
-this.noticecontent = res.data.noticecontent
-this.noticefile = res.data.noticefile
-this.noticeimg = res.data.noticeimg
-this.noticedate = res.data.noticedate
-}).catch((err) => {
-if (err.message.indexOf('Network Error') > -1) {
-alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-}
-})
-},
-fnList() {
-delete this.requestBody.noticeno
-this.$router.push({
-path: './list',
-query: this.requestBody
-})
-},
-fnUpdate() {
-this.$router.push({
-path: './write',
-query: this.requestBody
-})
-},
-fnDelete() {
-if (!confirm("삭제하시겠습니까?")) return
-
-  this.$axios.delete(this.$serverUrl + '/notice/' + this.noticeno, {})
-      .then(() => {
-        alert('삭제되었습니다.')
-        this.fnList();
-      }).catch((err) => {
-    console.log(err);
+export default defineComponent({
+  components: { 'ck-editor': CKEditor.component },
+  data() { //변수생성
+  return {
+    requestBody: this.$route.query,
+    noticeno: this.$route.query.noticeno,
+      noticetitle: '',
+      editorContent: '',
+      noticefile: '',
+      noticeimg: '',
+      noticedate: '',
+      editor: ClassicEditor, 
+    editorConfig: {
+          
+    toolbar: [
+        ],
+    table: {
+      contentToolbar: [
+          ],
+        },
+      },
+    };
+  },
+  mounted() {
+  this.fnGetView()
+  },
+  methods: {
+  fnGetView() {
+    this.$axios.get(this.$serverUrl + '/notice/' + this.noticeno, {
+    params: this.requestBody
+  }).then((res) => {
+    this.noticetitle = res.data.noticetitle
+    this.editorContent = res.data.noticecontent
+    this.noticefile = res.data.noticefile
+    this.noticeimg = res.data.noticeimg
+    this.noticedate = res.data.noticedate
+  }).catch((err) => {
+  if (err.message.indexOf('Network Error') > -1) {
+    alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+  }
   })
+  },
+  fnList() {
+    delete this.requestBody.noticeno
+    this.$router.push({
+    path: './list',
+    query: this.requestBody
+  })
+  },
+  fnUpdate() {
+    this.$router.push({
+    path: './write',
+    query: this.requestBody
+  })
+  },
+  fnDelete() {
+  if (!confirm("삭제하시겠습니까?")) return
+    this.$axios.delete(this.$serverUrl + '/notice/' + this.noticeno, {})
+        .then(() => {
+          alert('삭제되었습니다.')
+          this.fnList();
+        }).catch((err) => {
+      console.log(err);
+    })
+  }
 }
-
-}
-}
+});
 </script>
+
 <style scoped>
 .notice-detail {
   margin: 50px auto;

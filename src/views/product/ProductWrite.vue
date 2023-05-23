@@ -25,15 +25,11 @@
           <label for="consumerprice">6. 소비자가</label>
           <input type="number" v-model="consumerprice" class="w3-input w3-border" id="consumerprice" placeholder="소비자가 입력">
           <br>
-          <label for="productimg">7. 상품이미지</label>
-          <!-- <input type="file" ref="fileInput" @change="handleFileUpload()" accept="image/*" id="productimg" class="w3-input w3-border"> -->
+          <!-- <label for="productimg">7. 상품이미지</label>
           <td><label for="inputFile">file</label></td>
           <td><input type="file" name="picture" id="inputFile" /></td>
-          <!-- 
-          <input type="file" id="productimg" @change="onFileSelected">
-          <button @click="onUpload">Upload</button> -->
-          <br>
-          <label for="productremarks">8. 비고</label>
+          <br> -->
+          <label for="productremarks">7. 비고</label>
           <input type="text" v-model="productremarks" class="w3-input w3-border" id="productremarks" placeholder="비고 입력">
         </div>
       </div>
@@ -57,10 +53,10 @@ productno: this.$route.query.productno,
   productcost: '',
   purchaseprice: '',
   consumerprice: '',
-  productimg: '',
+  // productimg: '',
   productremarks: '',
   productdate: ''
-}
+  }
 
 },
 mounted() {
@@ -72,14 +68,14 @@ if (this.productno !== undefined) {
 this.$axios.get(this.$serverUrl + '/product/' + this.productno, {
 params: this.requestBody
 }).then((res) => {
-this.productid = res.data.productno
+this.productid = res.data.productid
 this.productname = res.data.productname
 this.productcategory = res.data.productcategory
 this.productcost = res.data.productcost
 this.purchaseprice = res.data.purchaseprice
 this.consumerprice = res.data.consumerprice
 this.productdate = res.data.productdate
-this.productimg = res.data.productimg
+// this.productimg = res.data.productimg
 this.productremarks = res.data.productremarks
 
 }).catch((err) => {
@@ -112,8 +108,10 @@ this.form = {
 "productcost": this.productcost,
 "purchaseprice": this.purchaseprice,
 "consumerprice": this.consumerprice,
-"productimg": this.productimg,
-"productremarks": this.productremarks
+// "productimg": this.productimg,
+"productremarks": this.productremarks,
+
+// "file": this.file
 }
   if (this.productno === undefined) {
     //INSERT

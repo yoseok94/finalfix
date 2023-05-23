@@ -20,19 +20,20 @@
           </button>
 
 
-          <template v-if="auth == '관리자' || '임원' ">
+          <template v-if="auth == '관리자' || '임원'">
             <transition name="accordion">
               <div class="collapse" ref="accordion1" id="admin-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                  <li><router-link to="/dept/list" class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 관리</router-link></li>
+                  <li><router-link to="/dept/list"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 이동</router-link></li>
                   <li><router-link to="/product/list"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 관리</router-link></li>
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 이동</router-link></li>
                 </ul>
               </div>
             </transition>
           </template>
 
-          <template v-else-if="auth == '사원' ">
+          <template v-else-if="auth == '사원'">
             <transition name="accordion">
               <div class="collapse" ref="accordion1" id="admin-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
@@ -47,8 +48,8 @@
           </template>
 
         </li>
-        
-        
+
+
         <!--  -->
         <li class="border-top my-3"></li>
         <li class="mb-1">
@@ -57,53 +58,63 @@
             data-bs-target="#notice-collapse" aria-expanded="false">
             공지관리
           </button>
-          <template v-if="auth == '' ">
+          <template v-if="auth == ''">
           </template>
-           
+
           <template v-else>
-          <transition name="accordion">
-            <div class="collapse" ref="accordion2" id="notice-collapse">
-              <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                <li><router-link to="/notice/list"
-                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항</router-link></li>
-                <li><router-link to="/event/list"
-                    class="link-body-emphasis d-inline-flex text-decoration-none rounded">이벤트</router-link></li>
-              </ul>
-            </div>
-          </transition>
-        </template>
+            <transition name="accordion">
+              <div class="collapse" ref="accordion2" id="notice-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li><router-link to="/notice/list"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">공지사항</router-link></li>
+                  <li><router-link to="/event/list"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">이벤트</router-link></li>
+                </ul>
+              </div>
+            </transition>
+          </template>
         </li>
-        
-        
+
         <!--  -->
         <li class="border-top my-3"></li>
         <li class="mb-1">
           <button @click="toggleAccordion('accordion3')"
             class="btn btn-toggle d-inline-flex align-items-center rounded border-0 collapsed" data-bs-toggle="collapse"
             data-bs-target="#management-collapse" aria-expanded="false">
-            담당관리
+            부서관리
           </button>
 
-          <template v-if="auth == '' ">
-          </template>
-           
-          <template v-else>
+          <template v-if="auth == '관리자' || auth == '임원'">
             <transition name="accordion">
               <div class="collapse" ref="accordion3" id="management-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                   <li><router-link to="/management/deptmove"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 이동</router-link></li>
-                  <li><router-link to="/management/deptinquiry"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 조회</router-link></li>
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 이동 관리</router-link></li>
                   <li><router-link to="/management/deptapplist"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">담당 부서 신청</router-link></li>
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">이동 신청 관리</router-link></li>
                 </ul>
               </div>
             </transition>
           </template>
+
+          <template v-else-if="auth == '사원'">
+            <transition name="accordion">
+              <div class="collapse" ref="accordion3" id="management-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li><router-link to="/management/writereasonapp"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 이동 신청</router-link></li>
+                  <li><router-link to="/management/movinghistory"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 이동 이력</router-link></li>
+                </ul>
+              </div>
+            </transition>
+          </template>
+
+          <template v-else>
+          </template>
         </li>
-        
-        
+
+
         <!--  -->
         <li class="border-top my-3"></li>
         <li class="mb-1">
@@ -112,12 +123,10 @@
             data-bs-target="#hr-collapse" aria-expanded="false">
             인사관리
           </button>
-          <template v-if="auth == '관리자' || auth == '임원' "> 
+          <template v-if="auth == '관리자'">
             <transition name="accordion">
               <div class="collapse" ref="accordion4" id="hr-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
-                  <li><router-link to="/hrm/hrmorder"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 신청</router-link></li>
                   <li><router-link to="/hrm/hrmlist"
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 관리</router-link></li>
                   <li><router-link to="/hrm/hrmcheck2"
@@ -128,21 +137,39 @@
               </div>
             </transition>
           </template>
-          <template v-else-if="auth == '사원' "> 
+
+          <template v-if="auth == '임원'">
             <transition name="accordion">
               <div class="collapse" ref="accordion4" id="hr-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                   <li><router-link to="/hrm/hrmorder"
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 신청</router-link></li>
+                  <li><router-link to="/hrm/hrmlist"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 관리</router-link></li>
+                  <li><router-link to="/hrm/hrmcheck"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 현황 조회</router-link></li>
                 </ul>
               </div>
             </transition>
           </template>
-          <template v-else> 
+          <template v-else-if="auth == '사원'">
+            <transition name="accordion">
+              <div class="collapse" ref="accordion4" id="hr-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li><router-link to="/hrm/hrmorder"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 신청</router-link></li>
+                  <li><router-link to="/hrm/hrmcheck"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">근태 현황 조회</router-link></li>
+                </ul>
+              </div>
+            </transition>
+          </template>
+
+          <template v-else>
           </template>
         </li>
-        
-        
+
+
         <!--  -->
         <li class="border-top my-3"></li>
         <li class="mb-1">
@@ -152,10 +179,7 @@
             영업관리
           </button>
 
-          <template v-if="auth == '' ">
-          </template>
-           
-          <template v-else>
+          <template v-if="auth == '관리자' || auth == '임원'">
             <transition name="accordion">
               <div class="collapse" ref="accordion5" id="sales-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
@@ -165,7 +189,8 @@
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">거래처 관리</router-link></li>
                   <li><router-link to="/tradingStatementList"
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">거래 명세서 처리</router-link></li>
-                  <li><router-link to="/ordersList" class="link-body-emphasis d-inline-flex text-decoration-none rounded">수주
+                  <li><router-link to="/ordersList"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">수주
                       작성 및 조회</router-link></li>
                   <li><router-link to="/businessDisbursement"
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">영업 지출 결의서</router-link></li>
@@ -175,8 +200,31 @@
               </div>
             </transition>
           </template>
+
+          <template v-else-if="auth == '사원'">
+            <transition name="accordion">
+              <div class="collapse" ref="accordion5" id="sales-collapse">
+                <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
+                  <li><router-link to="/businessPlanList"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">영업계획</router-link></li>
+                  <li><router-link to="/tradingStatementList"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">거래 명세서 처리</router-link></li>
+                  <li><router-link to="/ordersList"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">수주
+                      작성 및 조회</router-link></li>
+                  <li><router-link to="/businessDisbursement"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">영업 지출 결의서</router-link></li>
+                  <li><router-link to="/businessPerformance"
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">영업 실적 조회</router-link></li>
+                </ul>
+              </div>
+            </transition>
+          </template>
+
+          <template v-else-if="auth == ''">
+          </template>
         </li>
-        
+
 
 
         <!--  -->
@@ -187,7 +235,7 @@
             data-bs-target="#accounting-collapse" aria-expanded="false">
             회계관리
           </button>
-          <template v-if="auth == '관리자' || auth == '임원' ">
+          <template v-if="auth == '관리자' || auth == '임원'">
             <transition name="accordion">
               <div class="collapse" ref="accordion6" id="accounting-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
@@ -203,7 +251,7 @@
               </div>
             </transition>
           </template>
-          <template v-else-if="auth == '사원' ">
+          <template v-else-if="auth == '사원'">
             <transition name="accordion">
               <div class="collapse" ref="accordion6" id="accounting-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
@@ -306,8 +354,8 @@ div {
 
 <script>
 export default {
-  data(){
-    return{
+  data() {
+    return {
       token: "",
       auth: "",
     }
@@ -319,31 +367,32 @@ export default {
     }
   },
   methods: {
-    fnloginck(){
-      if(sessionStorage.getItem('token') !== null){
+    fnloginck() {
+      if (sessionStorage.getItem('token') !== null) {
         this.token = 1;
-      }else{
+      } else {
         this.token = 0;
       }
     },
     authcheck() {
-      if(sessionStorage.getItem('emplevel') == '관리자') {
+      if (sessionStorage.getItem('emplevel') == '관리자') {
         this.auth = '관리자';
       } else if (sessionStorage.getItem('emplevel') == '임원') {
         this.auth = '임원';
       } else if (sessionStorage.getItem('emplevel') == '사원') {
         this.auth = '사원';
-      } 
+      }
     },
-    fnlogout(){
+    fnlogout() {
       sessionStorage.clear();
+      this.auth = '';
       alert("logout 처리되었습니다.");
-      this.$router.go(0);
+      this.$router.push('/');
     },
     closeAccordion(element) {
       element.style.height = element.scrollHeight + 'px';
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => { 
+        requestAnimationFrame(() => {
           element.style.height = '0px';
         });
       });

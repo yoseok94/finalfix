@@ -27,9 +27,9 @@
 
 <script>
 export default {
-data() { //변수생성
+data() {
 return {
-requestBody: this.$route.query, //query를 보내왔으니까 지금 이 페이지는 qeury를 가지고 있는 상태가 된다
+requestBody: this.$route.query, 
 deptno: this.$route.query.deptno,
   deptname: '',
   deptid: '',

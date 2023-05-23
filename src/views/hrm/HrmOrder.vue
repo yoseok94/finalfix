@@ -116,6 +116,7 @@ export default {
   data(){
     return{
       empno: sessionStorage.getItem("empno"),
+      emplevel: sessionStorage.getItem("emplevel"),
       requestBody: {},
       attendenceno: "",
       empId: "",
@@ -157,6 +158,7 @@ export default {
           this.form = {
             "empId": this.empId,
             "empname": this.empname,
+            "emplevel": this.emplevel,
             "deptname": this.deptname,
             "reason": this.reason,
             "reasonpr": this.reasonpr,
@@ -226,11 +228,12 @@ export default {
     },
     fnincheck(){
       if(this.intime == null){
-        if(this.reason == null && this.checkresult == "N" || this.checkresult == null){
+        if(this.checkresult == "N" || this.checkresult == null){
           let apiUrl = this.$serverUrl + '/hrm/adin'
           this.form = {
             "empId": this.empId,
             "empname": this.empname,
+            "emplevel": this.emplevel,
             "deptname": this.deptname,
             "requestresult": this.requestresult,
           },
