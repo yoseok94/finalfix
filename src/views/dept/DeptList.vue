@@ -6,10 +6,11 @@
     <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">부서등록</button>
   </div>
   <div class="dept-list">
+    <div class="dept-column">
     <table class="w3-table-all">
       <thead>
         <tr>
-          <th></th>
+          <th>번호</th>
           <th>부서명</th>
           <th>부서 코드</th>
           <th>상품코드</th>
@@ -18,16 +19,15 @@
       </thead>
       <tbody>
         <tr v-for="(row, deptno) in list" :key="deptno">
-          <div class="form-check">
-            <input type="checkbox" :value="row.deptno" v-model="deptnock" id="deptno">          
-          </div>    
-          <td><a v-on:click="fnView(`${row.deptno}`)">{{ row.deptname }}</a></td>
+          <td>{{ no-deptno}}</td>
+          <td><a v-on:click="fnView(`${row.deptno}`)" :style="{ color: row.deptname ? 'blue' : '', textDecoration: 'none' }" class="hover-effect">{{ row.deptname }}</a></td>
           <td>{{ row.deptid }}</td>
           <td>{{ row.productid }}</td>
           <td>{{ row.deptdate }}</td>
         </tr>
       </tbody>
     </table>
+  </div>
     <!-- 검색필드추가 -->
     <div class="center">
       <div class="d-inline-flex align-items-center">
@@ -90,10 +90,9 @@ export default {
                 }, //페이징 데이터
                 page: this.$route.query.page ? this.$route.query.page : 1,
                 size: this.$route.query.size ? this.$route.query.size :10,
-                //keyword: this.$route.query.keyword,
                 search_key: this.$route.query.sk ? this.$route.query.sk : '',
                 search_value: this.$route.query.sv ? this.$route.query.sv : '',
-                paginavigation: function () { //페이징 처리 for문 커스텀
+                paginavigation: function () { 
                     let pageNumber = [] //;
                     let startPage = this.paging.startPage;
                     let endPage = this.paging.endPage;
@@ -107,7 +106,6 @@ export default {
             },
             methods: {
               fnGetList() {
-                //스프링부트에서 전송받은 데이터 출력처리
                                   this.requestBody = { // 데이터 전송
                                   sk: this.search_key,
                                   sv: this.search_value,
@@ -118,7 +116,6 @@ export default {
                                   params: this.requestBody,
                                   headers: {}
                               }).then((res) => {        
-                                  //this.list = res.data  //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.  
                                   if (res.data.resultCode === "OK") {
                                     this.list = res.data.data
                                     this.paging = res.data.pagination
@@ -141,7 +138,6 @@ export default {
     fnPage(n) {
       if (this.page !== n) {
                   this.page = n
-
                 }
                 this.fnGetList()
       },
@@ -150,25 +146,25 @@ export default {
                   path: './write'
                 })
               },
-    // fnDelete(deptnock) {
-    //   this.deptnock = deptnock
-    //   this.$axios.delete(this.$serverUrl + '/dept/deldept', JSON.stringify({list: deptnock})) //수정(js)
-    //       .then(() => {
-    //         alert('삭제되었습니다.')
-    //         this.fnGetList();
-    //       }).catch((err) => {
-    //     console.log(err);
-    //   })
-    // },
-      // fnUpdate(){
-      //     this.$router.push({
-      //       path: './update'
-      //     })
-      // },
   },
 };
 </script>
 <style scoped>
+  .hover-effect:hover {
+    background-color: #edf6ff;
+    text-decoration: none;
+  }
+.dept-column {
+      border: 2px solid #e7e8fa;
+			margin: 10px;
+			padding: 8px;
+      height: 460px;
+			overflow: auto;
+
+
+     
+}
+
 .center {
   display: flex;
   justify-content: center;
@@ -176,13 +172,11 @@ export default {
   margin-top: 10px;
 
 }
-
 .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
 }
-
 .page {
   display: inline-block;
   margin: 0 5px;
@@ -193,7 +187,6 @@ export default {
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
-
 .page.active,
 .page:hover {
   background-color: #0077cc;

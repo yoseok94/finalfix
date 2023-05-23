@@ -1,5 +1,4 @@
 <template>
-   <!-- <form action="/dept/${deptno}" method="post"> -->
   <div class="dept-detail-container">
     <div class="dept-detail">      
       <div class="dept-contents">
@@ -8,9 +7,6 @@
         <label for="deptid">1. 부서코드</label>
         <input type="text" v-model="deptid" class="w3-input w3-border" id="deptid" placeholder="부서코드 입력">
         <br>
-        <!-- <label for="deptname" v-if="deptno === undefined">2. 부서명</label>
-        <input type="text" v-model="deptname" class="w3-input w3-border" id="dept_name" placeholder="부서명 입력" v-if="deptno === undefined">
-        <br> -->
          <label for="deptname">2. 부서명</label>
         <input type="text" v-model="deptname" class="w3-input w3-border" id="deptname" placeholder="부서명 입력">
         <br>
@@ -23,12 +19,11 @@
       </div>
     </div>
   </div>
-   <!-- </form> -->
 </template>
 
 <script>
 export default {
-data() { //변수생성
+data() { 
 return {
   requestBody: this.$route.query,
     deptno: this.$route.query.deptno,
@@ -73,15 +68,12 @@ query: this.requestBody
 },
 fnSave() {
   let apiUrl = this.$serverUrl + '/dept'
-// let apiUrl = this.deptno === undefined ? '/dept' : '/dept/' + this.deptno // API URL 설정 수정
   this.form = {
     "deptno": this.deptno,
     "productid": this.productid,
     "deptid": this.deptid,
     "deptname": this.deptname,
-    // "deptdate": this.deptdate // 'deptdate' 속성 추가
   }
-
   if (this.deptno === undefined) {
     //INSERT
     this.$axios.post(apiUrl, this.form)

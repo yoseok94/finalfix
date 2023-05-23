@@ -6,7 +6,9 @@
     <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">글 등록</button>
   </div>
   <div class="event-list">
+    
   <table class="w3-table-all">
+   
     <thead>
     <tr>
       <th>번호</th>
@@ -16,20 +18,20 @@
     </tr>
     </thead>
     <tbody>
-      <tr v-for="(row, eventno) in list" :key="eventno">
-        <td>{{ row.eventno }}</td>
-        <!-- <td><router-link to="/event/detail">{{ row.eventtitle }}</router-link></td> -->
-        <td><a v-on:click="fnEventView(`${row.eventno}`)" :style="{ color: row.eventtitle ? 'blue' : ''}" class="hover-effect">{{ row.eventtitle }}</a></td>
+      <tr v-for="(row, eventno) in elist" :key="eventno">
+        <td>{{ no-eventno }}</td>
+        <td><a v-on:click="fnEventView(`${row.eventno}`)" :style="{ color: row.eventtitle ? 'blue' : '', textDecoration: 'none' }" class="hover-effect">{{ row.eventtitle }}</a></td>
         <td>관리자</td>
         <td>{{ row.eventdate }}</td>
       </tr>
     </tbody>
+    
   </table>
+    
   <!-- 검색필드추가 -->
   <div class="center">
   <div class="d-inline-flex align-items-center">
     <div class="form-group mr-2">
-      <!--카테고리-->
       <select id="category" v-model="search_key" class="form-control">
         <option value="">- 선택 -</option>
         <option value="eventtitle">제목</option>
@@ -68,9 +70,9 @@
 export default {
   data() {
     return { 
-      requestBody: {}, //리스트 페이지 데이터전송
-                list: {}, //리스트 데이터
-                no: '', //게시판 숫자처리
+      requestBody: {}, 
+                elist: {}, 
+                no: '', 
                 paging: {
                     block: 0,
                     endPage: 0,
@@ -85,11 +87,10 @@ export default {
                     totalPageCnt: 0,
                 }, //페이징 데이터
                 page: this.$route.query.page ? this.$route.query.page : 1,
-                size: this.$route.query.size ? this.$route.query.size :8,
-                //keyword: this.$route.query.keyword,
+                size: this.$route.query.size ? this.$route.query.size :10,
                 search_key: this.$route.query.sk ? this.$route.query.sk : '',
                 search_value: this.$route.query.sv ? this.$route.query.sv : '',
-                paginavigation: function () { //페이징 처리 for문 커스텀
+                paginavigation: function () { 
                     let pageNumber = [] //;
                     let startPage = this.paging.startPage;
                     let endPage = this.paging.endPage;
@@ -103,8 +104,7 @@ export default {
   },
   methods: {
     fnGetList() {
-      this.requestBody = { // 데이터 전송
-                                  // keyword: this.keyword,
+      this.requestBody = {
                                   sk: this.search_key,
                                   sv: this.search_value,
                                   page: this.page,
@@ -114,9 +114,8 @@ export default {
                                   params: this.requestBody,
                                   headers: {}
                               }).then((res) => {        
-                                  //this.list = res.data =  
                                   if (res.data.resultCode === "OK") {
-                                    this.list = res.data.data
+                                    this.elist = res.data.data
                                     this.paging = res.data.pagination
                                     this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
                                   }
@@ -144,11 +143,6 @@ export default {
                   path: './write'
                 })
               },
-      // fnUpdate(){
-      //     this.$router.push({
-      //       path: './update'
-      //     })
-      // },
   },
 };
 </script>
@@ -189,5 +183,7 @@ export default {
   background-color: #0077cc;
   color: #fff;
 }
+
+
 
 </style>
