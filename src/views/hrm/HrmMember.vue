@@ -4,10 +4,9 @@
     <h2 align="center">사원정보 리스트</h2>
     <div class="table-responsive">
       <div>
-      <div class="head-btn">
-      <button @click="fnexceldown()">Excel</button>
-      <button @click="fnincheck()">사원등록</button>
-      </div>
+        <div class="head-btn">
+          <button @click="fnincheck()">사원등록</button>
+        </div>
       </div>
       <hr class="my-4">
         <table class="table table-striped table-sm">
@@ -71,21 +70,7 @@
 export default {
   data() { //변수생성
     return {
-            // employee: {
-      //   empno: "",
-      //   empId: "",
-      //   empname: "",
-      //   empphone: "",
-      //   empaddress: "",
-      //   empemail: "",
-      //   empbirth: "",
-      //   emphiredate: "",
-      //   emplevel: "",
-      //   empstatus: "",
-      //   deptname: "",
-      //   empannual: "",
-      //   empprofile: "",
-      // },
+      exceldata:[],
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
       no: '', //게시판 숫자처리
@@ -144,6 +129,7 @@ export default {
 
         if (res.data.resultCode === "OK") {
           this.list = res.data.data
+          this.exceldata = this.list
           this.paging = res.data.pagination
           this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
         }
@@ -161,13 +147,11 @@ export default {
     },
     fnhrmup(empno){
       this.requestBody.empno = empno
+
       this.$router.push({
         path: './hrmup',
         query: this.requestBody
-      })
-    },
-    fnexceldown(){
-
+      });
     },
     fnhrmde(empno, empstatus){
       if(empstatus == "N"){

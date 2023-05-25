@@ -4,13 +4,12 @@
   <div class="hrmlist">
     <h2 align="center">근태 현황 조회</h2>
       <div class="table-responsive">
-        <div class="seldiv"> 기간 선택 : 
-        <input type="date" name="searchdate">
-        <button @click="fnexceldown()">Excel</button>
-        <button @click="fnhrmsearch()">조회</button>
-      </div>
+        <div class="head-btn"> 
+          <button @click="fnexceldown()">Excel</button>
+        </div>
+
       <hr class="my-4">
-        <table class="table table-striped table-sm">
+        <table id="table" class="table table-striped table-sm">
           <thead>
             <tr>
               <th scope="col">근무일자</th>
@@ -20,11 +19,11 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>23.01.01</td>
-              <td>AM 08:26</td>
-              <td>PM 06:30</td>
-              <td>정상</td>
+            <tr v-for="(row, attendenceno) in list" :key="attendenceno">
+              <td>{{row.requestdate}}</td>
+              <td>{{row.intime}}</td>
+              <td>{{row.outtime}}</td>
+              <td>{{row.divide}}</td>
             </tr>
           </tbody> 
         </table>
@@ -37,19 +36,19 @@
         </div>
         <div class="col p-4 d-flex flex-column position-static">
           <strong class="d-inline-block mb-2 text-success"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">My Profile</font></font></strong>
-          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ID : s01</font></font></h4><br>
-          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Name : 김이름</font></font></h4><br>
-          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">담당부서 : A파트부서</font></font></h4><br>
+          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ID : {{employee.empId}}</font></font></h4><br>
+          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Name : {{employee.empname}}</font></font></h4><br>
+          <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">담당부서 : {{employee.deptname}}</font></font></h4><br>
         </div>
       </div>
-  <div>
-    <div id="chart">
-      <apexchart type="pie" width="380" :options="chartOptions" :series="series"></apexchart>
+        <div>
+          <div id="chart">
+            <apexchart type="pie" width="380" :options="chartOptions" :series="series"></apexchart>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  </div>
-  </div>
-</div>
 </template>
 
   <script>
@@ -57,50 +56,148 @@
   import VueApexCharts from 'vue3-apexcharts';
   
   export default {
-    methods:{
-      fnexceldown(){
-
-      },
-      fnhrmsearch(){
-
-      },
-    },
     components: {
       apexchart: VueApexCharts,
     },
-    setup() {
-      const series = ref([70, 20, 10]);
+    setup(){
+        const series = ref([]);
   
-      const chartOptions = ref({
-        chart: {
-          width: 380,
-          type: 'pie',
-        },
-        labels: ['정상출근', '연차사용', '지각/조퇴'],
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                width: 200,
-              },
-              legend: {
-                position: 'bottom',
+        const chartOptions = ref({
+          chart: {
+            width: 380,
+            type: 'pie',
+          },
+          labels: ['정상근무', '비정상근무', '조퇴/연차/기타'],
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                chart: {
+                  width: 200,
+                },
+                legend: {
+                  position: 'bottom',
+                },
               },
             },
-          },
-        ],
-      });
-  
+          ],
+        });
+    
+        return {
+          series,
+          chartOptions,
+        };
+      },
+    data(){ //변수생성
       return {
-        series,
-        chartOptions,
-      };
+        empId: sessionStorage.getItem("empId"),
+        requestBody: {},
+        list:{},
+        employee: {},
+        startdate: "",
+        enddate: "",
+      }
+    },
+    mounted(){
+      this.setNowTimes();
+    },
+    methods:{
+      fncalculator(){
+        let a = 0;
+        let b = 0;
+        let c = 0;
+        let a2 = 0;
+        let b2 = 0;
+        let c2 = 0;
+        for(var i = 0; i < this.list.length; i++){
+          console.log(this.list[i].divide)
+          console.log(this.list[i].reason)
+          if(this.list[i].divide == "정상"){
+            a++;
+          }else if(this.list[i].reason == "조퇴" || this.list[i].reason == "기타" || this.list[i].reason == "연차"){
+            c++;
+          }else if(this.list[i].divide == "비정상"){
+            b++;
+          }
+        }
+
+        console.log(a + "===" + b + "===" + c + "===" )
+
+        if(a !== undefined){
+          a2 = (a/this.list.length) * 100;
+        }
+        if(b !== undefined){
+          b2 = (b/this.list.length) * 100;
+        }
+        if(c !== undefined){
+          c2 = (c/this.list.length) * 100;
+        }
+
+        console.log(a2 + "===" + b2 + "===" + c2 + "===" )
+
+        this.series = ref([a2, b2, c2]);
+
+      },
+      setNowTimes(){        
+        let myDate = new Date()
+        let yy = String(myDate.getFullYear())
+        let mm = String(myDate.getMonth() + 1 < 10 ? '0' + (myDate.getMonth() + 1) : (myDate.getMonth() + 1))
+        let dd = String(new Date(yy,mm,0).getDate())
+        this.startdate = yy + '-' + mm + '-01'
+        this.enddate = yy + '-' + mm + '-' + dd
+        console.log(this.startdate + "=====" + this.enddate);
+        this.fnmyinfo();
+      },
+      fnmyattendence(){
+        this.$axios.get(this.$serverUrl + "/hrm/myadlist/" + this.empId
+          ).then((res) => {
+            this.list = res.data
+            this.fncalculator();
+          }).catch((err) => {
+            console.log(err)
+        });
+      },
+      fnmyinfo(){
+      if (this.empId !== undefined) {
+        this.$axios.get(this.$serverUrl + "/hrm/employeeinfo/" + this.empId
+          ).then((res) => {
+            this.employee = res.data
+            this.fnmyattendence();
+          }).catch((err) => {
+            console.log(err)
+          });
+        }
+      },
+      fnexceldown(){
+        let tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">'
+        tab_text += '<head><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">'
+        tab_text += '<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>'
+        tab_text += '<x:Name>Test Sheet</x:Name>'
+        tab_text += '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>'
+        tab_text += '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>'
+        tab_text += "<table>"
+        const temp = document.getElementById('table').innerHTML
+        
+        tab_text += temp
+        tab_text += '</table></body></html>'
+        
+        const fileName = 'attendenceTable.xls'
+        const a_tag = document.createElement('a')
+        const blob = new Blob([tab_text], { type: 'application/vnd.ms-excel;charset=utf-8;' })
+        a_tag.href = window.URL.createObjectURL(blob)
+        a_tag.download = fileName
+        a_tag.click()
+      },
     },
   };
   </script>
   
 <style scoped>
+.head-btn{
+  text-align: right;
+  margin-top: 15px;
+  margin-right: 30px;
+}
 .seldiv{
   margin-top: 15px;
   margin-left: 30px;

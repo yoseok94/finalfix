@@ -3,8 +3,11 @@
   <div>
     <h2 align="center">근태 현황 조회</h2>
     <div class="table-responsive">
+      <div class="head-btn">
+      <button @click="fnexceldown()">Excel</button>
+      </div>
       <hr class="my-4">
-        <table class="table table-striped table-sm">
+        <table id="table" class="table table-striped table-sm">
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -106,6 +109,26 @@ export default {
     this.fnattendencelist()
   },
   methods: {
+    fnexceldown(){
+      let tab_text = '<html xmlns:x="urn:schemas-microsoft-com:office:excel">'
+      tab_text += '<head><meta http-equiv="content-type" content="application/vnd.ms-excel; charset=UTF-8">'
+      tab_text += '<xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>'
+      tab_text += '<x:Name>Test Sheet</x:Name>'
+      tab_text += '<x:WorksheetOptions><x:Panes></x:Panes></x:WorksheetOptions></x:ExcelWorksheet>'
+      tab_text += '</x:ExcelWorksheets></x:ExcelWorkbook></xml></head><body>'
+      tab_text += "<table>"
+      const temp = document.getElementById('table').innerHTML
+      
+      tab_text += temp
+      tab_text += '</table></body></html>'
+      
+      const fileName = 'attendenceTable.xls'
+      const a_tag = document.createElement('a')
+      const blob = new Blob([tab_text], { type: 'application/vnd.ms-excel;charset=utf-8;' })
+      a_tag.href = window.URL.createObjectURL(blob)
+      a_tag.download = fileName
+      a_tag.click()
+    },
     fnattendencesearch(n) {
       if (this.page !== n) {
         this.page = n       
@@ -144,6 +167,11 @@ export default {
 </script>
 
 <style scoped>
+.head-btn{
+  text-align: right;
+  margin-top: 15px;
+  margin-right: 30px;
+}
 .pagination{
   display: flex;
   align-items: center;
