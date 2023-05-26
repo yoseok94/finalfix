@@ -1,60 +1,41 @@
 <template>
   <div class="email-form">
     <button class="close-btn" @click="$emit('close')">Close</button>
-    <h1>Send template mail</h1>
+    <h1>템플릿 메일 보내기</h1>
     <div class="container">
       <form @submit.prevent="submitForm">
         <table>
           <tr v-for="(email, index) in emails" :key="index" class="form-group">
-            <td>Email address</td>
+            <td>메일 주소</td>
             <td>
-              <input type="text" class="form-control" v-model="email.address" placeholder="Enter your email address">
+              <input type="text" class="form-control" v-model="email.address" placeholder="이메일 주소를 입력하세요">
             </td>
             <td>
-              <button class="form-control remove-btn" @click.prevent="removeEmail(index)">Delete</button>
+              <button class="form-control remove-btn" @click.prevent="removeEmail(index)">삭제</button>
             </td>
-          </tr>
-          <tr class="form-group">
-    <td>From</td>
-    <td>
-      <input type="text" class="form-control" v-model="from" placeholder="Enter the sender's email">
-    </td>
-  </tr>
-  <tr class="form-group">
-    <td>CC</td>
-    <td>
-      <input type="text" class="form-control" v-model="ccAddress" placeholder="Enter the CC email addresses, comma-separated">
-    </td>
-  </tr>
-          <tr class="form-group">
-    <td>Content</td>
-    <td>
-      <textarea class="form-control" v-model="content" placeholder="Enter the email content"></textarea>
-    </td>
           </tr>
           <tr>
             <td colspan="3">
-              <button class="submit-btn">Submit</button>
+              <button class="form-control" @click.prevent="addEmail">추가</button>
             </td>
           </tr>
+          <!-- ... -->
+          <button class="submit-btn">발송</button>
         </table>
       </form>
     </div>
   </div>
 </template>
 
-
 <script>
-import axios from 'axios';
-
 export default {
   data() {
     return {
-      emails: [{ address: '' }],
-      from: '',
-      ccAddress: '',
+      emails: [
+        { address: '' }
+      ],
+      // ccAddresses: [ ... ],
       title: '',
-      content: '',
       template: '',
     }
   },
@@ -65,29 +46,14 @@ export default {
     removeEmail(index) {
       this.emails.splice(index, 1);
     },
-    async submitForm() {
-    try {
-      const emailAddresses = this.emails.map(email => email.address);
-      const ccAddresses = this.ccAddress.split(','); 
-
-
-        const data = {
-        from: this.from,
-        address: emailAddresses,
-        ccAddress: ccAddresses,
+    submitForm() {
+      console.log('Submitting form', {
+        emails: this.emails,
         title: this.title,
-        content: this.content,
         template: this.template,
-      };
-
-        // send the request to your server
-        await axios.post('/mail/template/send', data);
-      alert('Emails sent successfully');
-    } catch (error) {
-      alert('Failed to send emails:', error);
-    }
-  },
-}
+      });
+    },
+  }
 }
 </script>
 

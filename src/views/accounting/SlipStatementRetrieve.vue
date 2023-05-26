@@ -1,16 +1,17 @@
 <template>
     <div>
     <h1 style="text-align: center;">회계 전표 조회 페이지</h1>
-    <div class="salary_menu-bar">
-        <div class="searchdiv">
-            <select v-model="search_key" >
-              <option value="ID">ID</option>
-              <option value="Name">Name</option>
-            </select>
-            <input type="text" v-model="search_value" @keyup.enter="fnhrmsearch()">
-            <button @click="fnhrmsearch()">검색</button>
-        </div> 
-    </div>
+    <br>
+    <div class="search_container">
+    <select v-model="search_key">
+      <option value="slipstatementno">전표번호</option>
+      <option value="tradetype">거래유형</option>
+    </select>
+    <input class="search_container-input" type="text" placeholder="검색어를 입력해주세요" v-model="search_value"
+      @keyup.enter="fnsalarysearch()" size="50" />
+    <button class="search_container-btn w3-button w3-round w3-blue-gray" @click="fnsalarysearch()">검색</button>
+  </div>
+
     <!-- 테이블 구역 -->
     <table class="salary-table">
       <thead>
@@ -19,46 +20,40 @@
           <th style="text-align: center;">전표번호</th>
           <th style="text-align: center;">거래유형</th>
           <th style="text-align: center;">거래금액</th>
-          <!-- <th style="text-align: center;">거래처명</th> -->
           <th style="text-align: center;">적요</th>
-          <th style="text-align: center;">전표</th>
-          <th style="text-align: center;">결의서</th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(row, slipstatementno) in list" :key="slipstatementno">
           <td><input type="checkbox" /></td>
           <td>{{ row.slipstatementdate }}</td>
-          <td>{{ row.tradetype }}</td>
+          <td>{{ tradeTypeName(row.tradetype) }}</td>
           <td>{{ row.slipstatementamount }}</td>
-          <!-- <td>{{ row.customerName }}</td> -->
           <td>{{ row.slipstatementbrief }}</td>
-          <td style="text-align: center;">인쇄</td>
-          <td style="text-align: center;">인쇄</td>
         </tr>
       </tbody>
     </table>
 
     <div class="actions">
-      <router-link to="/accounting/slipwrite"><button>등록하기</button></router-link>
-      <button>인쇄</button>
+      <router-link to="/accounting/slipwrite"><button class="w3-button w3-round w3-blue-gray">등록하기</button></router-link>
+
     </div>
     <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
             <span>
-              <a href="javascript:;" @click="fnhrmsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
-              <a href="javascript:;" v-if="paging.startPage > 10" @click="fnhrmsearch(`${paging.startPage - 1}`)" class="prev w3-button w3-border">
+              <a href="javascript:;" @click="fnslipsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
+              <a href="javascript:;" v-if="paging.startPage > 10" @click="fnslipsearch(`${paging.startPage - 1}`)" class="prev w3-button w3-border">
               &lt;</a>
               <template v-for="(n, index) in paginavigation()">
               <template v-if="paging.page == n">
               <strong class="w3-button w3-border w3-green" :key="index">{{n}}</strong>
               </template>
               <template v-else>
-              <a class="w3-button w3-border" href="javascript:;" @click="fnhrmsearch(`${n}`)" :key="index">{{ n }}</a>
+              <a class="w3-button w3-border" href="javascript:;" @click="fnslipsearch(`${n}`)" :key="index">{{ n }}</a>
               </template>
               </template>
-              <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnhrmsearch(`${paging.endPage + 1}`)" class="next w3-button w3-border">
+              <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnslipsearch(`${paging.endPage + 1}`)" class="next w3-button w3-border">
               &gt;</a>
-              <a href="javascript:;" @click="fnhrmsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+              <a href="javascript:;" @click="fnslipsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
             </span>
         </div>
 
@@ -102,17 +97,25 @@ export default {
     }
   },
   mounted() {
-    this.fnhrmlist()
+    this.fnsliplist()
+  },
+  computed: {
+    listWithTradeTypeNames() {
+      return this.list.map(row => ({
+        ...row,
+        tradetype: this.tradeTypeName(row.tradetype)
+      }));
+    }
   },
   methods: {
-    fnhrmsearch(n) {
+    fnslipsearch(n) {
       if (this.page !== n) {
         this.page = n       
       }
 
-      this.fnhrmlist()      
+      this.fnsliplist()      
     },
-    fnhrmlist(){
+    fnsliplist(){
       this.requestBody = { // 데이터 전송        
         sk: this.search_key,
         sv: this.search_value,
@@ -138,19 +141,34 @@ export default {
         }
       })
     },
+
+    tradeTypeName(tradeType) {
+  switch(tradeType) {
+    case '1': return '카드 결제';
+    case '2': return '현금 결제';
+    case '3': return '기타';
+    default: return '기타';
+  }
+}
   }
 }
 </script>
 
 <style scoped>
-    .salary_menu-bar {
+   .salary_menu-bar {
       display: flex;
       justify-content: flex-end;
       margin-bottom: 1rem;
       margin-top: 5px;
     }
-    .search_container-bar {
-      margin-right: 1rem;
+    .search_container {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+    }
+    .search_container-input,
+    .search_container-btn {
+      margin-left: 1rem;
     }
     table {
       width: 100%;
@@ -201,4 +219,8 @@ export default {
       background-color: #0077cc;
       color: #fff;
     }
+td input[type="checkbox"] {
+  display: block;
+  margin: 0 auto;
+}
   </style>

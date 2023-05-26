@@ -6,12 +6,12 @@
   <div class="search_container">
     <select v-model="search_key">
       <option value="paymentdate">지급연월일</option>
-      <option value="empid">사원코드</option>
+      <option value="empId">사원코드</option>
       <option value="empname">사원이름</option>
     </select>
     <input class="search_container-input" type="text" placeholder="검색어를 입력해주세요" v-model="search_value"
       @keyup.enter="fnsalarysearch()" size="50" />
-    <button class="search_container-btn" @click="fnsalarysearch()">검색</button>
+    <button class="w3-button w3-round w3-blue-gray search_container-btn" @click="fnsalarysearch()">검색</button>
   </div>
 
   <!-- 테이블 구역 -->
@@ -43,12 +43,12 @@
       <tr v-for="(row, salaryno) in list" :key="salaryno">
         <td><input type="checkbox" /></td>
         <td style="color:blue;">
-          <a v-on:click="movePaySlib(`${row.empid}`, `${row.paymentdate}`)">{{ formatDate(row.paymentdate) }}</a>
+          <a v-on:click="movePaySlib(`${row.empId}`, `${row.paymentdate}`)">{{ formatDate(row.paymentdate) }}</a>
         </td>
-        <td>{{ row.empid }}</td>
+        <td>{{ row.empId }}</td>
         <td>{{ row.empname }}</td>
         <td>{{ row.deptname }}</td>
-        <td>{{ row.jobname }}</td>
+        <td>{{ row.emplevel }}</td>
         <td>{{ row.workhours }}</td>
         <td>{{ row.overtimehours }}</td>
         <td>{{ row.basesalary }}</td>
@@ -68,15 +68,15 @@
 
   <!-- 액션 버튼 (이메일 및 인쇄) 구역 -->
   <div class="actions">
-    <button @click="SendEmail()">Email</button>
-    <button @click="sendsms">SMS</button>
-    <button @click="printsalary">Print</button>
+    <!-- <button class="w3-button w3-round w3-blue-gray" @click="SendEmail()">Email</button> -->
+    <!-- <button class="w3-button w3-round w3-blue-gray" @click="sendsms">SMS</button> -->
+
   </div>
-  
+
   <div class="modal" v-if="showSendEmailModal">
     <SendEmail @close="showSendEmailModal = false" />
   </div>
- 
+
 
   <!-- 페이지 처리 -->
   <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
@@ -100,6 +100,7 @@
         class="last w3-button w3-border">&gt;&gt;</a>
     </span>
   </div>
+
 </template>
   
 <script>
@@ -111,6 +112,8 @@ export default {
   },
   data() {
     return {
+      paymentdate: this.$route.query.paymentdate,
+      salaryDetails: {},
       requestBody: {},
       list: [],
       no: '',
@@ -181,10 +184,10 @@ export default {
         }
       })
     },
-    movePaySlib(empid, paymentdate) {
+    movePaySlib(empId, paymentdate) {
       this.$router.push({
         path: './stub',
-        query: { empid, paymentdate }
+        query: { empId, paymentdate }
       });
     },
     formatDate(dateString) {
@@ -197,14 +200,11 @@ export default {
     },
     sendsms() {
 
-    },
-    printsalary() {
-
-    },
+    }
   }
 }
+
 </script>
-  
 <style scoped>
 .salary-table th,
 .salary-table td {
@@ -276,6 +276,7 @@ th {
   background-color: #0077cc;
   color: #fff;
 }
+
 .modal {
   position: fixed;
   top: 0;
@@ -288,5 +289,4 @@ th {
   justify-content: center;
   align-items: center;
 }
-
 </style>
