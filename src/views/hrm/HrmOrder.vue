@@ -25,11 +25,11 @@
             <tr>
               <td>{{this.empId}}</td>
               <td>{{this.empname}}</td>
-              <td>{{this.intime}}</td>
-              <td>{{this.outtime}}</td>
-              <td>{{this.inip}}</td>
-              <td>{{this.outip}}</td>
-              <td>{{this.divide}}</td>
+              <td v-if="this.requestdate == this.checkdate">{{this.intime}}</td>
+              <td v-if="this.requestdate == this.checkdate">{{this.outtime}}</td>
+              <td v-if="this.requestdate == this.checkdate">{{this.inip}}</td>
+              <td v-if="this.requestdate == this.checkdate">{{this.outip}}</td>
+              <td v-if="this.requestdate == this.checkdate">{{this.divide}}</td>
             </tr>
           </tbody>
         </table>
@@ -212,22 +212,23 @@ export default {
         ).then((res) => {
           this.requestBody = res.data
           this.attendenceno = this.requestBody.attendenceno
-          this.intime = this.requestBody.intime
-          this.outtime = this.requestBody.outtime
-          this.inip = this.requestBody.inip
-          this.outip = this.requestBody.outip
-          this.divide = this.requestBody.divide
           this.reason = "기타"
           this.reasonpr = this.requestBody.reasonpr
           this.requestdate = this.requestBody.requestdate
           this.checkresult = this.requestBody.requestresult
-          
+          if(this.requestBody.requestdate == this.checkdate){
+            this.intime = this.requestBody.intime
+            this.outtime = this.requestBody.outtime
+            this.inip = this.requestBody.inip
+            this.outip = this.requestBody.outip
+            this.divide = this.requestBody.divide
+          }
         }).catch((err) => {
           console.log(err)
         });
     },
     fnincheck(){
-      if(this.intime == null){
+      if(this.requestBody.intime == null || this.requestBody.requestdate != this.checkdate){
         if(this.checkresult == "N" || this.checkresult == null){
           let apiUrl = this.$serverUrl + '/hrm/adin'
           this.form = {

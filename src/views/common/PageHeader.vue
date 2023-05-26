@@ -20,7 +20,7 @@
           </button>
 
 
-          <template v-if="auth == '관리자' || '임원'">
+          <template v-if="auth == '관리자' || auth == '임원'">
             <transition name="accordion">
               <div class="collapse" ref="accordion1" id="admin-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
@@ -241,7 +241,7 @@
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                   <li><router-link to="/accounting/salaryretrieve"
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 조회</router-link></li>
-                  <li><router-link to="/accounting/management1"
+                  <li><router-link to="/accounting/management"
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">급여 관리</router-link></li>
                   <li><router-link to="/accounting/revenueretrieve"
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">매출 조회</router-link></li>
@@ -384,11 +384,13 @@ export default {
       }
     },
     fnlogout() {
-      sessionStorage.clear();
-      this.auth = '';
-      alert("logout 처리되었습니다.");
-      this.$router.push('/');
-    },
+  sessionStorage.clear();
+  this.auth = '';
+  alert("logout 처리되었습니다.");
+  this.fnloginck();  
+  this.authcheck();  
+  this.$router.push('/');
+},
     closeAccordion(element) {
       element.style.height = element.scrollHeight + 'px';
       requestAnimationFrame(() => {

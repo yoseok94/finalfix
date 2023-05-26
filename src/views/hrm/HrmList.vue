@@ -2,9 +2,8 @@
 <div class="hrmlist">
   <div>
     <h2 align="center">근태 신청자 리스트</h2>
-    <div class="table-responsive">
-      <hr class="my-4">
-        <table class="table table-striped table-sm">
+      <div class="table-responsive">
+      <table class="table table-striped table-sm">
           <thead>
             <tr>
               <th scope="col">ID</th>
@@ -41,6 +40,7 @@
         </table>
         <div class="searchdiv">
             <select v-model="search_key" >
+              <option value="">선택</option>
               <option value="ID">ID</option>
               <option value="Name">Name</option>
             </select>

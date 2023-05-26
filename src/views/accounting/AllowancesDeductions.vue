@@ -1,17 +1,17 @@
 <template>
   <div>
     <br>
-    <h1 style="text-align: center;">수당 및 공제 리스트 작성 페이지</h1>
+    <h1 style="text-align: center;">수당 및 공제 리스트 조회</h1>
     <br>
     </div>
     <div class="salary_menu-bar">
     <div class="searchdiv">
             <select v-model="search_key" >
-              <option value="ID">ID</option>
-              <option value="Name">Name</option>
+              <option value="항목코드">항목코드</option>
+              <option value="항목이름">항목이름</option>
             </select>
-            <input type="text" v-model="search_value" @keyup.enter="fnhrmsearch()">
-            <button @click="fnhrmsearch()">검색</button>
+            <input type="text" v-model="search_value" @keyup.enter="fnadsearch()">
+            <button @click="fnadsearch()">검색</button>
         </div> 
       </div> 
 
@@ -30,40 +30,40 @@
         <tbody>
          
           <tr v-for="(row, adno) in list" :key="adno">
-            <td><input type="checkbox" style="align-items: center;"></td>
-            <td>{{ row.adcode }}</td>
-            <td>{{ row.adname }}</td>
-            <td>{{ row.adcalculation }}</td>
-            <td>{{ row.adcalculationmethod }}</td>
-          </tr>
+    <td><input type="checkbox" style="align-items: center;"></td>
+    <td>{{ row. adcode }}</td>
+    <td>{{ row.adname }}</td>
+    <td>{{ row. adcalculation }}</td>
+    <td>{{ row.adcalculationmethod }}</td>
+    <td><button @click="deleteRow(row)">-</button></td>
+</tr>
         </tbody>
       </table>
     </form>
     
             <!-- 액션 버튼 (이메일 및 인쇄) 구역 -->
             <div class="actions">
-      <button @click="sendemail()">신규등록</button>
-      <button @click="sendsms()">삭제</button>
-      <button class="movelocation" @click="updatesalary()">수정</button>
+      <button @click="moveADwritePage()">신규등록</button>
+      <button class="movelocation" @click="goback">이전페이지</button>
     </div>
 
 
     <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
             <span>
-              <a href="javascript:;" @click="fnhrmsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
-              <a href="javascript:;" v-if="paging.startPage > 10" @click="fnhrmsearch(`${paging.startPage - 1}`)" class="prev w3-button w3-border">
+              <a href="javascript:;" @click="fnadsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
+              <a href="javascript:;" v-if="paging.startPage > 10" @click="fnadsearch(`${paging.startPage - 1}`)" class="prev w3-button w3-border">
               &lt;</a>
               <template v-for="(n, index) in paginavigation()">
               <template v-if="paging.page == n">
               <strong class="w3-button w3-border w3-green" :key="index">{{n}}</strong>
               </template>
               <template v-else>
-              <a class="w3-button w3-border" href="javascript:;" @click="fnhrmsearch(`${n}`)" :key="index">{{ n }}</a>
+              <a class="w3-button w3-border" href="javascript:;" @click="fnadsearch(`${n}`)" :key="index">{{ n }}</a>
               </template>
               </template>
-              <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnhrmsearch(`${paging.endPage + 1}`)" class="next w3-button w3-border">
+              <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnadsearch(`${paging.endPage + 1}`)" class="next w3-button w3-border">
               &gt;</a>
-              <a href="javascript:;" @click="fnhrmsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+              <a href="javascript:;" @click="fnadsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
             </span>
         </div>
 
@@ -104,17 +104,23 @@ export default {
     }
   },
   mounted() {
-    this.fnhrmlist()
+    this.fnadlist()
   },
   methods: {
-    fnhrmsearch(n) {
+    goBack() {
+      this.$router.go(-1);
+    },
+    moveADwritePage(){
+      this.$router.push({name: 'AllowancesDeductionsWrite'});
+    },
+    fnadsearch(n) {
       if (this.page !== n) {
         this.page = n       
       }
 
-      this.fnhrmlist()      
+      this.fnadlist()      
     },
-    fnhrmlist(){
+    fnadlist(){
       this.requestBody = { // 데이터 전송        
         sk: this.search_key,
         sv: this.search_value,
@@ -139,6 +145,18 @@ export default {
           alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
         }
       })
+    },   deleteRow(row) {
+        if (confirm('정말 해당 내용을 삭제하시겠습니까??')) {
+            this.$axios.delete(this.$serverUrl + "/accounting/remove/" + row.adcode)
+                .then(response => {
+                    if (response.data.success) {
+                        // If the delete was successful, remove the row from the list
+                        this.list = this.list.filter(item => item.adcode !== row.adcode);
+                    } else {
+                        // Handle the error case
+                    }
+                })
+        }
     },
   }
 }

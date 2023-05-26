@@ -4,13 +4,15 @@ import SalaryrRetrieve from '@/views/accounting/SalaryrRetrieve.vue';
 import PayStub from '@/views/accounting/PayStub.vue';
 // 급여명세서 작성하기
 import PayStubWrite from '@/views/accounting/PayStubWrite.vue';
-// 급여명세서 보내기
-import PayStubSend from '@/views/accounting/PayStubSend.vue';
+
 // 급여 관리 - v
 import SalaryManagement from '@/views/accounting/SalaryManagement.vue';
 
 // 수당 및 공제 리스트 
 import AllowancesDeductions from '@/views/accounting/AllowancesDeductions.vue';
+// 수당 및 공제 리스트 작성
+import AllowancesDeductionsWrite from '@/views/accounting/AllowancesDeductionsWrite.vue';
+
 // 매출 조회
 import RevenueRetrieve from '@/views/accounting/RevenueRetrieve.vue';
 // 회계전표 조회
@@ -38,24 +40,19 @@ const youngkwangjs = [
     component: PayStubWrite,
   },
   {
-    path: '/accounting/stubsend',
-    name: 'PayStubSend',
-    component: PayStubSend,
-  },
-  {
     path: '/accounting/management',
     name: 'SalaryManagement',
     component: SalaryManagement,
   },
-  // {
-  //   path: '/accounting/management2',
-  //   name: 'SalaryManagement2',
-  //   component: SalaryManagement2,
-  // },
   {
     path: '/accounting/allowancesdeductions',
     name: 'AllowancesDeductions',
     component: AllowancesDeductions,
+  },
+  {
+    path: '/accounting/adwrite',
+    name: 'AllowancesDeductionsWrite',
+    component: AllowancesDeductionsWrite,
   },
   {
     path: '/accounting/revenueretrieve',

@@ -6,13 +6,13 @@
      <!-- 검색 바 구역 -->
   <div class="search_container">
     <select v-model="search_key">
-      <option value="empId">사원코드</option>
-      <option value="empname">사원이름</option>
+      <option value="ID">사원코드</option>
+      <option value="Name">사원이름</option>
       <option value="deptname">부서이름</option>
       <option value="emphiredate">입사일자</option>
     </select>
     <input class="search_container-input" type="text" placeholder="검색어를 입력해주세요" v-model="search_value" @keyup.enter="fnhrmsearch()" size="50" />
-    <button class="search_container-btn" @click="fnhrmsearch()">검색</button>
+    <button class="search_container-btn w3-button w3-round w3-blue-gray" @click="fnhrmsearch()">검색</button>
   </div>
 
    <!-- 테이블 구역 -->
@@ -29,7 +29,7 @@
       <tbody>
         <tr v-for="(row, empno) in list" :key="empno">
           <td><input type="checkbox" /></td>
-          <td style="color:blue;" @click="updatesalary(row.empId)">{{ row.empId }}</td>
+          <td style="color:blue;"><a v-on:click="movePayStubWrite(`${row.empId}`)">{{ row.empId }}</a></td>
           <td>{{ row.empname }}</td>
           <td>{{ row.deptname }}</td>
           <td>{{ row.emphiredate }}</td>
@@ -39,9 +39,8 @@
 
     <!-- 액션 버튼 (이메일 및 인쇄) 구역 -->
   <div class="actions">
-    <button @click="sendemail()">Email</button>
-    <button @click="sendsms()">SMS</button>
-    <button @click="printsalary()">Print</button>
+    <!-- <button class="w3-button w3-round w3-blue-gray" @click="sendemail()">Email</button>
+    <button class="w3-button w3-round w3-blue-gray" @click="sendsms()">SMS</button> -->
 
   </div>
   
@@ -66,7 +65,6 @@
       <a href="javascript:;" @click="fnhrmsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
     </span>
   </div>
-
   </template>
    
 <script>
@@ -79,31 +77,32 @@ export default {
       paging: {
         block: 0,
         endPage: 0,
-        nextBlock : 0,
+        nextBlock: 0,
         page: 0,
         pageSize: 0,
-        prevBlock : 0 ,
+        prevBlock: 0,
         startIndex: 0,
         startPage: 0,
-        totalBlockCnt : 0,
-        totalListCnt : 0,
-        totalPageCnt: 0
-      },
+        totalBlockCnt: 0,
+        totalListCnt: 0,
+        totalPageCnt: 0,
+      }, 
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
-      search_key : this.$route.query.sk ? this.$route.query.sk : "",
-      search_value : this.$route.query.sv ? this.$route.query.sv : null,
-      empId: null,
-    }
-  },
-  computed: {
-    pagenavigation: function () {
-        let pageNumber = [];
+      search_key: this.$route.query.sk ? this.$route.query.sk : "",
+      search_value: this.$route.query.sv ? this.$route.query.sv : null,
+      
+
+      paginavigation: function () { //페이징 처리 for문 커스텀
+        let pageNumber = [] //;
         let startPage = this.paging.startPage;
         let endPage = this.paging.endPage;
         for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
-        return pageNumber ;
-    } 
+        return pageNumber;
+      },
+      empno: '',
+      empstatus: "" 
+    }
   },
   created() {
     this.empId = this.$route.params.empId;
@@ -140,18 +139,13 @@ export default {
         }
       });
     },
-    sendmail() {
-
+    movePayStubWrite(empId){
+      this.requestBody.empId = empId
+      this.$router.push({
+        path: '/accounting/stubwrite',
+        query: this.requestBody
+      })
     },
-    sendsms() {
-
-    },
-    print() {
-
-    },
-    updatesalary(empId){
-      this.$router.push({ name: 'PayStubWrite', params: { empId: empId } });
-    }
   }
 }
 </script>
