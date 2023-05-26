@@ -39,6 +39,7 @@
         </table>
         <div class="searchdiv">
             <select v-model="search_key" >
+              <option value="">선택</option>
               <option value="ID">ID</option>
               <option value="Name">Name</option>
             </select>
