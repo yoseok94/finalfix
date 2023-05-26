@@ -228,7 +228,7 @@ export default {
         });
     },
     fnincheck(){
-      if(this.requestBody.requestdate != this.checkdate){
+      if(this.requestBody.intime == null || this.requestBody.requestdate != this.checkdate){
         if(this.checkresult == "N" || this.checkresult == null){
           let apiUrl = this.$serverUrl + '/hrm/adin'
           this.form = {
