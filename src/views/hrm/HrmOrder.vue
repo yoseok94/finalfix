@@ -152,7 +152,7 @@ export default {
       if(this.reason != "기타"){
         this.reasonpr = "기타사유x"
       }
-      if(this.checkdate < this.requestdate){
+      if(this.checkdate <= this.requestdate){
         if(this.checkresult == null){
         let apiUrl = this.$serverUrl + '/hrm/orderin'
           this.form = {
