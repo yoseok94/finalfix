@@ -23,7 +23,9 @@
               <td>{{row.requestdate}}</td>
               <td>{{row.intime}}</td>
               <td>{{row.outtime}}</td>
-              <td>{{row.divide}}</td>
+              <td v-if="row.divide != null && row.reason == null">{{row.divide}}</td>
+              <td v-else-if="row.divide != null && row.reason != null">{{row.divide}} {{row.reason}}</td>
+              <td v-else-if="row.divide == null && row.reason != null">{{row.reason}}</td>
             </tr>
           </tbody> 
         </table>
@@ -110,8 +112,8 @@
         let b2 = 0;
         let c2 = 0;
         for(var i = 0; i < this.list.length; i++){
-          console.log(this.list[i].divide)
-          console.log(this.list[i].reason)
+
+
           if(this.list[i].divide == "정상"){
             a++;
           }else if(this.list[i].reason == "조퇴" || this.list[i].reason == "기타" || this.list[i].reason == "연차"){
@@ -121,7 +123,7 @@
           }
         }
 
-        console.log(a + "===" + b + "===" + c + "===" )
+
 
         if(a !== undefined){
           a2 = (a/this.list.length) * 100;
@@ -133,7 +135,8 @@
           c2 = (c/this.list.length) * 100;
         }
 
-        console.log(a2 + "===" + b2 + "===" + c2 + "===" )
+
+
 
         this.series = ref([a2, b2, c2]);
 
@@ -145,7 +148,7 @@
         let dd = String(new Date(yy,mm,0).getDate())
         this.startdate = yy + '-' + mm + '-01'
         this.enddate = yy + '-' + mm + '-' + dd
-        console.log(this.startdate + "=====" + this.enddate);
+
         this.fnmyinfo();
       },
       fnmyattendence(){

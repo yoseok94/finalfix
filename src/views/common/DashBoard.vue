@@ -123,7 +123,7 @@ export default {
       console.error(error);
     }
             console.log("localStorage: " + localStorage);
-            this.fnGetList();
+            
         },
         methods: {
             fnNoticeGetList() {
