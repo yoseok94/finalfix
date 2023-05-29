@@ -28,9 +28,9 @@
                 </div>
                 <div class="dashboard-column">
                 <div class="calendardiv">
-                  <div class="calendar-container" style="width: 500px; height: 500px;">
-                    <BusinessPlanCalendar></BusinessPlanCalendar>
-                  </div>
+                <div class="calendar-container" style="width: 500px; height: 500px">
+                <BusinessPlanCalendar :planList="planList" @dateClick="showPlanDetails"/>
+                </div>
                 </div>
                 </div>
             </div>
@@ -86,6 +86,7 @@ export default {
                 requestBody : this.$route.query,
                 nlist: [],
                 elist: [],
+                planList: [],
                 no: '', //게시판 숫자처리
                 paging: {
                     block: 0,
@@ -123,7 +124,7 @@ export default {
       console.error(error);
     }
             console.log("localStorage: " + localStorage);
-            
+            this.getPlanList();
         },
         methods: {
             fnNoticeGetList() {
@@ -199,6 +200,14 @@ export default {
             this.$router.push({
                 path: './update'
             })
+        },
+        async getPlanList() {
+      try {
+        const response = await axios.get("/business/planlist");
+        this.planList = response.data;
+        } catch (error) {
+        console.error(error);
+         }
         },
         },
         components: {
