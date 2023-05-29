@@ -5,9 +5,9 @@
     <table>
         <tr>
             <td>사원코드</td>
-            <td><input class="table-input" type="text" v-model="empId" id="empId"/></td>
+            <td><input class="table-input" type="text" v-model="empId" id="empId" /></td>
             <td>사원이름</td>
-            <td><input class="table-input" type="text" v-model="empname" id="empname"/></td>
+            <td><input class="table-input" type="text" v-model="empname" id="empname" /></td>
         </tr>
         <tr>
             <td>부서이름</td>
@@ -17,7 +17,7 @@
         </tr>
         <tr>
             <td>입사일자</td>
-            <td><input class="table-input" type="text" v-model="emphiredate" id="emphiredate"/></td>
+            <td><input class="table-input" type="text" v-model="emphiredate" id="emphiredate" /></td>
             <td>지급일자</td>
             <td><input class="table-input" type="text" v-model="paymentdate" id="paymentdate" /></td>
         </tr>
@@ -26,11 +26,12 @@
     <table>
         <tr>
             <td>총 근무시간 :</td>
-            <td><input class="table-input" type="text" v-model="workhours" id="workhours" placeholder="근무시간을 입력해주세요"/></td>
+            <td><input class="table-input" type="text" v-model="workhours" id="workhours" placeholder="근무시간을 입력해주세요" /></td>
             <td>초과근무시간:</td>
-            <td><input class="table-input" type="text" v-model="overtimehours" id="overtimehours" placeholder="초과근무시간을 입력해주세요"/></td>
+            <td><input class="table-input" type="text" v-model="overtimehours" id="overtimehours"
+                    placeholder="초과근무시간을 입력해주세요" /></td>
             <div class="center"><button v-on:click="calculateSalary()">급여 계산하기</button></div>
-            
+
         </tr>
     </table>
     <br>
@@ -80,7 +81,8 @@
     <br>
     <div class="actions">
         <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="submitForm">등록</button>
-        <router-link to="/accounting/allowancesdeductions"><button class="w3-button w3-round w3-blue-gray">리스트확인</button></router-link>
+        <router-link to="/accounting/allowancesdeductions"><button
+                class="w3-button w3-round w3-blue-gray">리스트확인</button></router-link>
         <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="goBack">이전페이지</button>
     </div>
 </template>
@@ -104,10 +106,10 @@ export default {
         };
     },
     created() {
-    this.requestBody = this.$route.query;
-    this.empId = this.requestBody.empId; 
-    this.payStubWriteGetView();
-},
+        this.requestBody = this.$route.query;
+        this.empId = this.requestBody.empId;
+        this.payStubWriteGetView();
+    },
     methods: {
         payStubWriteGetView() {
             console.log('empId : ' + this.empId);
@@ -119,73 +121,73 @@ export default {
                 this.deptname = res.data.deptname;
                 this.emplevel = res.data.emplevel;
                 this.emphiredate = res.data.emphiredate;
-        }).catch((err) => {
-            if (err.response) {
-                alert(`Error: ${err.response.data.message}`);
-            } else if (err.request) {
-                alert('서버에 문제가 발생하였습니다. 나중에 다시 시도해주세요.');
+            }).catch((err) => {
+                if (err.response) {
+                    alert(`Error: ${err.response.data.message}`);
+                } else if (err.request) {
+                    alert('서버에 문제가 발생하였습니다. 나중에 다시 시도해주세요.');
+                }
+            });
+        },
+        calculateSalary() {
+            let salaryRate = 0;
+            switch (this.emplevel) {
+                case '사원':
+                    salaryRate = 15000;
+                    break;
+                case '임원':
+                    salaryRate = 35000;
+                    break;
+                case '관리자':
+                    salaryRate = 60000;
+                    break;
             }
-        });
-    },
-    calculateSalary() {
-    let salaryRate = 0;
-    switch (this.emplevel) {
-        case '사원':
-            salaryRate = 15000;
-            break;
-        case '임원':
-            salaryRate = 35000;
-            break;
-        case '관리자':
-            salaryRate = 60000;
-            break;
+            let basesalary = this.workhours * salaryRate;
+            let overtimesalary = this.overtimehours * salaryRate * 1.5;
+            let totalpaymentsalary = basesalary + overtimesalary + 200000;
+
+            this.basesalary = basesalary.toLocaleString();
+            this.overtimesalary = overtimesalary.toLocaleString();
+            this.totalpaymentsalary = totalpaymentsalary.toLocaleString();
+
+        },
+        formatDate(dateString) {
+            let date = new Date(dateString);
+            return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
+        },
+        submitForm() {
+            this.calculateSalary();
+            let salaryData = {
+                empId: this.empId,
+                empname: this.empname,
+                deptname: this.deptname,
+                emplevel: this.emplevel,
+                emphiredate: this.emphiredate,
+                paymentdate: this.paymentdate,
+                workhours: this.workhours,
+                overtimehours: this.overtimehours,
+                basesalary: parseInt(this.basesalary.replace(/,/g, '')),
+                overtimesalary: parseInt(this.overtimesalary.replace(/,/g, '')),
+                totalpaymentsalary: parseInt(this.totalpaymentsalary.replace(/,/g, ''))
+            };
+            console.log(salaryData);
+            this.$axios.post(`${this.$serverUrl}/accounting/salarywrite/`, salaryData)
+                .then(() => {
+                    this.$router.push('/accounting/management');
+                })
+                .catch((err) => {
+                    if (err.response) {
+                        console.log(`Error: ${err.response.data.message}`);
+                    } else if (err.request) {
+                        console.log('서버에 문제가 발생하였습니다. 나중에 다시 시도해주세요.');
+                    }
+                });
+        },
+
+        goBack() {
+            this.$router.go(-1);
+        },
     }
-    let basesalary = this.workhours * salaryRate;
-    let overtimesalary = this.overtimehours * salaryRate * 1.5;
-    let totalpaymentsalary = basesalary + overtimesalary + 200000;
-
-    this.basesalary = basesalary.toLocaleString();
-    this.overtimesalary = overtimesalary.toLocaleString();
-    this.totalpaymentsalary = totalpaymentsalary.toLocaleString();
-
-},
-    formatDate(dateString) {
-        let date = new Date(dateString);
-        return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
-    },
-    submitForm() {
-    this.calculateSalary();
-    let salaryData = {
-        empId: this.empId,
-        empname: this.empname,
-        deptname: this.deptname,
-        emplevel: this.emplevel,
-        emphiredate: this.emphiredate,
-        paymentdate: this.paymentdate,
-        workhours: this.workhours,  
-        overtimehours: this.overtimehours,  
-        basesalary: parseInt(this.basesalary.replace(/,/g, '')), 
-        overtimesalary: parseInt(this.overtimesalary.replace(/,/g, '')),
-        totalpaymentsalary: parseInt(this.totalpaymentsalary.replace(/,/g, ''))
-    };
-    console.log(salaryData);
-    this.$axios.post(`${this.$serverUrl}/accounting/salarywrite/`, salaryData)
-        .then(() => {
-            this.$router.push('/accounting/management');
-        })
-        .catch((err) => {
-            if (err.response) {
-                console.log(`Error: ${err.response.data.message}`);
-            } else if (err.request) {
-                console.log('서버에 문제가 발생하였습니다. 나중에 다시 시도해주세요.');
-            }
-        });
-},
-    
-    goBack() {
-        this.$router.go(-1);
-    },
-}
 }
 </script>
 
@@ -217,13 +219,14 @@ input.table-input {
     position: relative;
     left: 20%;
 }
+
 .center {
-  text-align: center;
-  height: 33.5px;
+    text-align: center;
+    height: 33.5px;
 }
-.center button{
-  border: 1px solid black;
-  padding: 4px;
-  height: 33.5px; 
-}
-</style>
+
+.center button {
+    border: 1px solid black;
+    padding: 4px;
+    height: 33.5px;
+}</style>

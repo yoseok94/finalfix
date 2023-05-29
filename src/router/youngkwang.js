@@ -19,9 +19,6 @@ import RevenueRetrieve from '@/views/accounting/RevenueRetrieve.vue';
 import SlipStatementRetrieve from '@/views/accounting/SlipStatementRetrieve.vue';
 // 회계전표 작성
 import SlipStatementWrite from '@/views/accounting/SlipStatementWrite.vue';
-// 거래처 등록
-import SearchCustomer from '@/views/accounting/SearchCustomer.vue';
-
 
 const youngkwangjs = [
   {
@@ -69,12 +66,6 @@ const youngkwangjs = [
     name: 'SlipStatementWrite',
     component: SlipStatementWrite,
   },
-  {
-  
-    path: '/accounting/searchcustomer',
-    name: 'SearchCustomer',
-    component: SearchCustomer,
-  }
   //
 ];
 
