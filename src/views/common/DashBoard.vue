@@ -254,7 +254,7 @@ export default {
                     position: "front",
                     yaxis: [
                         {
-                            y: 300,
+                            y: 1000,
                             borderColor: "transparent",
                             label: {
                                 text: "(단위: 백만원)",
