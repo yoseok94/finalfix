@@ -1,18 +1,24 @@
 <template>
     <div class="main">
-      <!--관리자, 임원의 부서 이동관리 페이지입니다.-->
+      <!--관리자, 임원의 부서 강제 이동 관리 페이지입니다.-->
       <h2 align="center">부서 이동</h2>
-      <a v-on:click="fnView3(`${empno}`)"><button>신청하기</button></a>
+      
+      <!-- 접속자가 [임원]일 때, 신청하기 버튼 활성화합니다 -->
+      <div v-if="auth == '임원'">
+        <a v-on:click="fnView3()"><button>신청하기</button></a>
+      </div>
+      <div v-else></div>
+      
         <!--카테고리검색-->
         <div class="top">
           <div class="d-inline-flex align-items-center">
             <div class="form-group mr-2">
               <select id="category" v-model="search_key" class="form-control">
                 <option value="">- 선택 -</option>
-                <option value="Deptname">부서명</option>
+                <option value="deptname">부서명</option>
                 <option value="ID">ID</option>
                 <option value="Name">이름</option>
-                <!-- <option value="Level">직급</option> -->
+                <option value="Level">직급</option>
               </select>
             </div>
             <div class="form-group mr-2">
@@ -24,7 +30,7 @@
           </div>
         </div>
 
-        <!-- 내용 -->
+        <!-- 리스트 약식 내용 -->
         <table class="w3-table-all">
             <thead class="theadline">
                 <tr>
@@ -37,8 +43,9 @@
                     <th>부서이동</th>
                 </tr>
             </thead>
-            <tbody>
-              <tr v-for="(row, empno) in list" :key="empno">   
+            <!-- [관리자] 전체 리스트 출력 -->
+            <tbody v-if="auth == '관리자' ">
+              <tr v-for="(row, empno) in manager" :key="empno">   
                 <td>{{ row.deptname }}</td>
                 <td>{{ row.empId }}</td>
                 <td>{{ row.empname }}</td>
@@ -48,7 +55,20 @@
                 <td><a v-on:click="fnView2(`${row.empno}`)"><button>이동</button></a></td>
               </tr>
             </tbody>
-        </table>
+
+              <!-- [임원] 접속자와 같은 부서인 인원들만 출력 -->
+            <tbody v-else>
+              <tr v-for="(row, empno) in executive" :key="empno">   
+                <td>{{ row.deptname }}</td>
+                <td>{{ row.empId }}</td>
+                <td>{{ row.empname }}</td>
+                <td>{{ row.emplevel }}</td>
+                <td><a v-on:click="fnView(`${row.empno}`)"><button>세부정보보기</button></a></td>
+                <td>=></td>
+                <td><a v-on:click="fnView2(`${row.empno}`)"><button>이동</button></a></td>
+              </tr>
+            </tbody>
+        </table>      
       
       <!-- 페이징 -->
       <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
@@ -76,8 +96,13 @@
 export default {
   data() {
     return {
+      // loginempno: "",
+      token: "",
+      auth: "", // 권한 설정
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
+      manager: [],  //관리자
+      executive: [],  //임원
       no: '', //게시판 숫자처리
       paging: {
         block: 0,
@@ -106,34 +131,61 @@ export default {
       }
     }
   },
+  watch: {  // 권한 설정
+    '$route'() {
+      this.fnloginck();
+      this.authcheck();
+    }
+  },
   mounted() {
-    this.fnGetList();
+    this.fnGetList().then(() => {
+      // 관리자, 임원 전용 리스트 조건
+      this.manager = this.list.filter(level => level.emplevel === '임원' || level.emplevel === '사원');
+      this.executive = this.list.filter(level => level.emplevel === '사원');
+    });
+    this.authcheck();
   },
   methods: {
-    fnGetList() {
-      //스프링부트에서 전송받은 데이터 출력처리
-      this.requestBody = { // 데이터 전송
-        // keyword: this.keyword,
+    fnloginck() {
+      if (sessionStorage.getItem('token') !== null) {
+        this.token = 1;
+      } else {
+        this.token = 0;
+      }
+    },
+    authcheck() {
+      // 접속자 직급 구별용
+      if(sessionStorage.getItem('emplevel') == '관리자') {
+        this.auth = '관리자';
+      } else if (sessionStorage.getItem('emplevel') == '임원') {
+        this.auth = '임원';
+      } else if (sessionStorage.getItem('emplevel') == '사원') {
+        this.auth = '사원';
+      } 
+    },  // 권한 설정
+    async fnGetList() {
+      this.requestBody = {
         sk: this.search_key,
         sv: this.search_value,
         page: this.page,
         size: this.size
-      }
-      this.$axios.get(this.$serverUrl + "/hrm/hrmmember", { //Controller의 Mapping값
+      };
+      try {
+       const res = await this.$axios.get(this.$serverUrl + "/hrm/hrmmember", {
         params: this.requestBody,
-        headers: {}
-      }).then((res) => {        
-        //this.list = res.data  //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.  
-        if (res.data.resultCode === "OK") {
-          this.list = res.data.data
-          this.paging = res.data.pagination
-          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
-        }
-      }).catch((err) => {
-        if (err.message.indexOf('Network Error') > -1) {
-          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-        }
-      })
+           headers: {}
+          });
+       if (res.data.resultCode === "OK") {
+        this.list = res.data.data;
+          this.paging = res.data.pagination;
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+       }
+     } 
+     catch(err) {
+       if (err.message.indexOf('Network Error') > -1) {
+         alert('Network error. Please contact support.');
+       }
+     }
     },
     fnView(empno) {
       this.requestBody.empno = empno
@@ -149,11 +201,9 @@ export default {
         query: this.requestBody
       })
     },
-    fnView3(empno) {
-      this.requestBody.empno = empno
+    fnView3() {
       this.$router.push({
         path: '/management/writereasonapp',
-        query: this.requestBody
       })
     },
     fnPage(n) {
@@ -161,16 +211,6 @@ export default {
         this.page = n          
       }
       this.fnGetList()
-    },
-    fnWrite() {
-      this.$router.push({
-        path: './write'
-      })
-    },
-    fnUpdate(){
-      this.$router.push({
-      path: './update'
-      })
     },
   },
 };

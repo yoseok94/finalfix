@@ -1,19 +1,23 @@
 <template>
     <div class="main">
-      <!--[관리자, 임원]의 부서 신청 관리 페이지입니다.-->
+      <!--[관리자, 임원]의 부서이동신청 관리 페이지입니다.-->
       <h2 align="center">부서 신청</h2>
 
-        <!--카테고리검색-->
-        <!--담당자는 버튼 숨김-->
+        <!--관리자는 내 이동이력 버튼 숨김-->
+          <div v-if="auth == '임원' ">
+            <a v-on:click="fnView2()"><button>내 이동이력</button></a>
+          </div>
+          <div v-else></div>
         <div class="top">
-          <router-link to="/management/movinghistory"><button class="form-control">내 이동이력</button></router-link>
+          
+        <!--카테고리검색-->
           <div class="d-inline-flex align-items-center">
             <div class="form-group mr-2">
               <select id="category" v-model="search_key" class="form-control">
                 <option value="">- 선택 -</option>
                 <option value="ID">ID</option>
                 <option value="Name">이름</option>
-                <!-- <option value="Level">직급</option> -->
+                <option value="Level">직급</option>
                 <option value="Deptname">현부서명</option>
               </select>
             </div>
@@ -39,15 +43,27 @@
                     <th>신청내역조회</th>
                 </tr>
             </thead>
-            <tbody>
-              <tr v-for="(row, appno) in list" :key="appno">   
+            <tbody v-if="auth == '관리자' ">
+              <!-- [관리자] 전체인원중 현황값이 '검토중'인 모든 리스트 출력 -->
+              <tr v-for="(row, appno) in manager" :key="appno">   
                 <td>{{ row.appid }}</td>
                 <td>{{ row.appname }}</td>
                 <td>{{ row.applevel }}</td>
                 <td>{{ row.appdeptname }}</td>
-                <!-- 클릭시 해당 인원의 세부정보가 나와야함 -->
                 <td>=></td>
-                <!-- 모든 부서가 나와야하며 선택한 부서값 전달 -->
+                <td>{{ row.appchange }}</td>
+                <td><a v-on:click="fnView(`${row.appno}`)"><button>신청내역조회</button></a></td>
+                </tr>
+            </tbody>
+
+            <tbody v-else>
+              <!-- [임원] 접속한 본인과 같은 부서 인원들의 현황값 '검토중'만 출력 -->
+              <tr v-for="(row, appno) in executive" :key="appno">   
+                <td>{{ row.appid }}</td>
+                <td>{{ row.appname }}</td>
+                <td>{{ row.applevel }}</td>
+                <td>{{ row.appdeptname }}</td>
+                <td>=></td>
                 <td>{{ row.appchange }}</td>
                 <td><a v-on:click="fnView(`${row.appno}`)"><button>신청내역조회</button></a></td>
                 </tr>
@@ -80,22 +96,27 @@
 export default {
   data() {
     return {
+      loginid: "",
+      token: "",
+      auth: "",
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
+      manager: [],  //관리자
+      executive: [],  //임원
       no: '', //게시판 숫자처리
       paging: {
-        block: 0,
-        endPage: 0,
-        nextBlock: 0,
-        page: 0,
-        pageSize: 0,
-        prevBlock: 0,
-        startIndex: 0,
-        startPage: 0,
-        totalBlockCnt: 0,
-        totalListCnt: 0,
-        totalPageCnt: 0,
-      }, //페이징 데이터
+      block: 0,
+      endPage: 0,
+      nextBlock: 0,
+      page: 0,
+      pageSize: 0,
+      prevBlock: 0,
+      startIndex: 0,
+      startPage: 0,
+      totalBlockCnt: 0,
+      totalListCnt: 0,
+      totalPageCnt: 0,
+    }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size :10,
       //keyword: this.$route.query.keyword,
@@ -110,39 +131,75 @@ export default {
       }
     }
   },
+
   mounted() {
-    this.fnGetList();
+    this.fnGetList().then(() => {
+      // 관리자, 임원 전용 리스트 조건
+      this.manager = this.list.filter(condition => condition.applevel === '임원' && condition.appaccept === '검토중');
+      this.executive = this.list.filter(condition => condition.applevel === '사원' && condition.appaccept === '검토중');
+    });
+    this.authcheck();
   },
+
+  watch: {
+    '$route'() {
+      this.fnloginck();
+      this.authcheck();
+    }
+  },
+
   methods: {
-    fnGetList() {
-      //스프링부트에서 전송받은 데이터 출력처리
-      this.requestBody = { // 데이터 전송
-        // keyword: this.keyword,
+    fnloginck() {
+      if (sessionStorage.getItem('token') !== null) {
+        this.token = 1;
+      } else {
+        this.token = 0;
+      }
+    },
+    authcheck() {
+      if (sessionStorage.getItem('emplevel') == '관리자') {
+        this.auth = '관리자';
+      } else if (sessionStorage.getItem('emplevel') == '임원') {
+        this.auth = '임원';
+      } else if (sessionStorage.getItem('emplevel') == '사원') {
+        this.auth = '사원';
+      }
+    },
+    async fnGetList() {
+      this.requestBody = {
         sk: this.search_key,
         sv: this.search_value,
         page: this.page,
         size: this.size
-      }
-      this.$axios.get(this.$serverUrl + "/management/deptapplist", {
+      };
+      try {
+       const res = await this.$axios.get(this.$serverUrl + "/management/deptapplist", {
         params: this.requestBody,
-        headers: {}
-      }).then((res) => {        
-        //this.list = res.data  //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.  
-        if (res.data.resultCode === "OK") {
-          this.list = res.data.data
-          this.paging = res.data.pagination
-          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
-        }
-      }).catch((err) => {
-        if (err.message.indexOf('Network Error') > -1) {
-          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-        }
-      })
+           headers: {}
+          });
+       if (res.data.resultCode === "OK") {
+        this.list = res.data.data;
+          this.paging = res.data.pagination;
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+       }
+     } 
+     catch(err) {
+       if (err.message.indexOf('Network Error') > -1) {
+         alert('Network error. Please contact support.');
+       }
+     }
     },
     fnView(appno) {
-      this.requestBody.appno = appno
-      this.$router.push({
+        this.requestBody.appno = appno
+        this.$router.push({
         path: '/management/appdetailscheck',
+        query: this.requestBody
+      })
+    },
+    fnView2(appid) {
+      this.requestBody.loginid = appid
+      this.$router.push({
+        path: '/management/movinghistory',
         query: this.requestBody
       })
     },
@@ -151,16 +208,6 @@ export default {
         this.page = n          
       }
       this.fnGetList()
-    },
-    fnWrite() {
-      this.$router.push({
-        path: './write'
-      })
-    },
-    fnUpdate(){
-      this.$router.push({
-      path: './update'
-      })
     },
   },
 };

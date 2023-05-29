@@ -25,9 +25,9 @@
               <div class="collapse" ref="accordion1" id="admin-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                   <li><router-link to="/dept/list"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 이동</router-link></li>
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 등록</router-link></li>
                   <li><router-link to="/product/list"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 이동</router-link></li>
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 등록</router-link></li>
                 </ul>
               </div>
             </transition>
@@ -38,7 +38,7 @@
               <div class="collapse" ref="accordion1" id="admin-collapse">
                 <ul class="btn-toggle-nav list-unstyled fw-normal pb-1 small">
                   <li><router-link to="/product/list"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 관리</router-link></li>
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">상품 등록</router-link></li>
                 </ul>
               </div>
             </transition>
@@ -91,7 +91,7 @@
                   <li><router-link to="/management/deptmove"
                       class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 이동 관리</router-link></li>
                   <li><router-link to="/management/deptapplist"
-                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">이동 신청 관리</router-link></li>
+                      class="link-body-emphasis d-inline-flex text-decoration-none rounded">부서 신청 관리</router-link></li>
                 </ul>
               </div>
             </transition>

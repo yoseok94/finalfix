@@ -3,7 +3,7 @@
     <!--본인이동세부내역을 본인이 확인.-->
     <h2 align="center">이동내역조회</h2>
 
-      <!-- 내용 -->
+      <!-- 본인 이동 신청 내용 -->
       <table class="w3-table-all">
           <thead class="theadline">
               <tr>
@@ -42,83 +42,55 @@
 
 <script>
 export default {
-data() { //변수생성
-return {
-requestBody: this.$route.query, //query를 보내왔으니까 지금 이 페이지는 qeury를 가지고 있는 상태가 된다
-appno: this.$route.query.appno,
+    data() { //변수생성
+    return {
+            requestBody: this.$route.query, //query를 보내왔으니까 지금 이 페이지는 qeury를 가지고 있는 상태가 된다
+            appno: this.$route.query.appno,
+            appid: '',
+            appname: '',
+            applevel: '',
+            apphiredate: '',
+            appdeptname: '',
+            appchange: '',
+            appreason: '',
+            appaccept: '',
+        }
+    },
 
-appid: '',
-appname: '',
-applevel: '',
-apphiredate: '',
-appdeptname: '',
-appchange: '',
-appreason: '',
-appaccept: '',
-}
+    mounted() {
+        this.fnGetView()
+    },
 
-},
-mounted() {
-this.fnGetView()
-},
-methods: {
-fnGetView() {
-this.$axios.get(this.$serverUrl + '/management/applist' + this.appno, {
-params: this.requestBody
-}).then((res) => {
-this.appid = res.data.appid
-this.appname = res.data.appname
-this.appphone = res.data.appphone
-this.appaddress = res.data.appaddress
-this.appemail = res.data.appemail
-this.appbirth = res.data.appbirth
-this.apphiredate = res.data.apphiredate
-this.appdeptname = res.data.appdeptname
-this.applevel = res.data.applevel
-this.appreason = res.data.appreason
-this.appchange = res.data.appchange
-this.appaccept = res.data.appaccept
-}).catch((err) => {
-if (err.message.indexOf('Network Error') > -1) {
-alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-}
-})
-},
-
-}
+    methods: {
+    fnGetView() {
+        this.$axios.get(this.$serverUrl + '/management/applist' + this.appno, {
+            params: this.requestBody
+        }).then((res) => {
+            this.appid = res.data.appid
+            this.appname = res.data.appname
+            this.appphone = res.data.appphone
+            this.appaddress = res.data.appaddress
+            this.appemail = res.data.appemail
+            this.appbirth = res.data.appbirth
+            this.apphiredate = res.data.apphiredate
+            this.appdeptname = res.data.appdeptname
+            this.applevel = res.data.applevel
+            this.appreason = res.data.appreason
+            this.appchange = res.data.appchange
+            this.appaccept = res.data.appaccept
+        }).catch((err) => {
+            if (err.message.indexOf('Network Error') > -1) {
+        alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+        }
+        })
+        },
+    }
 }
 </script>
 
 <style scoped>
 .main {
 overflow: auto;
-}
-.top {
-display: flex;
-justify-content: flex-end;
-}
-
-.pagination {
-display: flex;
-justify-content: center;
-align-items: center;
-}
-
-.page {
-display: inline-block;
-margin: 0 5px;
-padding: 5px 10px;
-background-color: #f1f1f1;
-color: #333;
-text-decoration: none;
-border-radius: 5px;
-transition: background-color 0.3s ease;
-}
-
-.page.active,
-.page:hover {
-background-color: #0077cc;
-color: #fff;
 }
 .buttonbro {
 display: flex;

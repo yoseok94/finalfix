@@ -1,5 +1,5 @@
 <template>
-  <!-- 이동이력 출력 -->
+  <!-- 특정 인원의 모든 이동이력 출력 -->
     <div class="main">
       <h2 align="center">이동이력</h2>
 
@@ -12,9 +12,8 @@
                 <option value="Deptname">부서명</option>
                 <option value="ID">ID</option>
                 <option value="Name">이름</option>
-                <!-- <option value="Level">직급</option>
-                <option value="Hiredate">작성일자</option>
-                <option value="Accept">현황</option> -->
+                <option value="Level">직급</option>
+                <option value="Accept">현황</option>
               </select>
             </div>
             <div class="form-group mr-2">
@@ -41,24 +40,34 @@
                     <th>현황</th>
                 </tr>
             </thead>
-            <tbody>
-                 <tr v-for="(row, appno) in list" :key="appno">   
+            <tbody v-if="auth == '관리자' ">
+                <tr v-for="(row, appno) in list" :key="appno">   
                     <td>{{ row.appdeptname }}</td>
                     <td>{{ row.appid }}</td>
                     <td>{{ row.appname }}</td>
                     <td>{{ row.applevel }}</td>
                     <td>{{ row.appdate }}</td>
-                    <!-- 클릭시 해당 인원의 세부정보가 나와야함 -->
                     <td>=></td>
-                    <!-- 모든 부서가 나와야 하며 선택한 부서값 전달 -->
                     <td>{{ row.appchange }}</td>
                     <td><a v-on:click="fnView(`${row.appno}`)"><button>세부내역조회</button></a></td>
-                    <!-- <td><router-link to="/management/movedetailscheck"><button>세부내역조회</button></router-link></td> -->
+                    <td>{{ row.appaccept }}</td>
+                </tr>
+            </tbody>
+            <tbody v-else>
+                <tr v-for="(row, appno) in mylist" :key="appno">   
+                    <td>{{ row.appdeptname }}</td>
+                    <td>{{ row.appid }}</td>
+                    <td>{{ row.appname }}</td>
+                    <td>{{ row.applevel }}</td>
+                    <td>{{ row.appdate }}</td>
+                    <td>=></td>
+                    <td>{{ row.appchange }}</td>
+                    <td><a v-on:click="fnView(`${row.appno}`)"><button>세부내역조회</button></a></td>
                     <td>{{ row.appaccept }}</td>
                 </tr>
             </tbody>
         </table>
-        <!-- <router-link to="/management/writereasonapp"><button class="form-control">신청하기</button></router-link> -->
+
       <!-- 페이징 -->
       <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
         <span class="pg">
@@ -85,8 +94,11 @@
 export default {
   data() {
     return {
+      token: "",
+      auth: "", // 권한 설정
       requestBody: {}, //리스트 페이지 데이터전송
       list: {}, //리스트 데이터
+      mylist: [], //본인 리스트
       no: '', //게시판 숫자처리
       paging: {
         block: 0,
@@ -115,35 +127,65 @@ export default {
       }
     }
   },
-  mounted() {
-    this.fnGetList();
+  watch: {  // 권한 설정
+    '$route'() {
+      this.authcheck();
+      this.fnloginck();
+      
+    }
   },
+  mounted() {
+    this.authcheck();
+    this.fnGetList().then(() => {
+      // 관리자, 임원 전용 리스트 조건
+      this.mylist = this.list.filter(condition => condition.appid === this.empId);
+    });
+    
+  },
+
   methods: {
-    fnGetList() {
-      //스프링부트에서 전송받은 데이터 출력처리
-      this.requestBody = { // 데이터 전송
-        // keyword: this.keyword,
+    fnloginck() {
+      if (sessionStorage.getItem('token') !== null) {
+        this.token = 1;
+      } else {
+        this.token = 0;
+      }
+    },
+    authcheck() { 
+      this.empId = sessionStorage.getItem('empId');
+      if(sessionStorage.getItem('emplevel') == '관리자') {
+        this.auth = '관리자';
+      } else if (sessionStorage.getItem('emplevel') == '임원') {
+        this.auth = '임원';
+      } else if (sessionStorage.getItem('emplevel') == '사원') {
+        this.auth = '사원';
+      } 
+    },  // 권한 설정
+    async fnGetList() {
+      this.requestBody = {
         sk: this.search_key,
         sv: this.search_value,
         page: this.page,
         size: this.size
-      }
-      this.$axios.get(this.$serverUrl + "/management/deptapplist", {
+      };
+      try {
+       const res = await this.$axios.get(this.$serverUrl + "/management/deptapplist", {
         params: this.requestBody,
-        headers: {}
-      }).then((res) => {        
-        //this.list = res.data  //서버에서 데이터를 목록으로 보내므로 바로 할당하여 사용할 수 있다.  
-        if (res.data.resultCode === "OK") {
-          this.list = res.data.data
-          this.paging = res.data.pagination
-          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
-        }
-      }).catch((err) => {
-        if (err.message.indexOf('Network Error') > -1) {
-          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-        }
-      })
+           headers: {}
+          });
+       if (res.data.resultCode === "OK") {
+        this.list = res.data.data;
+          this.paging = res.data.pagination;
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+       }
+     } 
+     catch(err) {
+       if (err.message.indexOf('Network Error') > -1) {
+         alert('Network error. Please contact support.');
+       }
+     }
     },
+
     fnView(appno) {
       this.requestBody.appno = appno
       this.$router.push({
@@ -151,23 +193,27 @@ export default {
         query: this.requestBody
       })
     },
+
     fnPage(n) {
       if (this.page !== n) {
         this.page = n          
       }
       this.fnGetList()
     },
+
     fnWrite() {
       this.$router.push({
         path: './write'
       })
     },
+
     fnUpdate(){
       this.$router.push({
       path: './update'
       })
     },
-  },
+
+  }
 };
 </script>
 
