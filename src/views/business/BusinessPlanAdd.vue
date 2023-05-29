@@ -1,281 +1,218 @@
 <template>
-    <div>
-        <div class="breadcumb-area"
-             style="background-image: url('${pageContext.servletContext.contextPath}/resources/img/catagory-img/3.jpg');">
-            <div class="container h-100">
-                <div class="row h-100 align-items-center">
-                    <div class="col-12">
-                        <div class="bradcumb-title text-center">
-                            <h2>영업 계획 등록</h2>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <br>
-        <table class="add-business-form">
-            <tr>
-                <td>제목</td>
-                <td><input type="text" v-model="title" class="input-field"/></td>
-            </tr>
-            <tr>
-                <td>부서</td>
-                <td><input type="text" v-model="department" class="input-field"/></td>
-                <td>직책</td>
-                <td><input type="text" v-model="position" class="input-field"/></td>
-                <td>담당자</td>
-                <td><input type="text" v-model="manager" class="input-field"/></td>
-            </tr>
-            <tr>
-                <td>거래처</td>
-                <td><input type="text" v-model="account_name" class="input-field"/></td>
-            </tr>
-            <tr>
-                <td>목표 수량</td>
-                <td><input type="text" v-model="target_quantity" class="input-field"/></td>
-                <td>목표 금액</td>
-                <td><input type="text" v-model="target_amount" class="input-field"/></td>
-            </tr>
-            <tr>
-                <td>상세 내용</td>
-                <td colspan="5"><input type="textbox" v-model="description" class="textbox"/></td>
-            </tr>
-            <tr>
-                <td>비고</td>
-                <td colspan="5"><input type="textbox" v-model="note" class="textbox"/></td>
-            </tr>
-        </table>
-        <hr>
-        <div class="button-container">
-            <button class="btn-add">등록</button>
-            <button class="btn-cancel" @click="clearForm">취소</button>
-        </div>
-    </div>
+  <div class="business-plan-edit">
+    <h1>영업 계획 등록</h1>
+    <form @submit.prevent="addPlan">
+      <div class="form-group">
+        <label for="plantitle">계획 제목</label>
+        <input type="text" id="plantitle" v-model="plan.plantitle" required />
+      </div>
+      <div class="form-group">
+        <label for="empId">사원 ID</label>
+        <input type="text" id="empId" v-model="empId" readonly required />
+      </div>
+      <div class="form-group">
+        <label for="deptname">부서명</label>
+        <input type="text" id="deptname" v-model="plan.deptname" readonly required />
+      </div>
+      <div class="form-group">
+        <label for="productno">상품 이름</label>
+        <select v-model="plan.productno" required>
+          <option value="">선택하세요</option>
+          <option
+            v-for="product in products"
+            :key="product.productno"
+            :value="product.productno"
+          >
+            {{ product.productname }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="accountname">거래처</label>
+        <select v-model="plan.accountname" required>
+          <option value="">선택하세요</option>
+          <option
+            v-for="account in accounts"
+            :key="account.accountname"
+            :value="account.accountname"
+          >
+            {{ account.accountname }}
+          </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="targetquantity">목표 수량</label>
+        <input
+          type="number"
+          id="targetquantity"
+          v-model="plan.targetquantity"
+          required
+        />
+      </div>
+         
+      <div class="form-group">
+        <label for="plandetail">영업계획 상세내용:</label>
+        <input type="text" id="plandetail" v-model="plan.plandetail" required />
+      </div>
+      <div class="form-group">
+        <label for="planremarks">영업계획 비고:</label>
+        <input
+          type="text"
+          id="planremarks"
+          v-model="plan.planremarks"
+          required
+        />
+      </div>
+      <button type="submit">등록</button>
+    </form>
+  </div>
 </template>
+    <script>
+import axios from "axios";
 
-<script>
 export default {
-    data() {
-        return {
-            title: "",
-            department: "",
-            position: "",
-            manager: "",
-            account_name: "",
-            target_quantity: "",
-            target_amount: "",
-            description: "",
-            note: ""
-        };
+    computed: {
+  getLoggedInEmpId() {
+    return sessionStorage.getItem('empId');
+  }
+},
+
+  data() {
+    return {
+      plan: {
+        plantitle: "",
+        productno: 0,
+        targetquantity: 0,
+        plandetail: "",
+        planremarks: "",
+        accountname: "",
+        deptname: "",
+      },
+      empId: "",
+      productName: "",
+      accounts: [],
+    };
+  },
+  methods: {
+    addPlan() {
+        this.plan.empId = this.empId;
+      axios
+        .post("/business/planadd", this.plan)
+        .then((response) => {
+          console.log(response.data);
+          this.$router.push("/businessPlanList");
+        })
+        .catch((error) => {
+          console.error(error.response.data);
+        });
     },
-    methods: {
-        clearForm() {
-            this.title = "";
-            this.department = "";
-            this.position = "";
-            this.manager = "";
-            this.account_name = "";
-            this.target_quantity = "";
-            this.target_amount = "";
-            this.description = "";
-            this.note = "";
-        }
-    }
+    getProducts() {
+      axios
+        .get("/business/products") 
+        .then((response) => {
+          this.products = response.data;
+        })
+        .catch((error) => {
+          console.error(error.response.data);
+        });
+    },
+    getLoggedInEmpInfo() {
+    axios
+      .get("/hrm/employeeinfo/" + this.empId)
+      .then((response) => {
+        this.plan.deptname = response.data.deptname;
+      })
+      .catch((error) => {
+        console.error(error.response.data);
+      });
+  },
+  getAccounts() {
+      axios
+        .get("/business/accounts") 
+        .then((response) => {
+          this.accounts = response.data;
+        })
+        .catch((error) => {
+          console.error(error.response.data);
+        });
+    },
+    
+  },
+  mounted() {
+    this.getProducts();
+    this.empId = sessionStorage.getItem("empId");
+    this.getLoggedInEmpInfo();
+    axios
+      .get(`/hrm/employeeinfo/${this.empId}`) 
+      .then((response) => {
+        this.plan.deptname = response.data.deptname; 
+      })
+      .catch((error) => {
+        console.error(error.response.data);
+      });
+      this.getAccounts();
+  },
 };
-
 </script>
-
-<style scoped>
-.header {
-    display: inline-block;
-    padding: 8px 16px;
-    background-color: transparent;
-    color: black;
-    border: 1px solid black;
-    border-radius: 4px;
-    font-size: 24px;
-    margin-bottom: 16px;
+    
+    <style scoped>
+.business-plan-edit {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  overflow-x: hidden;
 }
 
-.bradcumb-title {
-    margin-top: 5px;
-    margin-bottom: 0;
+.business-plan-edit h1 {
+  text-align: center;
 }
 
-.form-container {
-    max-width: 800px;
-    margin: auto;
-    margin-bottom: 20px;
+.business-plan-edit form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-.add-business-form {
-    border-collapse: separate;
-    border-spacing: 0 10px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    margin: auto;
-    width: 90%;
+.business-plan-edit .form-group {
+  width: 100%;
+  margin-bottom: 20px;
 }
 
-.add-business-form td {
-    padding: 10px;
-    border: none;
-    font-size: 20px;
+.business-plan-edit label {
+  display: block;
+  margin-bottom: 5px;
 }
 
-.add-business-form td:first-child {
-    font-weight: bold;
-    margin-bottom: 5px;
+.business-plan-edit input,
+.business-plan-edit textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
 }
 
-.add-business-form td:nth-child(2),
-.add-business-form td:nth-child(4) {
-    margin-bottom: 10px;
+.business-plan-edit textarea {
+  height: 100px;
 }
 
-.add-business-form td:nth-child(3),
-.add-business-form td:nth-child(5) {
-    font-weight: bold;
-    margin-bottom: 5px;
+.business-plan-edit button {
+  padding: 10px 20px;
+  border-radius: 5px;
+  border: none;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+  margin-right: 10px;
 }
 
-.form-label {
-    width: 120px;
-    font-weight: bold;
+.business-plan-edit button.btn-cancel {
+  background-color: #dc3545;
 }
 
-.input-field {
-    width: 100%;
-    height: 28px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    padding: 4px;
-    font-size: 14px;
-}
-
-.input-textarea {
-    height: 150px;
-    resize: vertical;
-}
-
-.button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 16px;
-}
-
-.btn-add,
-.btn-cancel {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-left: 8px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.btn-add:hover,
-.btn-cancel:hover {
-    background-color: #0056b3;
-}
-
-.textbox {
-    border: 1.3px solid black;
-    margin: 3px 0;
-    resize: none;
-    outline: none;
-    background-color: #f5f5f5;
-    width: 100%;
-    height: 150px;
-    position: relative;
-    font-size: 14px;
-    padding: 8px;
-}
-
-.breadcumb-area {
-    height: 100px;
-    background-position: center center;
-    background-repeat: no-repeat;
-}
-
-
-.add-business-form {
-    border-collapse: separate;
-    border-spacing: 0 10px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    border-radius: 10px;
-    margin: auto;
-    width: 90%;
-}
-
-.add-business-form td {
-    text-align: left;
-    padding: 10px;
-    border: none;
-}
-
-.add-business-form td:first-child {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.add-business-form td:nth-child(2),
-.add-business-form td:nth-child(4) {
-    margin-bottom: 10px;
-}
-
-.add-business-form td:nth-child(3),
-.add-business-form td:nth-child(5) {
-    font-weight: bold;
-    margin-bottom: 5px;
-}
-
-.input-field {
-    width: 100%;
-    height: 28px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-    padding: 4px;
-    font-size: 14px;
-}
-
-.textbox {
-    border: 1.3px solid black;
-    margin: 3px 0;
-    resize: none;
-    outline: none;
-    background-color: #f5f5f5;
-    width: 100%;
-    height: 150px;
-    position: relative;
-    font-size: 14px;
-    padding: 8px;
-}
-
-.button-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 16px;
-}
-
-.btn-add,
-.btn-cancel {
-    padding: 8px 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-    margin-left: 8px;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.btn-add:hover,
-.btn-cancel:hover {
-    background-color: #0056b3;
+.business-plan-edit button.btn-update {
+  background-color: #28a745;
 }
 </style>

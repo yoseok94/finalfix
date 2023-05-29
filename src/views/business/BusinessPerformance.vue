@@ -1,318 +1,289 @@
 <template>
-    <div class="breadcrumb-area"
-         style="background-image: url('${pageContext.servletContext.contextPath}/resources/img/catagory-img/3.jpg');">
-        <div class="container h-100">
-            <div class="row h-100 align-items-center">
-                <div class="col-12">
-                    <div class="breadcrumb-title text-center">
-                        <h2>영업실적 조회</h2>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="business-plan">
-        <div class="left-section">
-            <div class="filters">
-                <label for="start-date">기준일</label>
-                <input type="date" id="start-date" class="calendar" v-model="startDate"/>
-                <label for="end-date">~</label>
-                <input type="date" id="end-date" class="calendar" v-model="endDate"/>
-                <label for="client">거래처</label>
-                <input type="text" id="client" class="department-manager-input" v-model="client"/>
-                <label for="department-manager">부서/담당자</label>
-                <select class="department-manager" v-model="filterType">
-                    <option value="">선택 해주세요</option>
-                    <option value="department">부서명</option>
-                    <option value="manager">담당자명</option>
-                </select>
-                <button class="btn-search" @click="search">조회</button>
-            </div>
-            <div class="plan-list">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>작성일</th>
-                        <th>거래처</th>
-                        <th>판매 목표 수량</th>
-                        <th>판매수량</th>
-                        <th>판매 목표 실적</th>
-                        <th>판매 실적</th>
-                        <th>부서</th>
-                        <th>직책</th>
-                        <th>담당자</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(plan, index) in filteredPlans" :key="index">
-                        <td>{{ index + 1 }}</td>
-                        <td>{{ plan.date }}</td>
-                        <td>{{ plan.client }}</td>
-                        <td>{{ plan.targetAmount }}</td> <!-- 판매 목표 수량 -->
-                        <td>{{ plan.actualAmount }}</td> <!-- 판매수량 -->
-                        <td>{{ plan.targetSales }}</td> <!-- 판매 목표 실적 -->
-                        <td>{{ plan.actualSales }}</td> <!-- 판매 실적 -->
-                        <td>{{ plan.department }}</td>
-                        <td>{{ plan.position }}</td>
-                        <td>{{ plan.manager }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
+  <div class="business-plan">
+    <div class="left-section">
+      <div class="list-container">
+        <div class="plan-list">
+          <span class="filter-label">작성일</span>
+          <input type="date" class="start-date-input" v-model="startDate" />
+          <span class="date-separator">~</span>
+          <input type="date" class="end-date-input" v-model="endDate" />
+          <button class="btn-search" @click="search">조회</button>
+          <button class="btn-reset" @click="reset">초기화</button>
 
-    <div class="pagination">
-        <a href="#" class="page active">1</a>
-        <a href="#" class="page">2</a>
-        <a href="#" class="page">3</a>
-        <a href="#" class="page">4</a>
-        <a href="#" class="page">5</a>
-        <a href="#" class="page">></a>
+          <h1>영업 실적 목록</h1>
+          <table>
+            <thead>
+              <tr>
+                <th>계획 번호</th>
+                <th>계획 제목</th>
+                <th>거래처명</th>
+                <th>상품명</th>
+                <th>부서명</th>
+                <th>직책</th>
+                <th>담당자명</th>
+                <th>목표 수량(개)</th>
+                <th>실적 수량(개)</th>
+                <th>목표 금액(원)</th>
+                <th>영업실적 금액(원)</th>
+                <th>영업실적 작성일</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="plan in currentPagePlanList" :key="plan.planno">
+                <td>{{ plan.planno }}</td>
+                <td>{{ plan.plantitle }}</td>
+                <td>{{ plan.accountname }}</td>
+                <td>{{ plan.productname }}</td>
+                <td>{{ plan.deptname }}</td>
+                <td>{{ plan.emplevel }}</td>
+                <td>{{ plan.empname }}</td>
+                <td>{{ formatNumber(plan.targetquantity) }}</td>
+                <td>{{ formatNumber(plan.quantity) }}</td>
+                <td>{{ formatNumber(plan.targetamount) }}</td>
+                <td>{{ formatNumber(plan.totalamount) }}</td>
+                <td>{{ plan.sentdate }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination">
+          <a
+            href="#"
+            class="page"
+            @click.prevent="changePage(Math.max(currentPage - 1, 1))"
+          >
+            &lt;
+          </a>
+          <a
+            href="#"
+            v-for="page in displayedPages"
+            :key="page"
+            class="page"
+            :class="{ active: currentPage === page }"
+            @click.prevent="changePage(page)"
+          >
+            {{ page }}
+          </a>
+          <a
+            href="#"
+            class="page"
+            @click.prevent="changePage(Math.min(currentPage + 1, totalPages))"
+          >
+            &gt;
+          </a>
+        </div>
+      </div>
     </div>
-                <div class="common-buttons">
-                    <button class="btn-excel">엑셀</button>
-                    <button class="btn-print">인쇄</button>
-                </div>
-    
+  </div>
 </template>
 
-<script>
+  
+ <script>
+import { ref, onMounted, computed } from "vue";
+import axios from "axios";
+
 export default {
-    data() {
-        return {
-            startDate: "",
-            endDate: "",
-            client: "",
-            department: "",
-            position: "",
-            manager: "",
-            plans: [
-                {
-                    id: 1,
-                    date: "2023-04-01",
-                    client: "A거래처",
-                    targetAmount: 1000,
-                    actualAmount: 900,
-                    targetSales: 1000000,
-                    actualSales: 900000,
-                    department: "영업1팀",
-                    position: "대리",
-                    manager: "김영업",
-                },
-                {
-                    id: 2,
-                    date: "2023-04-10",
-                    client: "B거래처",
-                    targetAmount: 2000,
-                    actualAmount: 1800,
-                    targetSales: 2000000,
-                    actualSales: 1800000,
-                    department: "영업2팀",
-                    position: "과장",
-                    manager: "박영업",
-                },
-                {
-                    id: 3,
-                    date: "2023-04-15",
-                    client: "C거래처",
-                    targetAmount: 1500,
-                    actualAmount: 1300,
-                    targetSales: 1500000,
-                    actualSales: 1300000,
-                    department: "영업3팀",
-                    position: "차장",
-                    manager: "이영업",
-                },
-                {
-                    id: 4,
-                    date: "2023-04-18",
-                    client: "D거래처",
-                    targetAmount: 800,
-                    actualAmount: 750,
-                    targetSales: 800000,
-                    actualSales: 750000,
-                    department: "영업4팀",
-                    position: "대리",
-                    manager: "최영업",
-                },
-                {
-                    id: 5,
-                    date: "2023-04-25",
-                    client: "E거래처",
-                    targetAmount: 1200,
-                    actualAmount: 1000,
-                    targetSales: 1200000,
-                    actualSales: 1000000,
-                    department: "영업5팀",
-                    position: "과장",
-                    manager: "홍영업",
-                },
-            ],
-        };
-    },
-    computed: {
-        filteredPlans() {
-            let plans = this.plans;
-            if (this.startDate && this.endDate) {
-                plans = plans.filter((plan) => {
-                    return plan.date >= this.startDate && plan.date <= this.endDate;
-                });
-            }
-            if (this.client) {
-                plans = plans.filter((plan) => {
-                    return plan.client.toLowerCase().includes(this.client.toLowerCase());
-                });
-            }
-            if (this.department) {
-                plans = plans.filter((plan) => {
-                    return plan.department.toLowerCase().includes(this.department.toLowerCase());
-                });
-            }
-            if (this.position) {
-                plans = plans.filter((plan) => {
-                    return plan.position.toLowerCase().includes(this.position.toLowerCase());
-                });
-            }
-            if (this.manager) {
-                plans = plans.filter((plan) => {
-                    return plan.manager.toLowerCase().includes(this.manager.toLowerCase());
-                });
-            }
-            return plans;
-        },
-    },
-    methods: {
-        search() {
-            // 검색 로직
-        },
-    },
+  setup() {
+    const planList = ref([]);
+    const itemsPerPage = 10;
+    const currentPage = ref(1);
+    const selectedPlans = ref([]);
+    const startDate = ref("");
+    const endDate = ref("");
+
+    const search = () => {
+      const filteredPlans = planList.value.filter((plan) => {
+        const planDate = new Date(plan.sentdate);
+        return (
+          planDate >= new Date(startDate.value) &&
+          planDate <= new Date(endDate.value)
+        );
+      });
+      planList.value = filteredPlans;
+      currentPage.value = 1;
+    };
+
+    const reset = () => {
+      startDate.value = "";
+      endDate.value = "";
+      fetchPlanList();
+    };
+
+    const isSelected = (planno) => {
+      return selectedPlans.value.includes(planno);
+    };
+
+    const fetchPlanList = async () => {
+      try {
+        const response = await axios.get("/business/disbursementlist");
+        const plans = response.data;
+        planList.value = plans;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    onMounted(fetchPlanList);
+
+    const sortedPlanList = computed(() => {
+      return planList.value.slice().sort((a, b) => b.planno - a.planno);
+    });
+
+    const totalPages = computed(() => {
+      return Math.ceil(planList.value.length / itemsPerPage);
+    });
+
+    const currentPagePlanList = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      return sortedPlanList.value.slice(start, end);
+    });
+
+    const changePage = (page) => {
+      if (page === totalPages.value + 1) {
+        currentPage.value = page - 1;
+      } else {
+        currentPage.value = page;
+      }
+    };
+
+    const displayedPages = computed(() => {
+      const start = Math.floor((currentPage.value - 1) / 5) * 5 + 1;
+      const end = Math.min(start + 4, totalPages.value);
+      return Array(end - start + 1)
+        .fill()
+        .map((_, index) => start + index);
+    });
+
+    const toggleSelection = (plan) => {
+      const index = selectedPlans.value.indexOf(plan.planno);
+      if (index === -1) {
+        selectedPlans.value.push(plan.planno);
+      } else {
+        selectedPlans.value.splice(index, 1);
+      }
+    };
+
+    const formatNumber = (value) => {
+      return value.toLocaleString();
+    };
+
+    const formatDate = (date) => {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date(date).toLocaleDateString(undefined, options);
+    };
+
+    return {
+      planList,
+      itemsPerPage,
+      currentPage,
+      selectedPlans,
+      isSelected,
+      sortedPlanList,
+      totalPages,
+      currentPagePlanList,
+      changePage,
+      displayedPages,
+      toggleSelection,
+      formatNumber,
+      formatDate,
+      startDate,
+      endDate,
+      search,
+      reset,
+    };
+  },
 };
 </script>
-
+ 
+    
+      
 <style scoped>
 .business-plan {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
+  font-family: Arial, sans-serif;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 .left-section {
-    width: 100%;
-    margin-right: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.right-section {
-    width: 30%;
+.list-container {
+  width: 100%;
 }
 
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
+.plan-list {
+  margin-bottom: 20px;
 }
 
-.filters label {
-    margin-right: 10px;
+.filter-label {
+  font-weight: bold;
 }
 
-
-.department-manager {
-    margin-right: 10px;
+.start-date-input,
+.end-date-input {
+  margin: 0 5px;
 }
 
-.department-manager-input {
-    width: 150px;
-    margin-right: 10px;
+.btn-search,
+.btn-reset {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #4caf50;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
 
-.actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
+.btn-reset {
+  background-color: #f44336;
 }
 
-.actions button {
-    margin-left: 10px;
+h1 {
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+thead th {
+  background-color: #f2f2f2;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
 }
 
 .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
 }
 
 .page {
-    display: inline-block;
-    margin: 0 5px;
-    padding: 5px 10px;
-    background-color: #f1f1f1;
-    color: #333;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.page.active,
-.page:hover {
-    background-color: #0077cc;
-    color: #fff;
-}
-
-.plan-list table {
-    text-align: center;
-    width: 100%;
-}
-
-.plan-list th,
-.plan-list td {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-.plan-list th {
-    background-color: #f1f1f1;
-    font-weight: bold;
-    color: #333;
-}
-
-.plan-list td {
-    color: #666;
-}
-
-.plan-list input[type="checkbox"] {
-    margin-right: 5px;
-}
-
-.plan-list tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.plan-list tr:hover {
-    background-color: #f5f5f5;
-}
-
-.selectdelete,
-.btn-add,
-.btn-edit,
-.btn-excel,
-.btn-search,
-.btn-approve,
-.btn-reject,
-.btn-print,
-.btn-send {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
+  margin: 0 5px;
+  padding: 5px 10px;
+  text-decoration: none;
+  color: #000;
+  background-color: #f2f2f2;
   cursor: pointer;
-  margin-left: 8px;
-  border-radius: 4px;
-  font-size: 14px;
 }
 
-
+.page.active {
+  background-color: #4caf50;
+  color: #fff;
+}
 </style>

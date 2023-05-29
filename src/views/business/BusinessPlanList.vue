@@ -1,346 +1,441 @@
 <template>
     <div class="business-plan">
-        <div class="left-section">
-            <div class="filters">
-                <label for="start-date">작성일</label>
-                <input type="date" id="start-date" class="calendar" v-model="startDate"/>
-                <label for="end-date">~</label>
-                <input type="date" id="end-date" class="calendar" v-model="endDate"/>
-                <label for="department-manager">부서/담당자</label>
-                <select class="department-manager" v-model="filterType">
-                    <option value="">선택 해주세요</option>
-                    <option value="department">부서명</option>
-                    <option value="manager">담당자명</option>
-                </select>
-                <input type="text" class="department-manager-input" v-model="filterValue"/>
-                <button class="btn-search" @click="search">조회</button>
+      <div class="left-section">
+        <div class="list-container">
+          <div class="plan-list">
+            <div
+              class="filters"
+              style="
+                background-color: #f2f2f2;
+                padding: 10px;
+                margin-bottom: 20px;
+                border: 1px solid #ccc;
+              "
+            >
+            <span style="margin-right: 5px">작성일</span>
+              <input
+                type="date"
+                class="start-date-input"
+                v-model="startDate"
+                style="margin-right: 10px"
+              />
+              <span style="margin-right: 5px">~</span>
+              <input
+                type="date"
+                class="end-date-input"
+                v-model="endDate"
+                style="margin-right: 10px"
+              />
+              <button
+                class="btn-search"
+                @click="search"
+                style="
+                  background-color: #4caf50;
+                  color: white;
+                  border: none;
+                  padding: 8px 16px;
+                  margin-right: 10px;
+                "
+              >
+                조회
+              </button>
+              <button
+                class="btn-reset"
+                @click="reset"
+                style="
+                  background-color: #f44336;
+                  color: white;
+                  border: none;
+                  padding: 8px 16px;
+                "
+              >
+                초기화
+              </button>
             </div>
-            <div class="list-container">
-                <div class="plan-list">
-                    <table>
-                        <thead>
-                        <tr>
-                            <th>번호</th>
-                            <th>선택</th>
-                            <th>작성일</th>
-                            <th>제목</th>
-                            <th>거래처</th>
-                            <th>부서</th>
-                            <th>직책</th>
-                            <th>담당자</th>
-                            <th>목표수량</th>
-                            <th>목표금액</th>
-                            <th>상세내용</th>
-                            <th>비고</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(plan, index) in filteredPlans" :key="index" @click="goToPlanDetail(plan.id)">
-                            <td>{{ index + 1 }}</td>
-                            <td>
-                                <input type="checkbox" :value="plan.id" v-model="selectedIds"/>
-                            </td>
-                            <td>{{ plan.date }}</td>
-                            <td @click="goToPlanDetail(plan.id)">{{ plan.title }}</td>
-                            <td>{{ plan.client }}</td>
-                            <td>{{ plan.department }}</td>
-                            <td>{{ plan.position }}</td>
-                            <td>{{ plan.manager }}</td>
-                            <td>{{ plan.targetQuantity }}</td>
-                            <td>{{ plan.targetAmount }}</td>
-                            <td>{{ plan.details }}</td>
-                            <td>{{ plan.remark }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="pagination">
-                    <a href="#" class="page active">1</a>
-                    <a href="#" class="page">2</a>
-                    <a href="#" class="page">3</a>
-                    <a href="#" class="page">4</a>
-                    <a href="#" class="page">5</a>
-                    <a href="#" class="page">></a>
-                </div>
-                <div class="common-buttons">
-                    <router-link to="/businessPlanAdd">
-                        <button class="btn-add">등록</button>
+  
+            <h1>영업 계획 목록</h1>
+            <table>
+              <thead>
+                <tr>
+                  <th>선택</th>
+                  <th>계획 번호</th>
+                  <th>계획 제목</th>
+                  <th>거래처명</th>
+                  <th>상품명</th>
+                  <th>부서명</th>
+                  <th>직책</th>
+                  <th>담당자명</th>
+                  <th>목표 수량(개)</th>
+                  <th>목표 금액(원)</th>
+                  <th>영업계획 상세내용</th>
+                  <th>영업계획 비고</th>
+                  <th>영업계획 작성일</th>
+                  <th>수정</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="plan in currentPagePlanList" :key="plan.planno">
+                  <td>
+                    <input
+                      type="checkbox"
+                      :value="plan"
+                      :checked="isSelected(plan.planno)"
+                      @change="toggleSelection(plan)"
+                    />
+                  </td>
+                  <td>{{ plan.planno }}</td>
+                  <td>{{ plan.plantitle }}</td>
+                  <td>{{ plan.accountname }}</td>
+                  <td>{{ plan.productname }}</td>
+                  <td>{{ plan.deptname }}</td>
+                  <td>{{ plan.emplevel }}</td>
+                  <td>{{ plan.empname }}</td>
+                  <td>{{ formatNumber(plan.targetquantity) }}</td>
+                  <td>{{ formatNumber(plan.targetamount) }}</td>
+                  <td>{{ plan.plandetail }}</td>
+                  <td>{{ plan.planremarks }}</td>
+                  <td>{{ formatDate(plan.plandate) }}</td>
+                  <td>
+                    <router-link :to="`/businessPlanEdit/${plan.planno}`">
+                      <button class="btn-edit" @click="editPlan(plan.planno)">
+                        수정
+                      </button>
                     </router-link>
-                    <router-link to="/businessPlanEdit">
-                        <button class="btn-edit">수정</button>
-                    </router-link>
-                    <button class="selectdelete">삭제</button>
-                </div>
-            </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <a
+              href="#"
+              class="page"
+              @click.prevent="changePage(Math.max(currentPage - 1, 1))"
+            >
+              &lt;
+            </a>
+            <a
+              href="#"
+              v-for="page in displayedPages"
+              :key="page"
+              class="page"
+              :class="{ active: currentPage === page }"
+              @click.prevent="changePage(page)"
+            >
+              {{ page }}
+            </a>
+            <a
+              href="#"
+              class="page"
+              @click.prevent="changePage(Math.min(currentPage + 1, totalPages))"
+            >
+              &gt;
+            </a>
+          </div>
+          <div class="common-buttons">
+            <router-link to="/businessPlanAdd">
+              <button class="btn-add">등록</button>
+            </router-link>
+            <button class="selectdelete" @click="deleteSelectedPlans">
+              삭제
+            </button>
+          </div>
         </div>
-        <div class="right-section">
-            <div class="calendar-container"> <!-- 추가 -->
-                <BusinessPlanCalendar></BusinessPlanCalendar>
-            </div>
+      </div>
+      <div class="right-section">
+        <div class="calendar-container">
+          <BusinessPlanCalendar
+            :planList="planList"
+            @dateClick="showPlanDetails"
+          />
         </div>
+      </div>
     </div>
-</template>
-
-<script>
-import BusinessPlanCalendar from "@/views/business/BusinessPlanCalendar.vue";
-
-export default {
+  </template>
+  
+    
+   <script>
+  import { ref, onMounted, computed } from "vue";
+  import axios from "axios";
+  import BusinessPlanCalendar from "@/views/business/BusinessPlanCalendar.vue";
+  
+  export default {
     components: {
-        BusinessPlanCalendar
+      BusinessPlanCalendar,
+      
     },
-    data() {
-        return {
-            startDate: '',
-            endDate: '',
-            filterType: '',
-            filterValue: '',
-            selectedIds: [],
-            plans: [
-                {
-                    id: 1,
-                    date: '2023-04-26',
-                    title: '회의',
-                    client: 'A회사',
-                    department: '영업부',
-                    position: '과장',
-                    manager: '김영업',
-                    targetQuantity: '100',
-                    targetAmount: '1000000',
-                    details: '다음주 계획 논의',
-                    remark: '없음'
-                },
-                {
-                    id: 2,
-                    date: '2023-04-27',
-                    title: '실적 보고',
-                    client: 'B회사',
-                    department: '영업부',
-                    position: '대리',
-                    manager: '이영업',
-                    targetQuantity: '50',
-                    targetAmount: '500000',
-                    details: '전월 실적 리뷰',
-                    remark: '날짜 변경 가능'
-                },
-                {
-                    id: 3,
-                    date: '2023-04-27',
-                    title: '상담',
-                    client: 'C회사',
-                    department: '영업부',
-                    position: '과장',
-                    manager: '박업업',
-                    targetQuantity: '30',
-                    targetAmount: '300000',
-                    details: '새로운 프로모션 기획',
-                    remark: '없음'
-                },
-                {
-                    id: 4,
-                    date: '2023-04-28',
-                    title: '신규 발표',
-                    client: 'D회사',
-                    department: '영업부',
-                    position: '대리',
-                    manager: '홍영업',
-                    targetQuantity: '50',
-                    targetAmount: '500000',
-                    details: '신규 제품 발표 계획',
-                    remark: '없음'
-                },
-                {
-                    id: 5,
-                    date: '2023-04-29',
-                    title: '미팅',
-                    client: 'E회사',
-                    department: '영업부',
-                    position: '과장',
-                    manager: '이영업',
-                    targetQuantity: '20',
-                    targetAmount: '200000',
-                    details: 'E회사와의 비즈니스 협의',
-                    remark: '날짜 변경 가능'
+    setup() {
+      const planList = ref([]);
+      const itemsPerPage = 10;
+      const currentPage = ref(1);
+      const selectedPlans = ref([]);
+      const startDate = ref("");
+      const endDate = ref("");
+  
+      const search = () => {
+        const filteredPlans = planList.value.filter((plan) => {
+          const planDate = new Date(plan.plandate);
+          return (
+            planDate >= new Date(startDate.value) &&
+            planDate <= new Date(endDate.value)
+          );
+        });
+        planList.value = filteredPlans;
+        currentPage.value = 1;
+      };
+  
+      const reset = () => {
+        startDate.value = "";
+        endDate.value = "";
+        fetchPlanList();
+      };
+  
+      const isSelected = (planno) => {
+        return selectedPlans.value.includes(planno);
+      };
+  
+      const fetchPlanList = async () => {
+        try {
+          const response = await axios.get("/business/planlist");
+          const plans = response.data;
+          planList.value = plans;
+        } catch (error) {
+          console.error(error);
+        }
+      };
+  
+      onMounted(fetchPlanList);
+  
+      const sortedPlanList = computed(() => {
+        return planList.value.slice().sort((a, b) => b.planno - a.planno);
+      });
+  
+      const totalPages = computed(() => {
+        return Math.ceil(planList.value.length / itemsPerPage);
+      });
+  
+      const currentPagePlanList = computed(() => {
+        const start = (currentPage.value - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        return sortedPlanList.value.slice(start, end);
+      });
+  
+      const changePage = (page) => {
+        if (page === totalPages.value + 1) {
+          currentPage.value = page - 1;
+        } else {
+          currentPage.value = page;
+        }
+      };
+  
+      const displayedPages = computed(() => {
+        const start = Math.floor((currentPage.value - 1) / 5) * 5 + 1;
+        const end = Math.min(start + 4, totalPages.value);
+        return Array(end - start + 1)
+          .fill()
+          .map((_, index) => start + index);
+      });
+  
+      const toggleSelection = (plan) => {
+        const index = selectedPlans.value.indexOf(plan.planno);
+        if (index === -1) {
+          selectedPlans.value.push(plan.planno);
+        } else {
+          selectedPlans.value.splice(index, 1);
+        }
+      };
+  
+      const formatNumber = (value) => {
+        return value.toLocaleString();
+      };
+  
+      const formatDate = (date) => {
+        const options = { year: "numeric", month: "long", day: "numeric" };
+        return new Date(date).toLocaleDateString(undefined, options);
+      };
+  
+      const deleteSelectedPlans = () => {
+        if (selectedPlans.value.length === 0) {
+          return;
+        }
+  
+        if (confirm("선택한 영업계획을 삭제하시겠습니까?")) {
+          axios
+            .delete("/business/plandel", {
+              data: selectedPlans.value,
+            })
+            .then(() => {
+              selectedPlans.value.forEach((plan) => {
+                const index = planList.value.findIndex(
+                  (p) => p.planno === plan.planno
+                );
+                if (index > -1) {
+                  planList.value.splice(index, 1);
                 }
-            ]
-        };
+              });
+              selectedPlans.value = [];
+  
+              fetchPlanList();
+            })
+            .catch((error) => {
+              console.error(error);
+              alert("영업계획 삭제에 실패했습니다.");
+            });
+        }
+      };
+  
+      return {
+        planList,
+        itemsPerPage,
+        currentPage,
+        selectedPlans,
+        isSelected,
+        sortedPlanList,
+        totalPages,
+        currentPagePlanList,
+        changePage,
+        displayedPages,
+        toggleSelection,
+        formatNumber,
+        formatDate,
+        startDate,
+        endDate,
+        search,
+        reset,
+        deleteSelectedPlans,
+      };
     },
     methods: {
-        search() {
-            // 필터링 로직
-        },
-        create() {
-            // 영업 계획 등록 로직
-        },
-        update() {
-            // 영업 계획 수정 로직
-        },
-        selectdelete() {
-            // 영업 계획 삭제 로직
-        },
-        goToPlanDetail(planId) {
-            // 선택한 계획의 상세 정보로 이동하는 로직
-            this.$router.push({name: 'businessPlanDetail', params: {planId}});
-        }
-
+      editPlan(planno) {
+        this.$router.push(`/businessPlanEdit/${planno}`);
+      },
     },
-    computed: {
-        filteredPlans() {
-            let plans = this.plans;
-            if (this.startDate && this.endDate) {
-                plans = plans.filter(plan => plan.date >= this.startDate && plan.date <= this.endDate);
-            }
-            if (this.filterType && this.filterValue) {
-                plans = plans.filter(plan => plan[this.filterType] === this.filterValue);
-            }
-            return plans;
-        }
-    },
-};
-</script>
-
-<style scoped>
-.business-plan {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.left-section {
-    width: 70%;
-    margin-right: 20px;
-    border: 1px solid #ccc; /* 추가 */
-    padding: 20px; /* 추가 */
-    box-sizing: border-box; /* 추가 */
-}
-
-.right-section {
-    width: 30%;
-    border: 1px solid #ccc; /* 추가 */
-    padding: 20px; /* 추가 */
-    box-sizing: border-box; /* 추가 */
-}
-
-.filter-container { /* 추가 */
-    padding: 20px;
-    border-bottom: 1px solid #ccc;
-}
-
-.list-container { /* 추가 */
-    padding: 20px;
-    border-bottom: 1px solid #ccc;
-}
-
-.button-container { /* 추가 */
-    padding: 20px;
-}
-
-.filters {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 20px;
-}
-
-.filters label {
-    margin-right: 10px;
-}
-
-.calendar {
-    margin-right: 10px;
-}
-
-.department-manager {
-    margin-right: 10px;
-}
-
-.department-manager-input {
-    width: 150px;
-    margin-right: 10px;
-}
-
-.actions {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.actions button {
-    margin-left: 10px;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 20px;
-}
-
-.page {
-    display: inline-block;
-    margin: 0 5px;
-    padding: 5px 10px;
-    background-color: #f1f1f1;
-    color: #333;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
-
-.page.active,
-.page:hover {
-    background-color: #0077cc;
-    color: #fff;
-}
-
-.plan-list table {
-    text-align: center;
-    width: 100%;
-}
-
-.plan-list th,
-.plan-list td {
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-}
-
-.plan-list th {
-    background-color: #f1f1f1;
-    font-weight: bold;
-    color: #333;
-}
-
-.plan-list td {
-    color: #666;
-}
-
-.plan-list input[type="checkbox"] {
-    margin-right: 5px;
-}
-
-.plan-list tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-.plan-list tr:hover {
-    background-color: #f5f5f5;
-}
-
-.selectdelete,
-.btn-add,
-.btn-edit,
-.btn-excel,
-.btn-search,
-.btn-approve,
-.btn-reject,
-.btn-send {
-  padding: 8px 16px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  cursor: pointer;
-  margin-left: 8px;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-</style>
+  };
+  </script>
+   
+      
+        
+   <style scoped>
+   .business-plan {
+     display: flex;
+     flex-direction: row;
+   }
+   
+   .left-section {
+     flex: 1;
+     padding: 20px;
+     background-color: #f2f2f2;
+   }
+   
+   .list-container {
+     margin-bottom: 20px;
+   }
+   
+   .filters {
+     background-color: #f2f2f2;
+     padding: 10px;
+     margin-bottom: 20px;
+     border: 1px solid #ccc;
+   }
+   
+   .filters span {
+     margin-right: 5px;
+   }
+   
+   .start-date-input,
+   .end-date-input {
+     margin-right: 10px;
+   }
+   
+   .btn-search {
+     background-color: #4caf50;
+     color: white;
+     border: none;
+     padding: 8px 16px;
+     margin-right: 10px;
+   }
+   
+   .btn-reset {
+     background-color: #f44336;
+     color: white;
+     border: none;
+     padding: 8px 16px;
+   }
+   
+   h1 {
+     margin-bottom: 20px;
+   }
+   
+   table {
+     width: 100%;
+     border-collapse: collapse;
+   }
+   
+   th,
+   td {
+     padding: 8px;
+     text-align: left;
+     border-bottom: 1px solid #ddd;
+   }
+   
+   th {
+     background-color: #f2f2f2;
+   }
+   
+   tbody tr:nth-child(even) {
+     background-color: #f9f9f9;
+   }
+   
+   tbody tr:hover {
+     background-color: #f2f2f2;
+   }
+   
+   .btn-edit {
+     background-color: #4caf50;
+     color: white;
+     border: none;
+     padding: 8px 16px;
+   }
+   
+   .pagination {
+     margin-top: 20px;
+   }
+   
+   .page {
+     color: #000;
+     padding: 4px 8px;
+     text-decoration: none;
+   }
+   
+   .page.active {
+     background-color: #4caf50;
+     color: white;
+   }
+   
+   .common-buttons {
+     margin-top: 20px;
+   }
+   
+   .btn-add {
+     background-color: #4caf50;
+     color: white;
+     border: none;
+     padding: 8px 16px;
+   }
+   
+   .selectdelete {
+     background-color: #f44336;
+     color: white;
+     border: none;
+     padding: 8px 16px;
+   }
+   
+   .right-section {
+     flex: 1;
+     padding: 20px;
+   }
+   
+   .calendar-container {
+     height: 100%;
+   }
+   </style>
