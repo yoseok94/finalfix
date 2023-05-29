@@ -1,9 +1,7 @@
 <template>
   <br>
-   <h1 style="text-align: center;">급여 관리 페이지</h1>
-   <br>
-
-     <!-- 검색 바 구역 -->
+  <h1 style="text-align: center;">급여 관리 페이지</h1>
+  <br>
   <div class="search_container">
     <select v-model="search_key">
       <option value="ID">사원코드</option>
@@ -11,40 +9,30 @@
       <option value="deptname">부서이름</option>
       <option value="emphiredate">입사일자</option>
     </select>
-    <input class="search_container-input" type="text" placeholder="검색어를 입력해주세요" v-model="search_value" @keyup.enter="fnhrmsearch()" size="50" />
+    <input class="search_container-input" type="text" placeholder="검색어를 입력해주세요" v-model="search_value"
+      @keyup.enter="fnhrmsearch()" size="50" />
     <button class="search_container-btn w3-button w3-round w3-blue-gray" @click="fnhrmsearch()">검색</button>
   </div>
 
-   <!-- 테이블 구역 -->
-   <table class="salary-table">
-      <thead>
-        <tr>
-          <th style="width:150px;"></th>
-          <th>사원코드</th>
-          <th>사원명</th>
-          <th>부서명</th>
-          <th>입사일자</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(row, empno) in list" :key="empno">
-          <td><input type="checkbox" /></td>
-          <td style="color:blue;"><a v-on:click="movePayStubWrite(`${row.empId}`)">{{ row.empId }}</a></td>
-          <td>{{ row.empname }}</td>
-          <td>{{ row.deptname }}</td>
-          <td>{{ row.emphiredate }}</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- 액션 버튼 (이메일 및 인쇄) 구역 -->
-  <div class="actions">
-    <!-- <button class="w3-button w3-round w3-blue-gray" @click="sendemail()">Email</button>
-    <button class="w3-button w3-round w3-blue-gray" @click="sendsms()">SMS</button> -->
-
-  </div>
-  
-  <!-- 페이지 처리 -->
+  <!-- 테이블 구역 -->
+  <table class="salary-table">
+    <thead>
+      <tr>
+        <th>사원코드</th>
+        <th>사원명</th>
+        <th>부서명</th>
+        <th>입사일자</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="(row, empno) in list" :key="empno">
+        <td style="color:blue;"><a v-on:click="movePayStubWrite(`${row.empId}`)">{{ row.empId }}</a></td>
+        <td>{{ row.empname }}</td>
+        <td>{{ row.deptname }}</td>
+        <td>{{ row.emphiredate }}</td>
+      </tr>
+    </tbody>
+  </table>
   <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
     <span>
       <a href="javascript:;" @click="fnhrmsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
@@ -65,11 +53,11 @@
       <a href="javascript:;" @click="fnhrmsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
     </span>
   </div>
-  </template>
+</template>
    
 <script>
 export default {
-  data () {
+  data() {
     return {
       requestBody: {},
       list: {},
@@ -86,12 +74,12 @@ export default {
         totalBlockCnt: 0,
         totalListCnt: 0,
         totalPageCnt: 0,
-      }, 
+      },
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
       search_key: this.$route.query.sk ? this.$route.query.sk : "",
       search_value: this.$route.query.sv ? this.$route.query.sv : null,
-      
+
 
       paginavigation: function () { //페이징 처리 for문 커스텀
         let pageNumber = [] //;
@@ -101,7 +89,7 @@ export default {
         return pageNumber;
       },
       empno: '',
-      empstatus: "" 
+      empstatus: ""
     }
   },
   created() {
@@ -117,7 +105,7 @@ export default {
         this.fnhrmlist();
       }
     },
-    fnhrmlist(){
+    fnhrmlist() {
       this.requestBody = {
         eg: this.search_key,
         sv: this.search_value,
@@ -132,14 +120,14 @@ export default {
           this.list = res.data.data;
           this.paging = res.data.pagination;
           this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
-        } 
+        }
       }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
           alert('Network error. Please contact support.');
         }
       });
     },
-    movePayStubWrite(empId){
+    movePayStubWrite(empId) {
       this.requestBody.empId = empId
       this.$router.push({
         path: '/accounting/stubwrite',
@@ -149,8 +137,7 @@ export default {
   }
 }
 </script>
-  <style scoped>
-
+<style scoped>
 .search_container {
   display: flex;
   justify-content: flex-end;
@@ -162,49 +149,50 @@ export default {
   margin-left: 1rem;
 }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-  }
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  th,
-  td {
-    padding: 0.5rem;
-    text-align: left;
-    border: 1px solid #ddd;
-  }
+th,
+td {
+  padding: 0.5rem;
+  text-align: left;
+  border: 1px solid #ddd;
+}
 
-  th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
+th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
 
-  .actions {
-    display: flex;
-    justify-content: flex-start;
-    margin: 1rem 0;
-  }
-  .movelocation {
-    position: relative;
-    left: 90%;
-  }
+.actions {
+  display: flex;
+  justify-content: flex-start;
+  margin: 1rem 0;
+}
 
-  .actions button {
-    margin-right: 1rem;
-  }
+.movelocation {
+  position: relative;
+  left: 90%;
+}
 
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1rem;
-  }
+.actions button {
+  margin-right: 1rem;
+}
 
-  .pagination button {
-    margin: 0 0.5rem;
-  }
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 1rem;
+}
 
-  .page {
+.pagination button {
+  margin: 0 0.5rem;
+}
+
+.page {
   display: inline-block;
   margin: 0 5px;
   padding: 5px 10px;
@@ -214,18 +202,20 @@ export default {
   border-radius: 5px;
   transition: background-color 0.3s ease;
 }
-  .page.active,
+
+.page.active,
 .page:hover {
   background-color: #0077cc;
   color: #fff;
 }
-th  {
+
+th {
   padding: 0.5rem;
   text-align: center;
   border: 1px solid #ddd;
 }
+
 td input[type="checkbox"] {
   display: block;
   margin: 0 auto;
-}
-</style>
+}</style>

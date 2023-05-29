@@ -13,12 +13,9 @@
       @keyup.enter="fnsalarysearch()" size="50" />
     <button class="w3-button w3-round w3-blue-gray search_container-btn" @click="fnsalarysearch()">검색</button>
   </div>
-
-  <!-- 테이블 구역 -->
   <table class="salary-table">
     <thead>
       <tr>
-        <th></th>
         <th>지급연월</th>
         <th>사원코드</th>
         <th>사원이름</th>
@@ -41,7 +38,6 @@
     </thead>
     <tbody>
       <tr v-for="(row, salaryno) in list" :key="salaryno">
-        <td><input type="checkbox" /></td>
         <td style="color:blue;">
           <a v-on:click="movePaySlib(`${row.empId}`, `${row.paymentdate}`)">{{ formatDate(row.paymentdate) }}</a>
         </td>
@@ -65,18 +61,6 @@
       </tr>
     </tbody>
   </table>
-
-  <!-- 액션 버튼 (이메일 및 인쇄) 구역 -->
-  <div class="actions">
-    <!-- <button class="w3-button w3-round w3-blue-gray" @click="SendEmail()">Email</button> -->
-    <!-- <button class="w3-button w3-round w3-blue-gray" @click="sendsms">SMS</button> -->
-
-  </div>
-
-  <div class="modal" v-if="showSendEmailModal">
-    <SendEmail @close="showSendEmailModal = false" />
-  </div>
-
 
   <!-- 페이지 처리 -->
   <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
@@ -104,12 +88,8 @@
 </template>
   
 <script>
-import SendEmail from './SendEmail.vue'
 
 export default {
-  components: {
-    SendEmail
-  },
   data() {
     return {
       paymentdate: this.$route.query.paymentdate,
@@ -134,17 +114,12 @@ export default {
       size: this.$route.query.size ? this.$route.query.size : 10,
       search_key: this.$route.query.sk ? this.$route.query.sk : "",
       search_value: this.$route.query.sv ? this.$route.query.sv : '',
-      showSendEmailModal: false,
     }
   },
   mounted() {
     this.fnsalarylist()
   },
   methods: {
-    closeModal() {
-      this.show = false;
-      this.$emit('close');
-    },
     paginavigation: function () {
       let pageNumber = []
       let startPage = this.paging.startPage;
@@ -194,13 +169,6 @@ export default {
       let date = new Date(dateString);
       return `${date.getFullYear()}-${("0" + (date.getMonth() + 1)).slice(-2)}-${("0" + date.getDate()).slice(-2)}`;
     },
-
-    SendEmail() {
-      this.showSendEmailModal = true;
-    },
-    sendsms() {
-
-    }
   }
 }
 
@@ -275,18 +243,4 @@ th {
 .page:hover {
   background-color: #0077cc;
   color: #fff;
-}
-
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.6);
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-</style>
+}</style>

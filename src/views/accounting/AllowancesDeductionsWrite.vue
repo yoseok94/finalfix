@@ -3,8 +3,6 @@
     <br>
     <h1 style="text-align: center;">수당 및 공제 리스트 등록</h1>
     <br>
-
-    <!-- 테이블 구역 -->
     <form @submit.prevent="saveData">
       <table class="salary-table">
         <thead>
@@ -26,7 +24,6 @@
         </tbody>
       </table>
     </form>
-            <!-- 액션 버튼 (이메일 및 인쇄) 구역 -->
             <div class="actions">
               <button @click="saveData" :disabled="isSaving">{{ isSaving ? '등록처리중...' : '신규등록' }}
 </button>
@@ -50,9 +47,8 @@ export default {
     this.list.push({ adcode: '', adname: '', adcalculation: '', adcalculationmethod: '' });
   },
   saveData() {
-    this.isSaving = true;  // New data property to track saving status
-
-    const savePromises = this.list.map(row => this.saveRow(row));  // Create an array of promises
+    this.isSaving = true;
+    const savePromises = this.list.map(row => this.saveRow(row));
 
     Promise.allSettled(savePromises)
   .then((results) => {

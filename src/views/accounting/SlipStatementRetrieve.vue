@@ -8,15 +8,14 @@
       <option value="tradetype">거래유형</option>
     </select>
     <input class="search_container-input" type="text" placeholder="검색어를 입력해주세요" v-model="search_value"
-      @keyup.enter="fnsalarysearch()" size="50" />
-    <button class="search_container-btn w3-button w3-round w3-blue-gray" @click="fnsalarysearch()">검색</button>
+      @keyup.enter="fnslipsearch()" size="50" />
+    <button class="search_container-btn w3-button w3-round w3-blue-gray" @click="fnslipsearch()">검색</button>
   </div>
 
     <!-- 테이블 구역 -->
     <table class="salary-table">
       <thead>
         <tr>
-          <th></th>
           <th style="text-align: center;">전표번호</th>
           <th style="text-align: center;">거래유형</th>
           <th style="text-align: center;">거래금액</th>
@@ -25,7 +24,6 @@
       </thead>
       <tbody>
         <tr v-for="(row, slipstatementno) in list" :key="slipstatementno">
-          <td><input type="checkbox" /></td>
           <td>{{ row.slipstatementdate }}</td>
           <td>{{ tradeTypeName(row.tradetype) }}</td>
           <td>{{ row.slipstatementamount }}</td>
@@ -35,9 +33,9 @@
     </table>
 
     <div class="actions">
-      <router-link to="/accounting/slipwrite"><button class="w3-button w3-round w3-blue-gray">등록하기</button></router-link>
-
+      <router-link to="/accounting/slipwrite"><button>등록하기</button></router-link>
     </div>
+
     <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
             <span>
               <a href="javascript:;" @click="fnslipsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
@@ -65,11 +63,10 @@
     
 <script>
 export default {
-  data() { //변수생성
+  data() {
     return {
-      requestBody: {}, //리스트 페이지 데이터전송
-      list: {}, //리스트 데이터
-      no: '', //게시판 숫자처리
+      requestBody: {}, //Send list page data
+      list: {}, // list data
       paging: {
         block: 0,
         endPage: 0,
@@ -81,14 +78,14 @@ export default {
         startPage: 0,
         totalBlockCnt: 0,
         totalListCnt: 0,
-        totalPageCnt: 0,
-      }, //페이징 데이터
+        totalPageCnt: 0
+      }, //paging data
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
       search_key: this.$route.query.sk ? this.$route.query.sk : "",
       search_value: this.$route.query.sv ? this.$route.query.sv : null,
-      paginavigation: function () { //페이징 처리 for문 커스텀
-        let pageNumber = [] //;
+      paginavigation: function () { // Customize pagination processing for statement
+        let pageNumber = [] 
         let startPage = this.paging.startPage;
         let endPage = this.paging.endPage;
         for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
@@ -96,27 +93,20 @@ export default {
       }
     }
   },
+
   mounted() {
     this.fnsliplist()
-  },
-  computed: {
-    listWithTradeTypeNames() {
-      return this.list.map(row => ({
-        ...row,
-        tradetype: this.tradeTypeName(row.tradetype)
-      }));
-    }
   },
   methods: {
     fnslipsearch(n) {
       if (this.page !== n) {
-        this.page = n       
+        this.page = n
       }
 
-      this.fnsliplist()      
+      this.fnsliplist()
     },
     fnsliplist(){
-      this.requestBody = { // 데이터 전송        
+      this.requestBody = { // send data
         sk: this.search_key,
         sv: this.search_value,
         page: this.page,
@@ -127,11 +117,11 @@ export default {
         
         params: this.requestBody,
         headers: {}
-      }).then((res) => {      
+      }).then((res) => {
 
         if (res.data.resultCode === "OK") {
           this.list = res.data.data
-          this.paging = res.data.pagination
+          this.paging = res.data.pagination 
           this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
         }
         
@@ -149,7 +139,7 @@ export default {
     case '3': return '기타';
     default: return '기타';
   }
-}
+},
   }
 }
 </script>
@@ -222,5 +212,29 @@ export default {
 td input[type="checkbox"] {
   display: block;
   margin: 0 auto;
+}
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 40px;
+  top: 100; /* Full width */
+  height: 50%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  display: none;
+
+}
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+  display: block;
+}
+.modal.show {
+    display: block;
 }
   </style>
