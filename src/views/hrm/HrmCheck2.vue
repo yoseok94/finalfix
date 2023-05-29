@@ -29,7 +29,9 @@
                 <td v-else></td>
                 <td v-if="row.outtime != null">{{ row.outtime }}</td>
                 <td v-else></td>
-                <td>{{ row.divide }}</td>
+                <td v-if="row.divide != null && row.reason == null">{{row.divide}}</td>
+                <td v-else-if="row.divide != null && row.reason != null">{{row.divide}} {{row.reason}}</td>
+                <td v-else-if="row.divide == null && row.reason != null">{{row.reason}}</td>
                 <td v-if="row.reason != null">{{ row.requestdate }}</td>
                 <td v-else>{{row.intime.substring(0,9)}}</td>
                 <td v-if="row.reason != null && row.intime != null && row.outtime != null">{{ row.reason }}</td>
