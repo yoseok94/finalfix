@@ -8,16 +8,16 @@
             </div>
             <div class="col p-4 d-flex flex-column position-static">
             
-                    <strong class="d-inline-block mb-2 text-success"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">My Profile</font></font></strong>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">ID : {{ empId }}</font></font></h4><br>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Name : {{ empname }}</font></font></h4><br>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">연락처 : {{ empphone }}</font></font></h4><br>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">주소 : {{ empaddress }}</font></font></h4><br>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">E-mail : {{ empemail }}</font></font></h4><br>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">출생년도 : {{ empbirth }}</font></font></h4><br>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">입사일자 : {{ emphiredate }}</font></font></h4><br>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">현부서 : {{ deptname }}</font></font></h4><br>
-                    <h4 class="mb-2"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">직급 : {{ emplevel }}</font></font></h4><br>
+                    <strong class="d-inline-block mb-2 text-success"><font style="vertical-align: inherit;">My Profile</font></strong>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">ID : {{ empId }}</font></h4><br>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">Name : {{ empname }}</font></h4><br>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">연락처 : {{ empphone }}</font></h4><br>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">주소 : {{ empaddress }}</font></h4><br>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">E-mail : {{ empemail }}</font></h4><br>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">출생년도 : {{ empbirth }}</font></h4><br>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">입사일자 : {{ emphiredate }}</font></h4><br>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">현부서 : {{ deptname }}</font></h4><br>
+                    <h4 class="mb-2"><font style="vertical-align: inherit;">직급 : {{ emplevel }}</font></h4><br>
                  
             </div>
             <router-link to="/management/deptmove"><button>닫기</button></router-link>
@@ -29,48 +29,48 @@
 
 <script>
 export default {
-data() { //변수생성
-return {
-requestBody: this.$route.query, //query를 보내왔으니까 지금 이 페이지는 qeury를 가지고 있는 상태가 된다
-empno: this.$route.query.empno,
+    data() { //변수생성
+        return {
+            requestBody: this.$route.query, //query를 보내왔으니까 지금 이 페이지는 qeury를 가지고 있는 상태가 된다
+            empno: this.$route.query.empno,
+            empId: '',
+            empname: '',
+            empphone: '',
+            empaddress: '',
+            empemail: '',
+            empbirth: '',
+            emphiredate: '',
+            deptname: '',
+            emplevel: '',
+        }
+    },
 
-empId: '',
-empname: '',
-empphone: '',
-empaddress: '',
-empemail: '',
-empbirth: '',
-emphiredate: '',
-deptname: '',
-emplevel: '',
-}
+    mounted() {
+        this.fnGetView()
+    },
 
-},
-mounted() {
-this.fnGetView()
-},
-methods: {
-fnGetView() {
-this.$axios.get(this.$serverUrl + '/management/emplist' + this.empno, {
-params: this.requestBody
-}).then((res) => {
-this.empId = res.data.empId
-this.empname = res.data.empname
-this.empphone = res.data.empphone
-this.empaddress = res.data.empaddress
-this.empemail = res.data.empemail
-this.empbirth = res.data.empbirth
-this.emphiredate = res.data.emphiredate
-this.deptname = res.data.deptname
-this.emplevel = res.data.emplevel
-}).catch((err) => {
-if (err.message.indexOf('Network Error') > -1) {
-alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-}
-})
-},
+    methods: {
+        fnGetView() {
+        this.$axios.get(this.$serverUrl + '/management/emplist' + this.empno, {
+            params: this.requestBody
+        }).then((res) => {
+            this.empId = res.data.empId
+            this.empname = res.data.empname
+            this.empphone = res.data.empphone
+            this.empaddress = res.data.empaddress
+            this.empemail = res.data.empemail
+            this.empbirth = res.data.empbirth
+            this.emphiredate = res.data.emphiredate
+            this.deptname = res.data.deptname
+            this.emplevel = res.data.emplevel
+        }).catch((err) => {
+            if (err.message.indexOf('Network Error') > -1) {
+                alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+            }
+        })
+        },
 
-}
+    }
 }
 </script>
 
@@ -89,22 +89,5 @@ alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해�
     border-radius: 15px;
     width: 200px;
     height: 200px;
-}
-.tableline {
-    display: table-cell;
-}
-
-.theadline {
-    background-color: rgb(203, 201, 201);
-}
-
-th {
-    border-bottom: solid black 2px;
-    padding: 0px;
-}
-
-td {
-    border-bottom: solid black 2px;
-    padding: 17px;
 }
 </style>
