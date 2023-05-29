@@ -4,27 +4,27 @@
         <div class="dashboard">
             <div class="dashboard-row">
                 <div class="dashboard-column">
-                    <table class="w3-table-all">
-                        <thead>
-                        <h2>공지사항</h2>
-                        <tr>
-                            <th>번호</th>
-                            <th>제목</th>
-                            <th>작성자</th>
-                            <th>등록일시</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(row, notice_no) in nlist" :key="notice_no">
-                            <td>{{ row.notice_no }}</td>
-                            <td>
-                                <router-link to="/notice/detail">{{ row.notice_title }}</router-link>
-                            </td>
-                            <td>{{ row.notice_author }}</td>
-                            <td>{{ row.created_at }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
+                    <div class="notice-column">
+                        <table class="w3-table-all">
+                            <thead>
+                                <h2>공지사항</h2>
+                                <tr>
+                                    <th>번호</th>
+                                    <th>제목</th>
+                                    <th>작성자</th>
+                                    <th>등록일시</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr v-for="(row, noticeno) in nlist" :key="noticeno">
+                                    <td>{{ no-noticeno }}</td>
+                                    <td><a v-on:click="fnNoticeView(`${row.noticeno}`)" :style="{ color: row.noticetitle ? 'blue' : ''}" class="hover-effect">{{ row.noticetitle }}</a></td>
+                                    <td>관리자</td>
+                                    <td>{{ row.noticedate }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="dashboard-column">
                 <div class="calendardiv">
@@ -38,25 +38,27 @@
           <div class="dashboard-column">
     
       <div class="dashboard-column">     
-        <table class="w3-table-all">
-          <thead>
-            <h2>이벤트</h2>
-            <tr>
-              <th>번호</th>
-              <th>제목</th>
-              <th>작성자</th>
-              <th>등록일시</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(row, event_no) in elist" :key="event_no">          
-              <td>{{ row.event_no }}</td>
-              <td><router-link to="/event/detail">{{ row.event_title }}</router-link></td>
-              <td>{{ row.event_author }}</td>
-              <td>{{ row.created_at }}</td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="event-column">
+            <table class="w3-table-all">
+                <thead>
+                    <h2>이벤트</h2>
+                    <tr>
+                        <th>번호</th>
+                        <th>제목</th>
+                        <th>작성자</th>
+                        <th>등록일시</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr v-for="(row, eventno) in elist" :key="eventno">
+                        <td>{{ no-eventno }}</td>
+                        <td><a v-on:click="fnEventView(`${row.eventno}`)" :style="{ color: row.eventtitle ? 'blue' : ''}" class="hover-effect">{{ row.eventtitle }}</a></td>
+                        <td>관리자</td>
+                        <td>{{ row.eventdate }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
           </div>
           <div class="dashboard-column">
             <div>
@@ -70,8 +72,8 @@
       </div>
     </div>
     </div>
-    </template>
-    <script>
+</template>
+<script>
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import VueApexCharts from 'vue3-apexcharts';
@@ -84,12 +86,36 @@ export default {
                 requestBody : this.$route.query,
                 nlist: [],
                 elist: [],
-                search_key: '',
-                search_value: '',
+                no: '', //게시판 숫자처리
+                paging: {
+                    block: 0,
+                    endPage: 0,
+                    nextBlock: 0,
+                    page: 0,
+                    pageSize: 0,
+                    prevBlock: 0,
+                    startIndex: 0,
+                    startPage: 0,
+                    totalBlockCnt: 0,
+                    totalListCnt: 0,
+                    totalPageCnt: 0,
+                }, //페이징 데이터
+                page: this.$route.query.page ? this.$route.query.page : 1,
+                size: this.$route.query.size ? this.$route.query.size :5,
+                paginavigation: function () { //페이징 처리 for문 커스텀
+                    let pageNumber = [] //;
+                    let startPage = this.paging.startPage;
+                    let endPage = this.paging.endPage;
+                    for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
+                    return pageNumber;
+                }
             };
         },
        
         async mounted() {
+            this.fnNoticeGetList();
+        this.fnEventGetList();
+
             try {
       const response = this.$axios.get('/accounting/monthlysales');
       this.monthlySales = response.data;
@@ -100,84 +126,80 @@ export default {
             this.fnGetList();
         },
         methods: {
-            fnGetList() {
-                this.nlist = [
-                    {
-                        notice_no: 1,
-                        notice_title: '부서 변경사항 안내(B부서)',
-                        notice_author: '정준혁',
-                        created_at: '2022-04-25',
-                    },
-                    {
-                        notice_no: 2,
-                        notice_title: '연말 인사드립니다',
-                        notice_author: '정준혁',
-                        created_at: '2021-12-30',
-                    },
-                    {
-                        notice_no: 3,
-                        notice_title: '긴급 공지',
-                        notice_author: '정준혁',
-                        created_at: '2022-08-10',
-                    },
-                    {
-                        notice_no: 4,
-                        notice_title: '회사 이전 안내',
-                        notice_author: '정준혁',
-                        created_at: '2023-02-14',
-                    },
-                    {
-                        notice_no: 5,
-                        notice_title: '업무협조 요청',
-                        notice_author: '윤영광',
-                        created_at: '2022-09-05',
-                    },
-                ];
-                this.elist = [
-                    {
-                        event_no: 1,
-                        event_title: '2023년 workshop 일정 안내',
-                        event_author: '정준혁',
-                        created_at: '2023-12-20',
-                    },
-                    {
-                        event_no: 2,
-                        event_title: '2023년 체육대회 일정 안내',
-                        event_author: '정준혁',
-                        created_at: '2023-9-10',
-                    },
-                    {
-                        event_no: 3,
-                        event_title: '2023 회사 후퇴: 더 강한 팀 만들기',
-                        event_author: '정준혁',
-                        created_at: '2023-08-30',
-                    },
-                    {
-                        event_no: 4,
-                        event_title: '2022 제품 출시 행사: 최신 혁신 소개',
-                        event_author: '정준혁',
-                        created_at: '2023-08-13',
-                    },
-                    {
-                        event_no: 5,
-                        event_title: '2023년 주주총회: 회사 실적 검토',
-                        event_author: '정준혁',
-                        created_at: '2023-07-29',
-                    },
-                ];
-            },
+            fnNoticeGetList() {
+            this.requestBody = { // 데이터 전송
+                                  // keyword: this.keyword,
+                                //   sk: this.search_key,
+                                //   sv: this.search_value,
+                                  page: this.page,
+                                  size: this.size
+                              }
+                              this.$axios.get(this.$serverUrl + "/notice/list", {
+                                  params: this.requestBody,
+                                  headers: {}
+                              }).then((res) => {        
+                                  //this.list = res.data =  
+                                  if (res.data.resultCode === "OK") {
+                                    this.nlist = res.data.data
+                                    this.paging = res.data.pagination
+                                    this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+                                  }
+                              }).catch((err) => {
+                                  if (err.message.indexOf('Network Error') > -1) {
+                                      alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+                                  }
+                              })
+        },
+        fnEventGetList(){
+            this.requestBody = { // 데이터 전송
+                                  // keyword: this.keyword,
+                                //   sk: this.search_key,
+                                //   sv: this.search_value,
+                                  page: this.page,
+                                  size: this.size
+                              }
+                              this.$axios.get(this.$serverUrl + "/event/list", {
+                                  params: this.requestBody,
+                                  headers: {}
+                              }).then((res) => {        
+                                  //this.list = res.data =  
+                                  if (res.data.resultCode === "OK") {
+                                    this.elist = res.data.data
+                                    this.paging = res.data.pagination
+                                    this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+                                  }
+                              }).catch((err) => {
+                                  if (err.message.indexOf('Network Error') > -1) {
+                                      alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+                                  }
+                              })
+        },
             fnPage() {
-            },
-            fnWrite() {
-                this.$router.push({
-                    path: './write'
-                })
-            },
-            fnUpdate() {
-                this.$router.push({
-                    path: './update'
-                })
-            },
+        },
+         fnNoticeView(noticeno){
+        this.requestBody.noticeno = noticeno
+        this.$router.push({
+            path: 'notice/detail',
+            query: this.requestBody
+        })
+        },
+         fnEventView(eventno){
+        this.requestBody.eventno = eventno
+        this.$router.push({
+            path: 'event/detail',
+            query: this.requestBody
+        })
+        },
+        fnWrite() {
+            this.$router.push({
+                path: './write'
+            })
+        },
+        fnUpdate() {
+            this.$router.push({
+                path: './update'
+            })
+        },
         },
         components: {
         apexchart: VueApexCharts,
@@ -295,4 +317,25 @@ series.value[0].data = monthlySales.value;
         width: calc(100% + 200px);
         box-sizing: border-box;
     }
+.notice-column {
+    border: 2px solid #e7e8fa;
+         margin: 10px;
+         padding: 8px;
+         width: 700px;
+            height: 300px;
+         overflow: hidden;
+}
+
+.event-column {
+    border: 2px solid #e7e8fa;
+         margin: 10px;
+         padding: 8px;
+         width: 700px;
+            height: 300px;
+         overflow: hidden;
+}
+
+
+
+
     </style>
