@@ -4,8 +4,7 @@
     <hr>
     <div class="noticetitle">
       <label for="noticetitle"></label>
-        <input type="text" v-model="noticetitle" class="w3-input w3-border" 
-          id="noticetitle" placeholder="제목을 입력해주세요.">
+        <input type="text" v-model="noticetitle" class="w3-input w3-border" id="noticetitle" placeholder="제목을 입력해주세요.">
         <hr>
       <label>작성자</label>
         <input type="text" class="w3-input w3-border" placeholder="관리자" readonly>
@@ -13,25 +12,20 @@
         <input type="date" v-model="noticedate" class="w3-input w3-border" placeholder="등록일자" readonly>
         <hr>
       <label for="noticefile">파일</label>
-        <input type="file" id="noticefile" @change="importExcel" 
-          accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+        <input type="file" id="noticefile" @change="importExcel" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
         <hr>
       <label for="noticeimg">이미지 파일</label>
-        <input type="file" ref="fileInput" @change="handleFileUpload()" 
-          accept="image/*" id="noticeimg" class="w3-input w3-border">
+        <input id="inputFile" type="file" @change="readInputFile" name="picture" class="w3-btn w3-white w3-border"/>
     </div>
       <label for="noticecontent">내용 &nbsp;</label>
-    <div class="ck-editor" id="editor">
+    <div class="ck-editor">
       <ck-editor v-model="editorContent" :editor="editor" :config="editorConfig" @ready="configureEditor" />
     </div>
-    <div class="common-buttons">
-      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnSave">등록</button> &nbsp;
-      <button type="button" class="w3-button w3-round w3-gray" v-on:click="fnList">목록</button>
-    </div>
+      <div class="common-buttons">
+        <button @click="registerProduct" class="w3-button w3-round w3-blue-gray">등록</button>
+      </div>
   </div>
 </template>
-
-
 
 <script>
 import { defineComponent } from 'vue';
@@ -47,11 +41,12 @@ export default defineComponent({
       noticetitle: '',
       editorContent: '',
       noticefile: '',
-      noticeimg: '',
       noticedate: '',
+      previewImage: null,
+      file: null,
       editor: ClassicEditor, 
-      editorConfig: {   
-      toolbar: [
+    editorConfig: {   
+    toolbar: [
             'heading',
             '|',
             'fontBackgroundColor',
@@ -108,13 +103,81 @@ params: this.requestBody
 this.noticetitle = res.data.noticetitle
 this.editorContent = res.data.noticecontent
 this.noticefile = res.data.noticefile
-this.noticeimg = res.data.noticeimg
+// this.noticeimg = res.data.noticeimg
 this.noticedate = res.data.noticedate
 }).catch((err) => {
 console.log(err)
 })
 }
 },
+
+    readInputFile(event) {
+
+      this.file = event.target.files[0];
+
+      this.previewImage = null; // Clear the existing preview
+      const files = event.target.files;
+      const fileArr = Array.from(files);
+      fileArr.forEach((file) => {
+        if (!file.type.match('image/.*')) {
+          alert("이미지 확장자만 업로드 가능합니다.");
+          return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.previewImage = e.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    },
+    registerProduct() {
+      var productObject = {
+        productno: this.productno,
+        productid: this.productid,
+        productname: this.productname,
+        productcategory: this.productcategory,
+        productcost: this.productcost,
+        purchaseprice: this.purchaseprice,
+        consumerprice: this.consumerprice,
+        productremarks: this.productremarks,
+        // productdate: this.productdate        
+      };
+
+      var formData = new FormData();
+      formData.append('file', this.file);
+      formData.append('product', JSON.stringify(productObject));
+      formData.append('productno', this.productno);
+      formData.append('productid', this.productid);
+      formData.append('productname', this.productname);
+      formData.append('productcategory', this.productcategory );
+      formData.append('productcost', this.productcost);
+      formData.append('purchaseprice', this.purchaseprice);
+      formData.append('consumerprice', this.consumerprice);
+      formData.append('productremarks', this.productremarks );
+
+      fetch('/product/file', {
+        method: 'POST',
+        body: formData,
+      })
+        .then(response => {
+          if (response.ok) {
+            alert('Created');
+          } else {
+            throw new Error('Request failed');
+          }
+        })
+        .catch(error => {
+          alert('Error: ' + error.message);
+        });
+    },
+
+
+
+
+
+
+
 fnList() {
 delete this.requestBody.noticeno
 this.$router.push({
@@ -129,15 +192,15 @@ path: './detail',
 query: this.requestBody
 })
 },
-  fnSave() {
-  let apiUrl = this.$serverUrl + '/notice'
-  this.form = {
-    "noticeno": this.noticeno,
-    "noticetitle": this.noticetitle,
-    "noticecontent": this.editorContent,
-    "noticefile": this.noticefile, 
-    "noticeimg": this.noticeimg,
-  }
+    fnSave() {
+let apiUrl = this.$serverUrl + '/notice'
+this.form = {
+  "noticeno": this.noticeno,
+  "noticetitle": this.noticetitle,
+  "noticecontent": this.editorContent,
+  "noticefile": this.noticefile, 
+  "noticeimg": this.noticeimg,
+}
   if (this.noticeno === undefined) {
     //INSERT
     this.$axios.post(apiUrl, this.form)
@@ -162,9 +225,7 @@ query: this.requestBody
     })
   }
 },
-
 }
-
 });
 </script>
 <style scoped>

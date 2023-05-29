@@ -2,11 +2,17 @@
   <div class="bradcumb-title text-center">
     <h2>공지사항</h2>
   </div>
+  <template v-if="auth == '관리자' ">
   <div class="common-buttons">
     <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">글 등록</button>
   </div>
+  </template>
+  <template v-else-if="auth == '임원' || auth == '사원' ">
+    <div class="common-buttons">
+    <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite" disabled>글 등록</button>
+  </div>
+  </template>
   <div class="notice-list">
-
     <table class="w3-table-all">
       <thead>
         <tr>
@@ -25,7 +31,6 @@
       </tr>
     </tbody>
   </table>
-
   <!-- 검색필드추가 -->
   <div class="center">
   <div class="d-inline-flex align-items-center">
@@ -68,6 +73,7 @@
 export default {
   data() {
     return { 
+      auth: "",
       requestBody: {}, 
                 list: {}, 
                 nos: '', 
@@ -99,29 +105,39 @@ export default {
   },
   mounted() {
     this.fnGetList();
+    this.authcheck();
   },
   methods: {
     fnGetList() {
       this.requestBody = { 
-                                  sk: this.search_key,
-                                  sv: this.search_value,
-                                  page: this.page,
-                                  size: this.size
-                              }
-                              this.$axios.get(this.$serverUrl + "/notice/list", {
-                                  params: this.requestBody,
-                                  headers: {}
-                              }).then((res) => {        
-                                  if (res.data.resultCode === "OK") {
-                                    this.list = res.data.data
-                                    this.paging = res.data.pagination
-                                    this.nos = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
-                                  }
-                              }).catch((err) => {
-                                  if (err.message.indexOf('Network Error') > -1) {
-                                      alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
-                                  }
-                              })
+                sk: this.search_key,
+                sv: this.search_value,
+                page: this.page,
+                size: this.size
+            }
+            this.$axios.get(this.$serverUrl + "/notice/list", {
+                params: this.requestBody,
+                headers: {}
+            }).then((res) => {        
+                if (res.data.resultCode === "OK") {
+                  this.list = res.data.data
+                  this.paging = res.data.pagination
+                  this.nos = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+                }
+            }).catch((err) => {
+                if (err.message.indexOf('Network Error') > -1) {
+                    alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
+                }
+            })
+    },
+     authcheck() {
+      if(sessionStorage.getItem('emplevel') == '관리자') {
+        this.auth = '관리자';
+      } else if (sessionStorage.getItem('emplevel') == '임원') {
+        this.auth = '임원';
+      } else if (sessionStorage.getItem('emplevel') == '사원') {
+        this.auth = '사원';
+      } 
     },
     fnNoticeView(noticeno){
       this.requestBody.noticeno = noticeno

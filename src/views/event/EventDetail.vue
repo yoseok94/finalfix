@@ -33,11 +33,21 @@
         </div>
       </div>
     </div>
+    <template v-if="auth == '관리자' ">
     <div class="common-buttons">
       <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUpdate">수정</button>
       <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnDelete">삭제</button>
       <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnList">목록</button>
     </div>
+    </template>
+
+  <template v-else-if="auth == '임원' || auth == '사원' ">
+     <div class="common-buttons">
+      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUpdate" disabled>수정</button>
+      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnDelete" disabled>삭제</button>
+      <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnList">목록</button>
+    </div>
+  </template>
   </div>
 </template>
 
@@ -51,6 +61,7 @@ export default defineComponent({
     components: { 'ck-editor': CKEditor.component },
 data() { //변수생성
 return {
+  auth: "",
 requestBody: this.$route.query,
 eventno: this.$route.query.eventno,
   eventtitle: '',
@@ -59,21 +70,19 @@ eventno: this.$route.query.eventno,
   eventimg: '',
   eventdate: '',
   editor: ClassicEditor, 
-    editorConfig: {     
-    toolbar: [
-
+  editorConfig: {     
+  toolbar: [
           ],
           table: {
             contentToolbar: [
-
             ],
           },
-
         },
     };
 },
 mounted() {
-this.fnGetView()
+this.fnGetView();
+this.authcheck();
 },
 methods: {
 fnGetView() {
@@ -97,6 +106,15 @@ this.$router.push({
 path: './list',
 query: this.requestBody
 })
+},
+authcheck(){
+  if(sessionStorage.getItem('emplevel') == '관리자'){
+    this.auth = '관리자';
+  } else if (sessionStorage.getItem('emplevel') == '임원'){
+    this.auth = '임원';
+  } else if (sessionStorage.getItem('emplevel') == '사원') {
+    this.auth = '사원';
+  }
 },
 fnUpdate() {
 this.$router.push({

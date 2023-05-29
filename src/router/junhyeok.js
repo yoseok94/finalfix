@@ -10,6 +10,7 @@ import EventWrite from '@/views/event/EventWrite.vue'
 import EventDetail from '@/views/event/EventDetail.vue'
 import DeptDetail from '@/views/dept/DeptDetail.vue'
 import ProductDetail from '@/views/product/ProductDetail.vue'
+import ProductUp from '@/views/product/ProductUp.vue'
 
 
 
@@ -18,6 +19,11 @@ const junhyeokjs = [
     path: '/dept/list',
     name: 'DeptList',
     component: DeptList
+  },
+  {
+    path: '/product/up',
+    name: 'ProductUp',
+    component: ProductUp
   },
 
   {

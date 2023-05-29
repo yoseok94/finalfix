@@ -2,9 +2,21 @@
   <div class="bradcumb-title text-center">
       <h2>상품 관리</h2>
   </div>
+
+  <template v-if="auth == '관리자' ">
   <div class="common-buttons">
-    <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">상품등록</button>
+    
+    <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUp">상품등록</button>
   </div>
+  </template>
+
+  <template v-else-if="auth == '임원' || auth == '사원' ">
+  <div class="common-buttons">
+   
+    <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnUp" disabled>상품등록</button>
+  </div>
+  </template>
+
   <div class="product-list">
     <div class="product-column">
     <table class="w3-table-all">
@@ -34,6 +46,7 @@
       </tbody>
     </table>
   </div>
+
     <div class="center">
       <div class="d-inline-flex align-items-center">
        <div class="form-group mr-2">
@@ -49,12 +62,6 @@
       </div>
       <div class="form-group mr-1">
         <button class="form-control" type="button"  @click="fnPage()">조회</button>
-      </div>
-      <div class="form-group mr-1">
-        <button class="form-control" type="button"  @click="fnDelete()">삭제</button>
-      </div>
-      <div class="form-group mr-1">
-        <button class="form-control" type="button"  @click="fnUpdate()">수정</button>
       </div>
     </div>
   </div>
@@ -83,6 +90,7 @@
 export default {
   data() {
     return {
+      auth: "",
            requestBody: {}, 
                 list: {}, 
                 no: '', 
@@ -114,6 +122,7 @@ export default {
   },
   mounted() {
     this.fnGetList();
+    this.authcheck();
   },
   methods: {
     fnGetList() {
@@ -138,6 +147,15 @@ export default {
                                   }
                               })
     },
+    authcheck() {
+      if(sessionStorage.getItem('emplevel') == '관리자') {
+        this.auth = '관리자';
+      } else if (sessionStorage.getItem('emplevel') == '임원') {
+        this.auth = '임원';
+      } else if (sessionStorage.getItem('emplevel') == '사원') {
+        this.auth = '사원';
+      } 
+    },
       fnView(productno) { 
                 this.requestBody.productno = productno
                 this.$router.push({
@@ -156,6 +174,11 @@ export default {
                   path: './write'
                 })
               },
+    fnUp() {
+            this.$router.push({
+              path: './up'
+            })
+  },
       fnUpdate(){
           this.$router.push({
             path: './update'
