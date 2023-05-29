@@ -78,22 +78,22 @@ fnSave() {
     //INSERT
     this.$axios.post(apiUrl, this.form)
     .then((res) => {
-      alert('글이 저장되었습니다.')
+      alert('부서가 등록되었습니다.')
       this.fnView(res.data.deptno)
     }).catch((err) => {
       if (err.message.indexOf('Network Error') > -1) {
-        alert('네트워크가 dddddd원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
+        alert('네트워크가 원활하지 않습니다.\\n잠시 후 다시 시도해주세요.')
       }
     })
   } else {
     //UPDATE
     this.$axios.patch(apiUrl, this.form)
     .then((res) => {
-      alert('글이 저장되었습니다.')
+      alert('부서가 수정되었습니다.')
       this.fnView(res.data.deptno)
     }).catch((err) => {
        if (err.message.indexOf('Network Error') > -1) {
-        alert('존재하지 않는 상품코드입니다.')
+        alert('다시 입력해주십시오.')
        }
     })
    }

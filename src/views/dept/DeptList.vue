@@ -2,10 +2,22 @@
   <div class="bradcumb-title text-center">
     <h2>부서 관리</h2>
   </div>
+  <template v-if="auth == '관리자' ">
   <div class="common-buttons">
     <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite">부서등록</button>
   </div>
+  </template>
+
+  <template v-else-if="auth == '임원' ">
+  <div class="common-buttons">
+    <button type="button" class="w3-button w3-round w3-blue-gray" v-on:click="fnWrite" disabled>부서등록</button>
+  </div>
+  </template>
+
   <div class="dept-list">
+
+
+<template v-if="auth == '관리자' ">
     <div class="dept-column">
     <table class="w3-table-all">
       <thead>
@@ -28,6 +40,35 @@
       </tbody>
     </table>
   </div>
+</template>
+
+<template v-else-if="auth == '임원' ">
+    <div class="dept-column">
+    <table class="w3-table-all">
+      <thead>
+        <tr>
+          <th>번호</th>
+          <th>부서명</th>
+          <th>부서 코드</th>
+          <th>상품코드</th>
+          <th>등록일시</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(row, deptno) in list" :key="deptno">
+          <td>{{ no-deptno}}</td>
+          <td>{{ row.deptname}}</td>
+          <td>{{ row.deptid }}</td>
+          <td>{{ row.productid }}</td>
+          <td>{{ row.deptdate }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  </template>
+
+
+
     <!-- 검색필드추가 -->
     <div class="center">
       <div class="d-inline-flex align-items-center">
@@ -71,6 +112,7 @@
 export default {
   data() {
     return {
+            auth: "",
             deptnock: [],
            requestBody: {}, //리스트 페이지 데이터전송
                 list: {}, //리스트 데이터
@@ -103,6 +145,7 @@ export default {
             },
             mounted() {
               this.fnGetList();
+                    this.authcheck();
             },
             methods: {
               fnGetList() {
@@ -127,6 +170,15 @@ export default {
                                       alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
                                   }
                               })
+    },
+        authcheck() {
+      if(sessionStorage.getItem('emplevel') == '관리자') {
+        this.auth = '관리자';
+      } else if (sessionStorage.getItem('emplevel') == '임원') {
+        this.auth = '임원';
+      } else if (sessionStorage.getItem('emplevel') == '사원') {
+        this.auth = '사원';
+      } 
     },
     fnView(deptno) {
       this.requestBody.deptno = deptno

@@ -1,7 +1,7 @@
 <template>
   <div class="product-detail-container">
     <div class="product-detail">
-      <h3 style="text-align: center;">상품 등록</h3>
+      <h3 style="text-align: center;">상품 수정</h3>
       <hr>
       <div class="product-contents">   
         <div>
@@ -108,16 +108,14 @@ this.form = {
 "productcost": this.productcost,
 "purchaseprice": this.purchaseprice,
 "consumerprice": this.consumerprice,
-// "productimg": this.productimg,
 "productremarks": this.productremarks,
 
-// "file": this.file
 }
   if (this.productno === undefined) {
     //INSERT
     this.$axios.post(apiUrl, this.form)
     .then((res) => {
-      alert('글이 저장되었습니다.')
+      alert('상품이 등록되었습니다.')
       this.fnView(res.data.productno)
     }).catch((err) => {
       if (err.message.indexOf('Network Error') > -1) {
@@ -128,7 +126,7 @@ this.form = {
     //UPDATE
     this.$axios.patch(apiUrl, this.form)
     .then((res) => {
-      alert('글이 저장되었습니다.')
+      alert('상품이 수정되었습니다.')
       this.fnView(res.data.productno)
     }).catch((err) => {
       if (err.message.indexOf('Network Error') > -1) {
