@@ -18,19 +18,19 @@
           </thead>
           <tbody>
             <tr v-for="(row, attendenceno) in list" :key="attendenceno">
-                <td v-if="row.reason != null">{{ row.empId }}</td>
-                <td v-if="row.reason != null">{{ row.empname }}</td>
-                <td v-if="row.reason != null">{{ row.emplevel }}</td>
-                <td v-if="row.reason != null">{{ row.reason }}</td>
-                <td v-if="row.reason != null">{{ row.reasonpr }}</td>
-                <td v-if="row.reason != null">{{ row.deptname }}</td>
-                <td v-if="row.reason != null">{{ row.requestresult }}</td>
-                <div v-if="row.requestresult == 'N' && row.empId != empId && row.emplevel != emplevel && row.reason != null">
+                <td>{{ row.empId }}</td>
+                <td>{{ row.empname }}</td>
+                <td>{{ row.emplevel }}</td>
+                <td>{{ row.reason }}</td>
+                <td>{{ row.reasonpr }}</td>
+                <td>{{ row.deptname }}</td>
+                <td>{{ row.requestresult }}</td>
+                <div v-if="row.requestresult == 'N' && row.empId != empId && row.emplevel != emplevel">
                 <td>
                 <button @click="fnchangeresult(row.attendenceno, row.requestresult)">승인</button>
                 </td>
                 </div>
-                <div v-if="row.requestresult == 'Y' && row.empId != empId && row.emplevel != emplevel && row.reason != null">
+                <div v-if="row.requestresult == 'Y' && row.empId != empId && row.emplevel != emplevel">
                 <td>
                 <button @click="fnchangeresult(row.attendenceno, row.requestresult)">반려</button>
                 </td>
@@ -127,7 +127,7 @@ export default {
         size: this.size
       }
 
-      this.$axios.get(this.$serverUrl + "/hrm/adlist", {
+      this.$axios.get(this.$serverUrl + "/hrm/adlist2", {
         
         params: this.requestBody,
         headers: {}
