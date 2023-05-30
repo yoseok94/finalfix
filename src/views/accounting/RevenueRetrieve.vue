@@ -16,7 +16,7 @@
         <tr v-for="(row, tradingno) in cardSales" :key="tradingno">
           <td>{{ row.tradingday }}</td>
           <td>{{ row.accountname }} : {{ row.productname }}</td>
-          <td>{{ row.totalprice }}</td>
+          <td>{{ row.totalprice.toLocaleString() }}</td>
         </tr>
       </tbody>
     </table>
@@ -33,7 +33,7 @@
         <tr v-for="(row, tradingno) in cashSales" :key="tradingno">
           <td>{{ row.tradingday }}</td>
           <td>{{ row.accountname }} : {{ row.productname }}</td>
-          <td>{{ row.totalprice }}</td>
+          <td>{{ row.totalprice.toLocaleString() }}</td>
         </tr>
       </tbody>
     </table>
@@ -50,16 +50,15 @@
         <tr v-for="(row, tradingno) in otherSales" :key="tradingno">
           <td>{{ row.tradingday }}</td>
           <td>{{ row.accountname }} : {{ row.productname }}</td>
-          <td>{{ row.totalprice }}</td>
+          <td>{{ row.totalprice.toLocaleString() }}</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <!-- 페이지 처리 -->
   <div class="pagination w3-bar w3-padding-16 w3-small" v-if="paging.totalListCnt > 0">
     <span>
-      <a href="javascript:;" @click="fnhrmsearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
-      <a href="javascript:;" v-if="paging.startPage > 10" @click="fnhrmsearch(`${paging.startPage - 1}`)"
+      <a href="javascript:;" @click="fnrevenuesearch(1)" class="first w3-button w3-border">&lt;&lt;</a>
+      <a href="javascript:;" v-if="paging.startPage > 10" @click="fnrevenuesearch(`${paging.startPage - 1}`)"
         class="prev w3-button w3-border">
         &lt;</a>
       <template v-for="(n, index) in paginavigation()">
@@ -67,27 +66,25 @@
           <strong class="w3-button w3-border w3-green" :key="index">{{ n }}</strong>
         </template>
         <template v-else>
-          <a class="w3-button w3-border" href="javascript:;" @click="fnhrmsearch(`${n}`)" :key="index">{{ n }}</a>
+          <a class="w3-button w3-border" href="javascript:;" @click="fnrevenuesearch(`${n}`)" :key="index">{{ n }}</a>
         </template>
       </template>
-      <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnhrmsearch(`${paging.endPage + 1}`)"
+      <a href="javascript:;" v-if="paging.totalPageCnt > paging.endPage" @click="fnrevenuesearch(`${paging.endPage + 1}`)"
         class="next w3-button w3-border">
         &gt;</a>
-      <a href="javascript:;" @click="fnhrmsearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
+      <a href="javascript:;" @click="fnrevenuesearch(`${paging.totalPageCnt}`)" class="last w3-button w3-border">&gt;&gt;</a>
     </span>
   </div>
 </template>
 
 <script>
 export default {
-  data() {
+  data() { //변수생성
     return {
-      requestBody: {},
-      list: {},
-      cardSales: [],
-      cashSales: [],
-      otherSales: [],
-      no: '',
+      exceldata:[],
+      requestBody: {}, //리스트 페이지 데이터전송
+      list: {}, //리스트 데이터
+      no: '', //게시판 숫자처리
       paging: {
         block: 0,
         endPage: 0,
@@ -100,9 +97,11 @@ export default {
         totalBlockCnt: 0,
         totalListCnt: 0,
         totalPageCnt: 0,
-      },
+      }, //페이징 데이터
       page: this.$route.query.page ? this.$route.query.page : 1,
       size: this.$route.query.size ? this.$route.query.size : 10,
+      search_key: this.$route.query.sk ? this.$route.query.sk : "",
+      search_value: this.$route.query.sv ? this.$route.query.sv : null,
       paginavigation: function () { //페이징 처리 for문 커스텀
         let pageNumber = [] //;
         let startPage = this.paging.startPage;
@@ -110,41 +109,51 @@ export default {
         for (let i = startPage; i <= endPage; i++) pageNumber.push(i);
         return pageNumber;
       },
+      empno: '',
+      empstatus: "" 
     }
   },
   mounted() {
-
-    this.fnrevenuelist().then(() => {
-      this.cardSales = this.list.filter(trade => trade.tradetype === 1);
-      this.cashSales = this.list.filter(trade => trade.tradetype === 2);
-      this.otherSales = this.list.filter(trade => trade.tradetype === 3);
-    });
+    this.fnrevenuelist();
   },
-
   methods: {
-    async fnrevenuelist() {
-      this.requestBody = {
+    fnrevenuesearch(n) {
+      if (this.page !== n) {
+        this.page = n       
+      }
+
+      this.fnrevenuelist()      
+    },
+    fnrevenuelist(){
+      this.requestBody = { // 데이터 전송        
+        sk: this.search_key,
+        sv: this.search_value,
         page: this.page,
         size: this.size
-      };
-      try {
-        const res = await this.$axios.get(this.$serverUrl + "/accounting/revenuelist", {
-          params: this.requestBody,
-          headers: {}
-        });
+      }
+
+      this.$axios.get(this.$serverUrl + "/accounting/revenuelist", {
+        params: this.requestBody,
+        headers: {}
+      }).then((res) => {      
+
         if (res.data.resultCode === "OK") {
-          this.list = res.data.data;
-          this.paging = res.data.pagination;
-          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize);
+          this.list = res.data.data
+          this.exceldata = this.list
+          this.paging = res.data.pagination
+          this.no = this.paging.totalListCnt - ((this.paging.page - 1) * this.paging.pageSize)
+          this.cardSales = this.list.filter(trade => trade.tradetype === 1);
+          this.cashSales = this.list.filter(trade => trade.tradetype === 2);
+          this.otherSales = this.list.filter(trade => trade.tradetype === 3);
         }
-      }
-      catch (err) {
+        
+      }).catch((err) => {
         if (err.message.indexOf('Network Error') > -1) {
-          alert('Network error. Please contact support.');
+          alert('네트워크가 원활하지 않습니다.\n잠시 후 다시 시도해주세요.')
         }
-      }
+      })
     },
-  },
+  }
 }
 </script>
 <style scoped>
